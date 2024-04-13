@@ -18,7 +18,7 @@ class StoryViewModel {
 
   Future<void> fetchStory() async {
     try {
-      _stories = await _storyService.fetchStory();
+      _stories = await _storyService.fetchSearchStory();
       _storyStreamController.add(_stories); // Emit the updated list of stories
       Logger logger = Logger();
       logger.i(_stories.length);
