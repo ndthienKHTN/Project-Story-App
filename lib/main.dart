@@ -1,15 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:project_login/ViewModels/StoryViewModel.dart';
+import 'package:project_login/ViewModels/SearchStoryViewModel.dart';
 import 'package:provider/provider.dart';
 import 'Models/Story.dart';
 import 'ViewModels/DetailStoryViewModel.dart';
 import 'Views/DetailStoryView.dart';
+import 'Views/SearchStoryView.dart';
 import 'login_view.dart';
 import 'register_view.dart';
 void main() {
   runApp(MyApp());
 }
 class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => SearchStoryViewModel()),
+        ChangeNotifierProvider(create: (context) => DetailStoryViewModel()),
+      ],
+      child: MaterialApp(
+        title: 'Story App',
+        home: SearchScreen(),
+      ),
+    );
+  }
+}
+/*class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -20,9 +36,9 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-}
+}*/
 
-class StoryListScreen extends StatelessWidget {
+/*class StoryListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _storyViewModel = Provider.of<StoryViewModel>(context);
@@ -70,7 +86,7 @@ class StoryListScreen extends StatelessWidget {
       ),
     );
   }
-}
+}*/
 /*class MyApp extends StatelessWidget {
   final StoryViewModel _storyViewModel = StoryViewModel();
   //const MyApp({super.key});

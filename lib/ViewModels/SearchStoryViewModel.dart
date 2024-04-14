@@ -1,9 +1,28 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:project_login/Models/Story.dart';
 import 'package:project_login/Services/StoryService.dart';
 import 'dart:async';
 
+class SearchStoryViewModel extends ChangeNotifier {
+  final StoryService _storyService = StoryService();
+  List<Story> _stories = [];
+  List<Story> get stories => _stories;
+
+  Future<void> fetchSearchStories() async {
+    try {
+      _stories = await _storyService.fetchSearchStory();
+      Logger logger = Logger();
+      logger.i(stories[0].toString());
+      notifyListeners();
+    } catch (e) {
+      // Handle error
+      print('Error fetching stories: $e');
+    }
+  }
+}
+/*
 class StoryViewModel {
   final StoryService _storyService = StoryService();
   List<Story> _stories = [];
@@ -22,8 +41,7 @@ class StoryViewModel {
       _storyStreamController.add(_stories); // Emit the updated list of stories
       Logger logger = Logger();
       logger.i(_stories.length);
-      /*var temp = _stories[0].toString();
-      logger.i(temp);*/
+      logger.i(_stories[0].toString());
     } catch (e) {
         print(e);
     }
@@ -33,4 +51,4 @@ class StoryViewModel {
     _storyStreamController.close(); // Close the stream controller
   }
 
-}
+}*/

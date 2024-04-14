@@ -2,51 +2,76 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../Models/Story.dart';
+import '../ViewModels/ContenStoryViewModel.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
-/*
-class StoryDetailScreen extends StatelessWidget {
-  final Story story;
+import 'ContentStoryView.dart';
 
-  const StoryDetailScreen({required this.story});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(story.name),
-      ),
-      body: Center(
-        child: Text('Story details'),
-      ),
-    );
-  }
-}*/
-
-
-class StoryDetailScreen extends StatefulWidget {
+class DetailStoryScreen extends StatefulWidget {
   final String storyTitle;
 
-  const StoryDetailScreen({required this.storyTitle});
+  const DetailStoryScreen({required this.storyTitle});
 
   @override
-  _StoryDetailScreenState createState() => _StoryDetailScreenState();
+  _DetailStoryScreenState createState() => _DetailStoryScreenState();
 }
 
-class _StoryDetailScreenState extends State<StoryDetailScreen> {
+class _DetailStoryScreenState extends State<DetailStoryScreen> {
   late DetailStoryViewModel _detailStoryViewModel;
 
   @override
   void initState() {
     super.initState();
     _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
-    _fetchStoryDetails();
+    //_fetchStoryDetails();
+    _detailStoryViewModel.fetchDetailsStory(widget.storyTitle);
   }
 
   Future<void> _fetchStoryDetails() async {
-    await _detailStoryViewModel.fetchStoryDetails(widget.storyTitle);
+    await _detailStoryViewModel.fetchDetailsStory(widget.storyTitle);
   }
 
   @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Story Detail'),
+      ),
+      body: Consumer<DetailStoryViewModel>(
+        builder: (context, storyDetailViewModel, _) {
+          if (storyDetailViewModel.story == null) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            final story = storyDetailViewModel.story!;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Title: ${story.name}'),
+                Text('Description: ${story.link}'),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChangeNotifierProvider(
+                          create: (_) => ContentStoryViewModel(),
+                          child: ContentStoryScreen(storyTitle: storyDetailViewModel.story?.name != null ? storyDetailViewModel.story!.name : ""),
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text('Read'),
+                ),
+                // Add more details as needed
+              ],
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+/*@override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -76,5 +101,23 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
         },
       ),
     );
+  }*/
+
+/*
+class StoryDetailScreen extends StatelessWidget {
+  final Story story;
+
+  const StoryDetailScreen({required this.story});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(story.name),
+      ),
+      body: Center(
+        child: Text('Story details'),
+      ),
+    );
   }
-}
+}*/
