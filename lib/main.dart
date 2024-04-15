@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
 import 'package:project_login/ViewModels/SearchStoryViewModel.dart';
+import 'package:project_login/Views/HomeStoryView.dart';
 import 'package:provider/provider.dart';
 import 'Models/Story.dart';
 import 'ViewModels/DetailStoryViewModel.dart';
@@ -17,10 +19,11 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => SearchStoryViewModel()),
         ChangeNotifierProvider(create: (context) => DetailStoryViewModel()),
+        ChangeNotifierProvider(create: (context) => HomeStoryViewModel())
       ],
       child: MaterialApp(
         title: 'Story App',
-        home: SearchScreen(),
+        home: HomeScreen(),
       ),
     );
   }
