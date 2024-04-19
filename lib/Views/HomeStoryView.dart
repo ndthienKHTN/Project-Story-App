@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:project_login/Services/StoryService.dart';
 import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
 import 'package:provider/provider.dart';
 
@@ -63,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: navigateToSearchScreen,
             child: Text('Search'),
           ),
+          ElevatedButton(onPressed: () => {new StoryService().fetchListNameDataSource()}, child: Text('source names'))
         ],
       ),
     ),
