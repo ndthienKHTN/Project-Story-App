@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:project_login/ViewModels/ContentStoryViewModel.dart';
 import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
 import 'package:project_login/ViewModels/SearchStoryViewModel.dart';
-import 'package:project_login/Views/HomeStoryView.dart';
+import 'package:project_login/Views/ContentStoryView.dart';
 import 'package:provider/provider.dart';
-import 'Models/Story.dart';
+
 import 'ViewModels/DetailStoryViewModel.dart';
-import 'Views/DetailStoryView.dart';
-import 'Views/SearchStoryView.dart';
-import 'login_view.dart';
-import 'register_view.dart';
+import 'Views/Components/ChooseChapterBottomSheet.dart';
+import 'Views/HomeStoryView.dart';
 void main() {
   runApp(MyApp());
 }
@@ -19,11 +18,13 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => SearchStoryViewModel()),
         ChangeNotifierProvider(create: (context) => DetailStoryViewModel()),
-        ChangeNotifierProvider(create: (context) => HomeStoryViewModel())
+        ChangeNotifierProvider(create: (context) => HomeStoryViewModel()),
+        //ChangeNotifierProvider(create: (context) => ContentStoryViewModel()) //để tạm
       ],
       child: MaterialApp(
         title: 'Story App',
-        home: HomeScreen(),
+        //home: ContentStoryScreen(storyTitle: 'choc-tuc-vo-yeu-mua-mot-tang-mot',),
+         home: HomeScreen(),
       ),
     );
   }
