@@ -1,10 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'dart:convert';
 
 import '../Models/ContentStory.dart';
 import '../Models/Story.dart';
-
+import '../Models/Category.dart' as categoryModel;
 
 class StoryService {
   Future<List<String>> fetchListNameDataSource() async {
@@ -20,8 +21,8 @@ class StoryService {
     } else {
         throw Exception("Fail to fetch fetchListNameDataSource");
     }
-
   }
+
   Future<List<Story>> fetchSearchStory() async {
     final response = await http.get(Uri.parse('http://localhost:3000/api/v1/search/?datasource=Truyen123&search=ta'));
 
@@ -76,5 +77,18 @@ class StoryService {
   List<Story> parseListStories(List<dynamic> jsonList) {
     return jsonList.map((json) => Story.fromJson(json)).toList();
   }
-  
+
+  Future<List<categoryModel.Category>> fetchListCategory(String datasource) async {
+    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listCategory/?datasource=Truyen123'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = jsonDecode(response.body);
+      List<categoryModel.Category> listCategories =  (jsonData.map((json) => categoryModel.Category.fromJson(json))).toList();
+      Logger logger = Logger();
+      logger.i(listCategories[0].toString());
+      return listCategories;
+    } else {
+      throw Exception("Failed to fetch content of story");
+    }
+  }
 }

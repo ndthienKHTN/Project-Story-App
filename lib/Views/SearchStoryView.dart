@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../Services/StoryService.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
 import '../ViewModels/SearchStoryViewModel.dart';
 import 'DetailStoryView.dart';
@@ -28,35 +29,52 @@ class _SearchScreenState extends State<SearchScreen> {
       appBar: AppBar(
         title: Text('Home'),
       ),
-      body: Consumer<SearchStoryViewModel>(
-        builder: (context, storyListViewModel, _) {
-          if (storyListViewModel.stories.isEmpty) {
-            return Center(child: CircularProgressIndicator());
-          } else {
-            return ListView.builder(
-              itemCount: storyListViewModel.stories.length,
-              itemBuilder: (context, index) {
-                final story = storyListViewModel.stories[index];
-                return ListTile(
-                  title: Text(story.name),
-                  subtitle: Text(story.link),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChangeNotifierProvider(
-                          create: (context) => DetailStoryViewModel(),
-                          child: DetailStoryScreen(storyTitle: 'need to change',),
-                        ),
-                      ),
-                    );
-                  },
-                );
+      body: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                ElevatedButton(
+                    onPressed: () => {new StoryService().fetchListCategory("Truyen123")},
+                    child: Text('list categories'))
+              ],
+            ),
+          ),
+          Expanded(
+            child:Consumer<SearchStoryViewModel>(
+              builder: (context, storyListViewModel, _) {
+                if (storyListViewModel.stories.isEmpty) {
+                  return Center(child: CircularProgressIndicator());
+                } else {
+                  return ListView.builder(
+                    itemCount: storyListViewModel.stories.length,
+                    itemBuilder: (context, index) {
+                      final story = storyListViewModel.stories[index];
+                      return ListTile(
+                        title: Text(story.name),
+                        subtitle: Text(story.link),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChangeNotifierProvider(
+                                create: (context) => DetailStoryViewModel(),
+                                child: DetailStoryScreen(storyTitle: 'need to change',),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  );
+                }
               },
-            );
-          }
-        },
+            ),
+          ),
+        ],
       ),
+
     );
   }
 }
