@@ -44,7 +44,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
                 height: double.infinity,
                 decoration: const BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('assets/background_home.png'),
+                        image: AssetImage('assets/images/background_home.png'),
                         fit: BoxFit.fill)),
                 child: SafeArea(
                   child: Container(

@@ -91,7 +91,7 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                     child: ImageIcon(
-                        AssetImage('assets/text_size_decrease_icon.png')),
+                        AssetImage('assets/images/text_size_decrease_icon.png')),
                   ),
                 ),
               ),
@@ -129,7 +129,7 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                     child: ImageIcon(
-                        AssetImage('assets/text_size_increase_icon.png')),
+                        AssetImage('assets/images/text_size_increase_icon.png')),
                   ),
                 ),
               ),
@@ -161,7 +161,7 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                     child: ImageIcon(
-                        AssetImage('assets/line_spacing_decrease_icon.png')),
+                        AssetImage('assets/images/line_spacing_decrease_icon.png')),
                   ),
                 ),
               ),
@@ -195,7 +195,7 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                     child: ImageIcon(
-                        AssetImage('assets/line_spacing_increase_icon.png')),
+                        AssetImage('assets/images/line_spacing_increase_icon.png')),
                   ),
                 ),
               ),

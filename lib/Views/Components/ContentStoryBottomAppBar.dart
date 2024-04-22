@@ -34,14 +34,14 @@ class ContentStoryBottomAppBar extends StatelessWidget {
           unselectedItemColor: Colors.black,
           items: const [
             BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage('assets/back_button.png')),
+                icon: ImageIcon(AssetImage('assets/images/back_button.png')),
                 label: ''),
             BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage('assets/list_icon.png')), label: ''),
+                icon: ImageIcon(AssetImage('assets/images/list_icon.png')), label: ''),
             BottomNavigationBarItem(
                 icon: Icon(Icons.settings_rounded), label: ''),
             BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage('assets/next_button.png')),
+                icon: ImageIcon(AssetImage('assets/images/next_button.png')),
                 label: '')
           ],
           onTap: (int index) {
