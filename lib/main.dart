@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
-import 'login_view.dart';
-import 'register_view.dart';
+import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
+import 'package:project_login/ViewModels/SearchStoryViewModel.dart';
+import 'package:project_login/Views/HomeStoryView.dart';
+import 'package:provider/provider.dart';
+import 'ViewModels/DetailStoryViewModel.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
-
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => SearchStoryViewModel()),
+        ChangeNotifierProvider(create: (context) => DetailStoryViewModel()),
+        ChangeNotifierProvider(create: (context) => HomeStoryViewModel())
+      ],
+      child: MaterialApp(
+        title: 'Story App',
+        home: HomeScreen(),
       ),
-      home: LoginPage(),
     );
   }
 }
-
