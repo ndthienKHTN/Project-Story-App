@@ -8,13 +8,6 @@ class LoginPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      /*appBar: AppBar(
-        title: const Padding(
-          padding: EdgeInsets.only(top:30),
-          child: Text('Login'),
-        ),
-        centerTitle: true,
-      ),*/
       body: BodyWidget(),
     );
   }

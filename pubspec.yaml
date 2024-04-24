@@ -35,6 +35,8 @@ dependencies:
   google_fonts: ^6.2.1
   flutter_material_color_picker: ^1.2.0
   shared_preferences: ^2.2.3
+  yaml: ^3.1.2
+  path_provider: ^2.1.3
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
@@ -78,6 +80,7 @@ flutter:
     - assets/images/line_spacing_increase_icon.png
     - assets/images/text_size_decrease_icon.png
     - assets/images/text_size_increase_icon.png
+    - assets/images/naruto.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -102,5 +105,12 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
+  fonts:
+    - family: Lobster
+      fonts:
+        - asset: assets/fonts/Lobster/Lobster.ttf
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto/Roboto.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

@@ -60,7 +60,7 @@ class ContentStoryBottomAppBar extends StatelessWidget {
               showModalBottomSheet(
                 context: context,
                 builder: (BuildContext context) =>
-                    const ChooseChapterBottomSheet(),
+                const ChooseChapterBottomSheet(),
               );
             } else if (index == 2) {
               showModalBottomSheet(

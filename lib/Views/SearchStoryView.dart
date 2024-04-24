@@ -5,6 +5,9 @@ import '../Services/StoryService.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
 import '../ViewModels/SearchStoryViewModel.dart';
 import 'DetailStoryView.dart';
+import '../ViewModels/DetailStoryViewModel.dart';
+import '../ViewModels/SearchStoryViewModel.dart';
+import 'Components_DetailStory/DetailStoryView.dart';
 
 class SearchScreen extends StatefulWidget {
   late String searchQuery;
@@ -78,3 +81,4 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 }
+

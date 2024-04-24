@@ -52,11 +52,3 @@ class Story {
      return 'Story{name: $name,detail: $detail, categories: $str}';
     //return 'Story{name: $name, link: $link, title: $title, cover: $cover, description: $description, author: $author, authorLink: $authorLink, view: $view, detail: $detail, categories: $str}';
   }
-
-/*  Story(String name, String cover, String link, String author) {
-     name = name;
-     link = link;
-     cover = cover;
-     author = author;
-   }*/
-}

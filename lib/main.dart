@@ -11,6 +11,7 @@ import 'Views/HomeStoryView.dart';
 void main() {
   runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -22,9 +23,10 @@ class MyApp extends StatelessWidget {
         //ChangeNotifierProvider(create: (context) => ContentStoryViewModel()) //để tạm
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Story App',
         //home: ContentStoryScreen(storyTitle: 'choc-tuc-vo-yeu-mua-mot-tang-mot',),
-        home: HomeScreen(),
+         home: HomeScreen(),
       ),
     );
   }
@@ -99,58 +101,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'MVVM Flutter App',
+      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('MVVM Flutter App'),
-        ),
-        body: Column(
-          children: [
-            ElevatedButton(
-              onPressed: () => _storyViewModel.fetchStory(),
-              child: Text('Fetch Stories'),
-            ),
-            Expanded(
-              child: StreamBuilder<List<Story>>(
-                stream: _storyViewModel.storyStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final stories = snapshot.data;
-                    return ListView.builder(
-                      itemCount: stories?.length,
-                      itemBuilder: (context, index) {
-                        final story = stories?[index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => StoryDetailScreen(storyTitle: 'need to change later'),
-                              ),
-                            );
-                          },
-                          child: ListTile(
-                            title: Text(story!.name),
-                            subtitle: Text('Cover: ${story?.cover}'),
-                          ),
-                        );
-                      },
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('Error');
-                  } else {
-                    return CircularProgressIndicator();
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+      home: LoginPage(),
     );
   }
-}*/
+}
 

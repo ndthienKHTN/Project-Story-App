@@ -6,6 +6,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../Constants.dart';
 import '../Models/ContentStory.dart';
 import '../Services/StoryService.dart';
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:project_login/Views/ContentDisplay.dart';
+import 'package:yaml/yaml.dart';
+
+import '../Models/ContentStory.dart';
+import '../Services/StoryService.dart';
 
 class ContentStoryViewModel extends ChangeNotifier {
   final StoryService _storyService = StoryService();
@@ -17,6 +26,14 @@ class ContentStoryViewModel extends ChangeNotifier {
   List<String> _fontNames = [];
 
   List<String> get fontNames => _fontNames;
+
+
+class ContentStoryViewModel extends ChangeNotifier {
+  final StoryService _storyService = StoryService();
+  ContentStory? _contentStory;
+  ContentDisplay contentDisplay = ContentDisplay.defaultDisplay();
+
+  ContentStory? get contentStory => _contentStory;
 
   Future<void> fetchContentStory(String storyTitle) async {
     try {
@@ -57,6 +74,11 @@ class ContentStoryViewModel extends ChangeNotifier {
           fontFamily: fontFamily ?? DEFAULT_FONT_FAMILY,
           textColor: textColor ?? DEFAULT_TEXT_COLOR,
           backgroundColor: backgroundColor ?? DEFAULT_BACKGROUND_COLOR);
+  Future<void> fetchContentDisplay(String storyTitle) async {
+    try {
+      List<String> fontLists = await getFontFileNames();
+      contentDisplay = await ContentDisplay(20, 2, fontLists);
+      //contentDisplay.fontLists = await getFontFileNames();
       notifyListeners();
     } catch (e) {
       // Handle error

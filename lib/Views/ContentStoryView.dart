@@ -8,6 +8,10 @@ import 'Components/ContentStoryBottomAppBar.dart';
 
 class ContentStoryScreen extends StatefulWidget {
   final String storyTitle;
+  static const double MIN_TEXT_SIZE = 5;
+  static const double MAX_TEXT_SIZE = 30;
+  static const double MIN_LINE_SPACING = 0.5;
+  static const double MAX_LINE_SPACING = 5;
 
   const ContentStoryScreen({super.key, required this.storyTitle});
 

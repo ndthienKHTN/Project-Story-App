@@ -65,7 +65,7 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding:
-                    EdgeInsets.only(top: 20, bottom: 10, left: 20, right: 20),
+                EdgeInsets.only(top: 20, bottom: 10, left: 20, right: 20),
                 child: Text(
                   "Size",
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -88,7 +88,7 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                     onTap: () {
                       setState(() {
                         if (contentStoryViewModel.contentDisplay.textSize -
-                                textSizeChange >=
+                            textSizeChange >=
                             MIN_TEXT_SIZE) {
                           double newTextSize =
                               contentStoryViewModel.contentDisplay.textSize -
@@ -101,7 +101,7 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                     },
                     child: const Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                      EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                       child: ImageIcon(
                           AssetImage('assets/text_size_decrease_icon.png')),
                     ),
@@ -127,7 +127,7 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                     onTap: () {
                       setState(() {
                         if (contentStoryViewModel.contentDisplay.textSize +
-                                textSizeChange <=
+                            textSizeChange <=
                             MAX_TEXT_SIZE) {
                           double newTextSize =
                               contentStoryViewModel.contentDisplay.textSize +
@@ -140,7 +140,7 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                     },
                     child: const Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                      EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                       child: ImageIcon(
                           AssetImage('assets/text_size_increase_icon.png')),
                     ),
@@ -164,7 +164,7 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                     onTap: () {
                       setState(() {
                         if (contentStoryViewModel.contentDisplay.lineSpacing -
-                                lineSpacingChange >=
+                            lineSpacingChange >=
                             MIN_LINE_SPACING) {
                           double newlineSpacing =
                               contentStoryViewModel.contentDisplay.lineSpacing -
@@ -177,7 +177,7 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                     },
                     child: const Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                      EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                       child: ImageIcon(
                           AssetImage('assets/line_spacing_decrease_icon.png')),
                     ),
@@ -211,7 +211,7 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                     },
                     child: const Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                      EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                       child: ImageIcon(
                           AssetImage('assets/line_spacing_increase_icon.png')),
                     ),
@@ -260,7 +260,7 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
               alignment: Alignment.centerLeft,
               child: Padding(
                   padding:
-                      EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
+                  EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
                   child: Row(
                     children: [
                       Text(
