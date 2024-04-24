@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:project_login/Views/HomeStoryView.dart';
+import 'package:project_login/Views/MainView.dart';
+import 'package:provider/provider.dart';
+import 'ViewModels/DetailStoryViewModel.dart';
+import 'ViewModels/HomeStoryViewModel.dart';
+import 'ViewModels/SearchStoryViewModel.dart';
 import 'login_view.dart';
 import 'register_view.dart';
 void main() {
@@ -17,12 +23,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => DetailStoryViewModel()),
         ChangeNotifierProvider(create: (context) => HomeStoryViewModel())
       ],
-      child: const MaterialApp(
+      child:  MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Story App',
         home: MainPage(),
       ),
-      home: LoginPage(),
+
     );
   }
 }
