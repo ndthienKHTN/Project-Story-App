@@ -14,9 +14,6 @@ class StoryService {
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
       List<String> result =  List<String>.from(jsonData['names']);
-      String str = result.join(" === ");
-      Logger logger = Logger();
-      logger.i(str);
       return result;
     } else {
       throw Exception("Fail to fetch fetchListNameDataSource");

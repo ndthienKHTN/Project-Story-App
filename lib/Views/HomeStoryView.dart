@@ -118,28 +118,3 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
 }
-/*body: ListView.builder(
-        itemCount: stories.length,
-        itemBuilder: (context, index) {
-          final category = stories.keys.elementAt(index);
-          final categoryStories = stories[category]!;
-
-          return Column(
-            children: [
-              Text('$category List Stories'),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: ClampingScrollPhysics(),
-                itemCount: categoryStories.length,
-                itemBuilder: (context, index) {
-                  final story = categoryStories[index];
-                  return ListTile(
-                    title: Text(story.title),
-                    // Display other story properties as needed
-                  );
-                },
-              ),
-            ],
-          );
-        },
-      ),*/
