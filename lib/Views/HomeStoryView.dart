@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:project_login/Services/StoryService.dart';
 import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
@@ -98,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               MaterialPageRoute(
                                 builder: (context) => ChangeNotifierProvider(
                                   create: (context) => DetailStoryViewModel(),
-                                  child: DetailStoryScreen(storyTitle: "need to change",),
+                                  child: DetailStoryScreen(storyTitle: 'need to change',),
                                 ),
                               ),
                             );
@@ -118,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
     );
   }
-  
+
 }
 /*body: ListView.builder(
         itemCount: stories.length,

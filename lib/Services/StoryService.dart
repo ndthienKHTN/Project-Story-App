@@ -32,6 +32,25 @@ class StoryService {
   }
   Future<List<Story>> fetchSearchStory() async {
     final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/search/?datasource=Truyen123&search=ta'));
+import '../Models/ContentStory.dart';
+import '../Models/Story.dart';
+import '../Models/Category.dart' as categoryModel;
+
+class StoryService {
+  Future<List<String>> fetchListNameDataSource() async {
+    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listDataSource/'));
+
+    if (response.statusCode == 200) {
+      final dynamic jsonData = jsonDecode(response.body);
+      List<String> result =  List<String>.from(jsonData['names']);
+      return result;
+    } else {
+      throw Exception("Fail to fetch fetchListNameDataSource");
+    }
+  }
+
+  Future<List<Story>> fetchSearchStory() async {
+    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/search/?datasource=Truyen123&search=ta'));
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);
@@ -62,7 +81,7 @@ class StoryService {
       throw Exception("Failed to fetch content of story");
     }
   }
-  
+
   Future<Map<String, List<Story>>> fetchHomeStory() async {
       final response = await http.get(Uri.parse('http://localhost:3000/api/v1/home/?datasource=Truyen123'));
 

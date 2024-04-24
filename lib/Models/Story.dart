@@ -1,5 +1,8 @@
 import 'Category.dart';
 
+import 'package:flutter/cupertino.dart';
+
+
 //ip avd: 10.0.2.2
 class Story {
   String name;
@@ -25,6 +28,7 @@ class Story {
     this.detail});
 
   factory Story.fromJson(Map<String, dynamic> json) {
+
     List<Category>? categoryList = json['categoryList'] != null
         ? (json['categoryList'] as List<dynamic>).map(
             (category) => Category.fromJson(category)

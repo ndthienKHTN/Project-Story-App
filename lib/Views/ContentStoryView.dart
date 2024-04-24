@@ -62,26 +62,26 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
                           .contentDisplay.backgroundColor),
                     ),
                     child: contentStoryViewModel.contentStory !=
-                            null // sửa lại != null khi load được data
+                        null // sửa lại != null khi load được data
                         ? SingleChildScrollView(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                contentStoryViewModel.contentStory?.content ?? 'content', // load data
-                                //'contffffffffffffffffffffffffffffffffffffffffent\ncontent',
-                                // fake data
-                                style: TextStyle(
-                                    fontSize: contentStoryViewModel
-                                        .contentDisplay.textSize,
-                                    height: contentStoryViewModel
-                                        .contentDisplay.lineSpacing,
-                                    fontFamily: contentStoryViewModel
-                                        .contentDisplay.fontFamily,
-                                    color: intToColor(contentStoryViewModel
-                                        .contentDisplay.textColor)),
-                              ), // dữ liệu giả
-                            ),
-                          )
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          contentStoryViewModel.contentStory?.content ?? 'content', // load data
+                          //'contffffffffffffffffffffffffffffffffffffffffent\ncontent',
+                          // fake data
+                          style: TextStyle(
+                              fontSize: contentStoryViewModel
+                                  .contentDisplay.textSize,
+                              height: contentStoryViewModel
+                                  .contentDisplay.lineSpacing,
+                              fontFamily: contentStoryViewModel
+                                  .contentDisplay.fontFamily,
+                              color: intToColor(contentStoryViewModel
+                                  .contentDisplay.textColor)),
+                        ), // dữ liệu giả
+                      ),
+                    )
                         : const Center(child: CircularProgressIndicator()),
                   ),
                 )),
