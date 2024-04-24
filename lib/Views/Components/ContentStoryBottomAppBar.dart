@@ -7,9 +7,18 @@ class ContentStoryBottomAppBar extends StatelessWidget {
   final ContentStoryViewModel _contentStoryViewModel;
   final Function(double) onTextSizeChanged;
   final Function(double) onLineSpacingChanged;
+  final Function(String) onFontFamilyChanged;
+  final Function(int) onTextColorChanged;
+  final Function(int) onBackgroundChanged;
 
-  const ContentStoryBottomAppBar(this._contentStoryViewModel, this.onTextSizeChanged,
-      this.onLineSpacingChanged, {super.key});
+  const ContentStoryBottomAppBar(
+      this._contentStoryViewModel,
+      this.onTextSizeChanged,
+      this.onLineSpacingChanged,
+      this.onFontFamilyChanged,
+      this.onTextColorChanged,
+      this.onBackgroundChanged,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +59,19 @@ class ContentStoryBottomAppBar extends StatelessWidget {
             } else if (index == 1) {
               showModalBottomSheet(
                 context: context,
-                builder: (BuildContext context) => const ChooseChapterBottomSheet(),
+                builder: (BuildContext context) =>
+                    const ChooseChapterBottomSheet(),
               );
             } else if (index == 2) {
               showModalBottomSheet(
                 context: context,
-                builder: (BuildContext context) => ChangeDisplayBottomSheet(_contentStoryViewModel, onTextSizeChanged, onLineSpacingChanged),
+                builder: (BuildContext context) => ChangeDisplayBottomSheet(
+                    _contentStoryViewModel,
+                    onTextSizeChanged,
+                    onLineSpacingChanged,
+                    onFontFamilyChanged,
+                    onTextColorChanged,
+                    onBackgroundChanged),
               );
             } else if (index == 3) {
               print("index 3");

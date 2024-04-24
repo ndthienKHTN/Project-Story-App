@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_login/Constants.dart';
 import 'package:project_login/Views/Components/ContentStoryTopAppBar.dart';
 import 'package:provider/provider.dart';
 
@@ -7,10 +8,6 @@ import 'Components/ContentStoryBottomAppBar.dart';
 
 class ContentStoryScreen extends StatefulWidget {
   final String storyTitle;
-  static const double MIN_TEXT_SIZE = 5;
-  static const double MAX_TEXT_SIZE = 30;
-  static const double MIN_LINE_SPACING = 0.5;
-  static const double MAX_LINE_SPACING = 5;
 
   const ContentStoryScreen({super.key, required this.storyTitle});
 
@@ -27,7 +24,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     _contentStoryViewModel =
         Provider.of<ContentStoryViewModel>(context, listen: false);
     _contentStoryViewModel.fetchContentStory(widget.storyTitle);
-    _contentStoryViewModel.fetchContentDisplay(widget.storyTitle);
+    _contentStoryViewModel.fetchContentDisplay();
   }
 
   @override
@@ -50,14 +47,15 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
                   child: Container(
                     width: double.infinity,
                     height: double.infinity,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20),
                         bottomLeft: Radius.circular(0),
                         bottomRight: Radius.circular(0),
                       ),
-                      color: Colors.white,
+                      color: intToColor(contentStoryViewModel
+                          .contentDisplay.backgroundColor),
                     ),
                     child: contentStoryViewModel.contentStory !=
                             null // sửa lại != null khi load được data
@@ -66,11 +64,17 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
                               padding: const EdgeInsets.all(16.0),
                               child: Text(
                                 contentStoryViewModel.contentStory?.content ?? 'content', // load data
-                                //'contffffffffffffffffffffffffffffffffffffffffent\ncontent', // fake data
+                                //'contffffffffffffffffffffffffffffffffffffffffent\ncontent',
+                                // fake data
                                 style: TextStyle(
-                                  fontSize: contentStoryViewModel.contentDisplay.textSize,
-                                  height: contentStoryViewModel.contentDisplay.lineSpacing,
-                                ),
+                                    fontSize: contentStoryViewModel
+                                        .contentDisplay.textSize,
+                                    height: contentStoryViewModel
+                                        .contentDisplay.lineSpacing,
+                                    fontFamily: contentStoryViewModel
+                                        .contentDisplay.fontFamily,
+                                    color: intToColor(contentStoryViewModel
+                                        .contentDisplay.textColor)),
                               ), // dữ liệu giả
                             ),
                           )
@@ -78,9 +82,12 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
                   ),
                 )),
             bottomNavigationBar: ContentStoryBottomAppBar(
-                _contentStoryViewModel,
+                contentStoryViewModel,
                 onTextSizeChanged,
-                onLineSpacingChanged));
+                onLineSpacingChanged,
+                onFontFamilyChanged,
+                onTextColorChanged,
+                onBackgroundChanged));
       },
     );
   }
@@ -90,6 +97,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     setState(() {
       _contentStoryViewModel.contentDisplay.textSize = newSize;
     });
+    _contentStoryViewModel.saveDouble(TEXT_SIZE_KEY, newSize);
   }
 
   // change line spacing
@@ -97,5 +105,31 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     setState(() {
       _contentStoryViewModel.contentDisplay.lineSpacing = newSize;
     });
+    _contentStoryViewModel.saveDouble(LINE_SPACING_KEY, newSize);
+  }
+
+  void onFontFamilyChanged(String fontFamily) {
+    setState(() {
+      _contentStoryViewModel.contentDisplay.fontFamily = fontFamily;
+    });
+    _contentStoryViewModel.saveString(FONT_FAMILY_KEY, fontFamily);
+  }
+
+  void onTextColorChanged(int textColor) {
+    setState(() {
+      _contentStoryViewModel.contentDisplay.textColor = textColor;
+    });
+    _contentStoryViewModel.saveInt(TEXT_COLOR_KEY, textColor);
+  }
+
+  void onBackgroundChanged(int backgroundColor) {
+    setState(() {
+      _contentStoryViewModel.contentDisplay.backgroundColor = backgroundColor;
+    });
+    _contentStoryViewModel.saveInt(BACKGROUND_COLOR_KEY, backgroundColor);
+  }
+
+  Color intToColor(int colorValue) {
+    return Color(colorValue);
   }
 }

@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Story App',
         //home: ContentStoryScreen(storyTitle: 'choc-tuc-vo-yeu-mua-mot-tang-mot',),
-         home: HomeScreen(),
+        home: HomeScreen(),
       ),
     );
   }
