@@ -24,14 +24,14 @@ class _ContentStoryTopAppBarState extends State<ContentStoryTopAppBar>{
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
-        icon: Image.asset('assets/back_icon.png'), // Icon bên trái
+        icon: Image.asset('assets/images/back_icon.png'), // Icon bên trái
         onPressed: () {
           Navigator.pop(context);
         },
       ),
       actions: [
         IconButton(
-          icon: Image.asset('assets/download_icon.png'),
+          icon: Image.asset('assets/images/download_icon.png'),
           onPressed: () {
             // Xử lý khi nhấn vào icon bên phải
           },

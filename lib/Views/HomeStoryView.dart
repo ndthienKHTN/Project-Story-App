@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../Models/Story.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
 import 'DetailStoryView.dart';
-import 'Components_DetailStory/DetailStoryView.dart';
+import 'Components_DetailStory/DetailStoryView_temp.dart';
 import 'SearchStoryView.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               MaterialPageRoute(
                                 builder: (context) => ChangeNotifierProvider(
                                   create: (context) => DetailStoryViewModel(),
-                                  child: DetailStoryScreen(storyTitle: 'need to change',),
+                                  child: DetailStoryScreen(storyTitle: "need to change",),
                                 ),
                               ),
                             );

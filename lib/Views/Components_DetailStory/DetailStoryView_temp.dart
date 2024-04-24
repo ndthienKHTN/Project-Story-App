@@ -7,16 +7,16 @@ import '../../ViewModels/DetailStoryViewModel.dart';
 import '../ContentStoryView.dart';
 import 'DownloadChapters.dart';
 
-class DetailStoryScreen extends StatefulWidget {
+class DetailStoryScreen1 extends StatefulWidget {
   final String storyTitle;
 
-  const DetailStoryScreen({required this.storyTitle});
+  const DetailStoryScreen1({required this.storyTitle});
 
   @override
-  _DetailStoryScreenState createState() => _DetailStoryScreenState();
+  _DetailStoryScreenState1 createState() => _DetailStoryScreenState1();
 }
 
-class _DetailStoryScreenState extends State<DetailStoryScreen> {
+class _DetailStoryScreenState1 extends State<DetailStoryScreen1> {
   late DetailStoryViewModel _detailStoryViewModel;
 
   @override

@@ -27,14 +27,6 @@ class ContentStoryViewModel extends ChangeNotifier {
 
   List<String> get fontNames => _fontNames;
 
-
-class ContentStoryViewModel extends ChangeNotifier {
-  final StoryService _storyService = StoryService();
-  ContentStory? _contentStory;
-  ContentDisplay contentDisplay = ContentDisplay.defaultDisplay();
-
-  ContentStory? get contentStory => _contentStory;
-
   Future<void> fetchContentStory(String storyTitle) async {
     try {
       _contentStory = await _storyService.fetchContentStory(storyTitle);
@@ -74,17 +66,13 @@ class ContentStoryViewModel extends ChangeNotifier {
           fontFamily: fontFamily ?? DEFAULT_FONT_FAMILY,
           textColor: textColor ?? DEFAULT_TEXT_COLOR,
           backgroundColor: backgroundColor ?? DEFAULT_BACKGROUND_COLOR);
-  Future<void> fetchContentDisplay(String storyTitle) async {
-    try {
-      List<String> fontLists = await getFontFileNames();
-      contentDisplay = await ContentDisplay(20, 2, fontLists);
-      //contentDisplay.fontLists = await getFontFileNames();
       notifyListeners();
     } catch (e) {
       // Handle error
       print('Error fetching story content: $e');
     }
   }
+
 
   Future<void> saveString(String key, String value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

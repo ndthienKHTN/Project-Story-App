@@ -7,32 +7,29 @@ import '../Models/ChapterPagination.dart';
 import '../Models/ContentStory.dart';
 import '../Models/Story.dart';
 import '../Models/Category.dart' as categoryModel;
-
-class StoryService {
-  Future<List<String>> fetchListNameDataSource() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listDataSource/'));
-
-    if (response.statusCode == 200) {
-      final dynamic jsonData = jsonDecode(response.body);
-      List<String> result =  List<String>.from(jsonData['names']);
-      String str = result.join(" === ");
-      Logger logger = Logger();
-      logger.i(str);
-      return result;
-    } else {
-        throw Exception("Fail to fetch fetchListNameDataSource");
-    }
-  }
-
-  Future<List<Story>> fetchSearchStory() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/search/?datasource=Truyen123&search=ta'));
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../Models/ContentStory.dart';
 import '../Models/Story.dart';
 
+
+
 class StoryService {
+  Future<List<String>> fetchListNameDataSource() async {
+      final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listDataSource/'));
+
+      if (response.statusCode == 200) {
+        final dynamic jsonData = jsonDecode(response.body);
+        List<String> result =  List<String>.from(jsonData['names']);
+        String str = result.join(" === ");
+        Logger logger = Logger();
+        logger.i(str);
+        return result;
+      } else {
+        throw Exception("Fail to fetch fetchListNameDataSource");
+      }
+  }
   Future<List<Story>> fetchSearchStory() async {
     final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/search/?datasource=Truyen123&search=ta'));
 

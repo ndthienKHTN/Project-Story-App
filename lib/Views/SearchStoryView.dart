@@ -7,7 +7,7 @@ import '../ViewModels/SearchStoryViewModel.dart';
 import 'DetailStoryView.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
 import '../ViewModels/SearchStoryViewModel.dart';
-import 'Components_DetailStory/DetailStoryView.dart';
+import 'Components_DetailStory/DetailStoryView_temp.dart';
 
 class SearchScreen extends StatefulWidget {
   late String searchQuery;
