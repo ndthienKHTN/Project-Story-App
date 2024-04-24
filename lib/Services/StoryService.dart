@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'dart:convert';
 
+import '../Models/ChapterPagination.dart';
 import '../Models/ContentStory.dart';
 import '../Models/Story.dart';
 import '../Models/Category.dart' as categoryModel;
@@ -91,4 +92,16 @@ class StoryService {
       throw Exception("Failed to fetch content of story");
     }
   }
+
+  Future<ChapterPagination> fetchChapterPagination(String datasource, String title, String pageNumber) async {
+    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listChapter/?datasource=Truyen123&title=vo-than-chua-te&page=1'));
+
+    if (response.statusCode == 200) {
+      final dynamic jsonData = jsonDecode(response.body);
+      return ChapterPagination.fromJson(jsonData);
+    } else {
+      throw Exception("Failed to fetch Chapter Pagination");
+    }
+  }
+
 }

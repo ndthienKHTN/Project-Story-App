@@ -24,6 +24,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
     _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
     //_fetchStoryDetails();
     _detailStoryViewModel.fetchDetailsStory(widget.storyTitle);
+    _detailStoryViewModel.fetchChapterPagination(widget.storyTitle);
   }
 
   Future<void> _fetchStoryDetails() async {
@@ -61,8 +62,39 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                   },
                   child: Text('Read'),
                 ),
-                // Add more details as needed
+                Expanded(
+                    child: Consumer<DetailStoryViewModel>(
+                      builder: (context, chapterListViewModel, _) {
+                        if (chapterListViewModel.chapterPagination == null) {
+                          return Center(child: CircularProgressIndicator());
+                        } else {
+                          return ListView.builder(
+                            itemCount: chapterListViewModel.chapterPagination?.listChapter?.length,
+                            itemBuilder: (context, index) {
+                              final chapter = chapterListViewModel.chapterPagination!.listChapter?[index];
+                              return ListTile(
+                                title: Text(chapter!.content),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChangeNotifierProvider(
+                                            create: (context) => ContentStoryViewModel(),
+                                            child:  ContentStoryScreen(storyTitle: chapter.content)
+                                        ),
+                                      ),
+                                  );
+                                },
+
+                              );
+                            },
+                          );
+                        }
+                      },
+                    )
+                )
               ],
+
             );
           }
         },
