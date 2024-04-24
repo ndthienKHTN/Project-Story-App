@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../Models/Story.dart';
-import '../ViewModels/ContenStoryViewModel.dart';
+import '../ViewModels/ContentStoryViewModel.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
 import 'ContentStoryView.dart';
 
