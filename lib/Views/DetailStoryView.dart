@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_login/Views/Components_DetailStory/DownloadChapters.dart';
+import 'package:project_login/Views/DownloadChaptersView.dart';
 import 'package:provider/provider.dart';
 import '../Models/Story.dart';
 import '../ViewModels/ContentStoryViewModel.dart';

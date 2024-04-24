@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:project_login/Views/ContentDisplay.dart';
+import 'package:project_login/Views/ContentDisplayView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Constants.dart';
@@ -10,7 +10,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:project_login/Views/ContentDisplay.dart';
+import 'package:project_login/Views/ContentDisplayView.dart';
 import 'package:yaml/yaml.dart';
 
 import '../Models/ContentStory.dart';

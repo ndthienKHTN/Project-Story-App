@@ -5,7 +5,7 @@ import '../../Models/Story.dart';
 import '../../ViewModels/ContentStoryViewModel.dart';
 import '../../ViewModels/DetailStoryViewModel.dart';
 import '../ContentStoryView.dart';
-import 'DownloadChapters.dart';
+import '../DownloadChaptersView.dart';
 
 class DetailStoryScreen1 extends StatefulWidget {
   final String storyTitle;
