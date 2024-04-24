@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       child:  MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Story App',
-        home: MainPage(),
+        home: HomeScreen(),//MainPage(),
       ),
 
     );
