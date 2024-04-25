@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import '../Models/Story.dart';
 import '../ViewModels/HomeStoryViewModel.dart';
 
 class HomePage extends StatefulWidget {
@@ -239,7 +236,7 @@ class ListViewBook extends StatelessWidget {
                 return Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(top: 20),
+                      padding: const EdgeInsets.only(top: 20),
                       child: Text.rich(
                         TextSpan(
                           children: [
@@ -378,7 +375,6 @@ class GridViewBook extends StatelessWidget {
         if (storyNotifier.stories.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          List<Story> liststorys=storyNotifier.stories['full']!;
           return Consumer<HomeStoryViewModel>(
             builder: (context,storyNotifier,_){
               if (storyNotifier.stories.isEmpty) {
@@ -392,7 +388,7 @@ class GridViewBook extends StatelessWidget {
                       return Column(
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(top: 20),
+                            padding: const EdgeInsets.only(top: 20),
                             child: Text.rich(
                               TextSpan(
                                 children: [
