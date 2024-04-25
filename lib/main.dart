@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => SearchStoryViewModel()),
         ChangeNotifierProvider(create: (context) => DetailStoryViewModel()),
-        ChangeNotifierProvider(create: (context) => HomeStoryViewModel())
+        ChangeNotifierProvider(create: (context) => HomeStoryViewModel()),
+
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
