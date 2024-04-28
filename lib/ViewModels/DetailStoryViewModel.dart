@@ -14,10 +14,10 @@ class DetailStoryViewModel extends ChangeNotifier {
   ChapterPagination? _chapterPagination;
   ChapterPagination? get chapterPagination => _chapterPagination;
 
-  Future<void> fetchDetailsStory(String title) async {
+  Future<void> fetchDetailsStory(String title, String datasource) async {
     try {
       // Fetch story details from the API using the storyId
-      _story = await _storyService.fetchDetailStory(title);
+      _story = await _storyService.fetchDetailStory(title,datasource);
       Logger logger = Logger();
       logger.i(_story.toString());
       notifyListeners();
@@ -27,10 +27,10 @@ class DetailStoryViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchChapterPagination(String title) async {
+  Future<void> fetchChapterPagination(String title, int pageNumber, String datasource) async {
     try {
       // Fetch story details from the API using the storyId
-      _chapterPagination = await _storyService.fetchChapterPagination('voz',title,'1');
+      _chapterPagination = await _storyService.fetchChapterPagination(title,pageNumber,datasource);
       Logger logger = Logger();
       logger.i(_chapterPagination.toString());
       notifyListeners();

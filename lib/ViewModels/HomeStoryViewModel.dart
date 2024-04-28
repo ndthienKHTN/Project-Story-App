@@ -17,7 +17,7 @@ class HomeStoryViewModel extends ChangeNotifier {
   Future<void> fetchHomeStories() async {
     try {
       _stories = await _storyService.fetchHomeStory();
-      sourceBooks= await _storyService.fetchListNameDataSource();
+      sourceBooks = await _storyService.fetchListNameDataSource();
       notifyListeners();
     } catch (e) {
       // Handle error

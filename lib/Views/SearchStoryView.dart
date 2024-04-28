@@ -63,7 +63,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             MaterialPageRoute(
                               builder: (context) => ChangeNotifierProvider(
                                 create: (context) => DetailStoryViewModel(),
-                                child: DetailStoryScreen(storyTitle: 'need to change',),
+                                child: DetailStoryScreen(storyTitle: story.title,datasource: "Truyenfull",),
                               ),
                             ),
                           );

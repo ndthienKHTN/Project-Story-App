@@ -24,11 +24,11 @@ class _DetailStoryScreenState1 extends State<DetailStoryScreen1> {
     super.initState();
     _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
     //_fetchStoryDetails();
-    _detailStoryViewModel.fetchDetailsStory(widget.storyTitle);
+    _detailStoryViewModel.fetchDetailsStory(widget.storyTitle,"Truyenfull");
   }
 
   Future<void> _fetchStoryDetails() async {
-    await _detailStoryViewModel.fetchDetailsStory(widget.storyTitle);
+    await _detailStoryViewModel.fetchDetailsStory(widget.storyTitle,"Truyenfull");
   }
   final List<String> items = [
     'TruyenFull',
@@ -308,7 +308,7 @@ class _DetailStoryScreenState1 extends State<DetailStoryScreen1> {
                                      MaterialPageRoute(
                                        builder: (context) => ChangeNotifierProvider(
                                         create: (_) => ContentStoryViewModel(),
-                                         child: ContentStoryScreen(storyTitle: storyDetailViewModel.story?.name != null ? storyDetailViewModel.story!.name : ""),
+                                         child: ContentStoryScreen(storyTitle: storyDetailViewModel.story?.name != null ? storyDetailViewModel.story!.name : "", datasource: 'Truyenfull',),
                                        ),
                                      ),
                                    );

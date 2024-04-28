@@ -97,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               MaterialPageRoute(
                                 builder: (context) => ChangeNotifierProvider(
                                   create: (context) => DetailStoryViewModel(),
-                                  child: DetailStoryScreen(storyTitle: 'need to change',),
+                                  child: DetailStoryScreen(storyTitle: story.title, datasource: "Truyenfull",),
                                 ),
                               ),
                             );

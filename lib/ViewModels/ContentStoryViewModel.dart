@@ -27,9 +27,9 @@ class ContentStoryViewModel extends ChangeNotifier {
 
   List<String> get fontNames => _fontNames;
 
-  Future<void> fetchContentStory(String storyTitle) async {
+  Future<void> fetchContentStory(String storyTitle, int pageNumber, String datasource) async {
     try {
-      _contentStory = await _storyService.fetchContentStory(storyTitle);
+      _contentStory = await _storyService.fetchContentStory(storyTitle, pageNumber, datasource);
       notifyListeners();
     } catch (e) {
       // Handle error

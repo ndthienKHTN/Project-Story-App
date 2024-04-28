@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project_login/ViewModels/DetailStoryViewModel.dart';
+import 'package:project_login/Views/DetailStoryView.dart';
 import 'package:provider/provider.dart';
 import '../Models/Story.dart';
 import '../ViewModels/HomeStoryViewModel.dart';
@@ -212,88 +214,102 @@ class ListViewBook extends StatelessWidget {
         if (storyNotifier.stories.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          List<Story> liststorys=storyNotifier.stories['full']!;
-          return ListView.builder(
-            itemCount: liststorys.length,
+          List<Story> listStories=storyNotifier.stories['full']!;
+          return  ListView.builder(
+            itemCount: listStories.length,
             itemBuilder: (context,index){
-              return Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 0.5,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.yellow, width: 1),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Image(image: NetworkImage(liststorys[index].cover), height: 101, width: 84),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider(
+                            create: (context) => DetailStoryViewModel(),
+                            child: DetailStoryScreen(storyTitle: listStories[index].title, datasource: "Truyenfull",),
+                          )
+                      )
+                  );
+                },
+                child:  Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 0.5,
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 241,
-                              child: Text(
-                                liststorys[index].name,
-                                maxLines: 1,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  overflow: TextOverflow.ellipsis,
-                                  color: Colors.white,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.yellow, width: 1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Image(image: NetworkImage(listStories[index].cover), height: 101, width: 84),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 241,
+                                child: Text(
+                                  listStories[index].name,
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    overflow: TextOverflow.ellipsis,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: Text(
-                                'By: ${liststorys[index].author}',
-                                maxLines: 1,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  overflow: TextOverflow.ellipsis,
-                                  color: Colors.white,
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5.0),
+                                child: Text(
+                                  'By: ${listStories[index].author}',
+                                  maxLines: 1,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    overflow: TextOverflow.ellipsis,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: Row(
-                                children: [
-                                  for (int j = 0; j < (liststorys[index].categories!.length < 3 ? liststorys[index].categories!.length : 3); j++)
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(horizontal: 3),
-                                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                                      decoration: BoxDecoration(
-                                        color: Colors.black,
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(color: Colors.white, width: 1),
-                                      ),
-                                      child: Text(
-                                        liststorys[index].categories![j].content,
-                                        style: const TextStyle(
-                                          fontSize: 7,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5.0),
+                                child: Row(
+                                  children: [
+                                    for (int j = 0; j < (listStories[index].categories!.length < 3 ? listStories[index].categories!.length : 3); j++)
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black,
+                                          borderRadius: BorderRadius.circular(20),
+                                          border: Border.all(color: Colors.white, width: 1),
+                                        ),
+                                        child: Text(
+                                          listStories[index].categories![j].content,
+                                          style: const TextStyle(
+                                            fontSize: 7,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                )
               );
+
             },
           );
         }
@@ -301,8 +317,6 @@ class ListViewBook extends StatelessWidget {
     );
   }
 }
-
-
 
 class GridViewBook extends StatelessWidget {
   const GridViewBook({super.key});
@@ -315,9 +329,9 @@ class GridViewBook extends StatelessWidget {
         if (storyNotifier.stories.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          List<Story> liststorys=storyNotifier.stories['full']!;
+          List<Story> listStories=storyNotifier.stories['full']!;
           return GridView.builder(
-            itemCount: liststorys.length,
+            itemCount: listStories.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3, // Số lượng cột trong grid view
               mainAxisSpacing: 10, // Khoảng cách giữa các hàng
@@ -338,7 +352,7 @@ class GridViewBook extends StatelessWidget {
                         border: Border.all(color: Colors.yellow, width: 2),
                       ),
                       child: Image(
-                        image: NetworkImage(liststorys[index].cover),
+                        image: NetworkImage(listStories[index].cover),
                         height: 120,
                         width: 110,
                       ),
@@ -349,7 +363,7 @@ class GridViewBook extends StatelessWidget {
                         SizedBox(
                           width: 99,
                           child: Text(
-                            liststorys[index].name,
+                            listStories[index].name,
                             style: const TextStyle(
                               fontSize: 12,
                               overflow: TextOverflow.ellipsis,
@@ -360,7 +374,7 @@ class GridViewBook extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 3.0),
                           child: Text(
-                            'By: ${liststorys[index].author}',
+                            'By: ${listStories[index].author}',
                             maxLines: 1,
                             style: const TextStyle(
                               fontSize: 8,

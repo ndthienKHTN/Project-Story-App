@@ -8,8 +8,8 @@ import 'ContentStoryView.dart';
 
 class DetailStoryScreen extends StatefulWidget {
   final String storyTitle;
-
-  const DetailStoryScreen({required this.storyTitle});
+  final String datasource;
+  const DetailStoryScreen({super.key, required this.storyTitle,required this.datasource});
 
   @override
   _DetailStoryScreenState createState() => _DetailStoryScreenState();
@@ -23,12 +23,12 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
     super.initState();
     _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
     //_fetchStoryDetails();
-    _detailStoryViewModel.fetchDetailsStory(widget.storyTitle);
-    _detailStoryViewModel.fetchChapterPagination(widget.storyTitle);
+    _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, widget.datasource);
+    _detailStoryViewModel.fetchChapterPagination(widget.storyTitle,1, widget.datasource);
   }
 
   Future<void> _fetchStoryDetails() async {
-    await _detailStoryViewModel.fetchDetailsStory(widget.storyTitle);
+    await _detailStoryViewModel.fetchDetailsStory(widget.storyTitle,widget.datasource);
   }
   bool _isBtnDescribePressed = false;
   bool _isBtnChapterPressed = false;
@@ -310,7 +310,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                         MaterialPageRoute(
                                           builder: (context) => ChangeNotifierProvider(
                                             create: (_) => ContentStoryViewModel(),
-                                            child: ContentStoryScreen(storyTitle: storyDetailViewModel.story?.name != null ? storyDetailViewModel.story!.name : ""),
+                                            child: ContentStoryScreen(storyTitle: storyDetailViewModel.story?.name != null ? storyDetailViewModel.story!.name : "", datasource: widget.datasource,),
                                           ),
                                         ),
                                       );

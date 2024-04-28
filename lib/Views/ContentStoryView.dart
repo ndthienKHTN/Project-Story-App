@@ -8,12 +8,13 @@ import 'Components/ContentStoryBottomAppBar.dart';
 
 class ContentStoryScreen extends StatefulWidget {
   final String storyTitle;
+  final String datasource;
   static const double MIN_TEXT_SIZE = 5;
   static const double MAX_TEXT_SIZE = 30;
   static const double MIN_LINE_SPACING = 0.5;
   static const double MAX_LINE_SPACING = 5;
 
-  const ContentStoryScreen({super.key, required this.storyTitle});
+  const ContentStoryScreen({super.key, required this.storyTitle, required this.datasource});
 
   @override
   State<StatefulWidget> createState() => _ContentStoryScreenState();
@@ -27,7 +28,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     super.initState();
     _contentStoryViewModel =
         Provider.of<ContentStoryViewModel>(context, listen: false);
-    _contentStoryViewModel.fetchContentStory(widget.storyTitle);
+    _contentStoryViewModel.fetchContentStory(widget.storyTitle,1,widget.datasource);
     _contentStoryViewModel.fetchContentDisplay();
   }
 
