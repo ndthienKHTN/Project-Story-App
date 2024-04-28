@@ -226,7 +226,7 @@ class ListViewBook extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (context) => ChangeNotifierProvider(
                             create: (context) => DetailStoryViewModel(),
-                            child: DetailStoryScreen(storyTitle: listStories[index].title, datasource: "Truyenfull",),
+                            child: DetailStoryScreen(storyTitle: listStories[index].title, datasource: storyNotifier.sourceBook,),
                           )
                       )
                   );

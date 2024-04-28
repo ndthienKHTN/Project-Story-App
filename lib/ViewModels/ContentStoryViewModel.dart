@@ -74,7 +74,7 @@ class ContentStoryViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       // Handle error
-      print('Error fetching story content: $e');
+      print('Error fetching story content display: $e');
     }
   }
 
@@ -87,7 +87,7 @@ class ContentStoryViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       // Handle error
-      print('Error fetching story details: $e');
+      print('Error fetching chapter pagination: $e');
     }
   }
 

@@ -21,7 +21,7 @@ class HomeStoryViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       // Handle error
-      print('Error fetching stories: $e');
+      print('Error fetching home stories: $e');
     }
   }
 

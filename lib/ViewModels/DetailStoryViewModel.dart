@@ -36,7 +36,7 @@ class DetailStoryViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       // Handle error
-      print('Error fetching story details: $e');
+      print('Error fetching chapter pagination: $e');
     }
   }
 }
