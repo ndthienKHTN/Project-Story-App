@@ -10,9 +10,9 @@ class SearchStoryViewModel extends ChangeNotifier {
   List<Story> _stories = [];
   List<Story> get stories => _stories;
 
-  Future<void> fetchSearchStories() async {
+  Future<void> fetchSearchStories(String query, String datasource) async {
     try {
-      _stories = await _storyService.fetchSearchStory();
+      _stories = await _storyService.fetchSearchStory(query,datasource);
       Logger logger = Logger();
       logger.i(stories[0].toString());
       notifyListeners();

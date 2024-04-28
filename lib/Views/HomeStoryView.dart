@@ -24,7 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _homeStoryViewModel = Provider.of<HomeStoryViewModel>(context, listen: false);
 
-    _homeStoryViewModel.fetchHomeStories();
+    //TODO: need to change
+    _homeStoryViewModel.fetchHomeStories("Truyenfull");
   }
 
 

@@ -18,7 +18,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _homeStoryViewModel = Provider.of<HomeStoryViewModel>(context, listen: false);
-    _homeStoryViewModel.fetchHomeStories();
+    //TODO: need to change
+    _homeStoryViewModel.fetchHomeStories("Truyenfull");
   }
 
   @override

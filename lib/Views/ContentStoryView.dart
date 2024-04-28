@@ -30,6 +30,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
         Provider.of<ContentStoryViewModel>(context, listen: false);
     _contentStoryViewModel.fetchContentStory(widget.storyTitle,1,widget.datasource);
     _contentStoryViewModel.fetchContentDisplay();
+    _contentStoryViewModel.fetchChapterPagination(widget.storyTitle, 1, widget.datasource);
   }
 
   @override
@@ -46,7 +47,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
                 height: double.infinity,
                 decoration: const BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('assets/background_home.png'),
+                        image: AssetImage('assets/images/background_home.png'),
                         fit: BoxFit.fill)),
                 child: SafeArea(
                   child: Container(

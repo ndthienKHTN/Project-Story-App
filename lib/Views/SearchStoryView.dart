@@ -23,7 +23,8 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
     _searchStoryViewModel = Provider.of<SearchStoryViewModel>(context, listen: false);
 
-    _searchStoryViewModel.fetchSearchStories();
+    //TODO: need to change
+    _searchStoryViewModel.fetchSearchStories(searchQuery, "Truyenfull");
   }
 
   @override
