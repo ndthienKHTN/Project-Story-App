@@ -40,7 +40,7 @@ class Story {
         link: json['link'],
         author: json['author'],
         title: json['title'],
-        view: json['view'],
+        view: json.containsKey('detail') ? json['view'] : null,
         description: json['description'],
         authorLink: json['authorLink'],
         categories: categoryList,
