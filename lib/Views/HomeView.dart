@@ -20,6 +20,7 @@ class _HomePageState extends State<HomePage> {
     _homeStoryViewModel = Provider.of<HomeStoryViewModel>(context, listen: false);
     //TODO: need to change
     _homeStoryViewModel.fetchHomeStories("Truyenfull");
+    _homeStoryViewModel.fetchListCategories("Truyenfull");
   }
 
   @override

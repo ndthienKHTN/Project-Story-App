@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
+import 'package:project_login/Models/Category.dart';
 
 import '../Models/Story.dart';
 import '../Services/StoryService.dart';
@@ -14,6 +15,8 @@ class HomeStoryViewModel extends ChangeNotifier {
   int indexSourceBook=0;
   bool listOn=true;
 
+  List<Category> _listCategories = <Category>[];
+  List<Category> get listCategories => _listCategories;
   Future<void> fetchHomeStories(String datasource) async {
     try {
       _stories = await _storyService.fetchHomeStory(datasource);
@@ -25,6 +28,15 @@ class HomeStoryViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> fetchListCategories(String datasource) async {
+    try {
+      _listCategories = await _storyService.fetchListCategory(datasource);
+      notifyListeners();
+    } catch (e) {
+      // Handle error
+      print('Error fetching home stories - list categories: $e');
+    }
+  }
 
   void ChangeSourceBook(String newSourceBook){
     this.sourceBook=newSourceBook;
