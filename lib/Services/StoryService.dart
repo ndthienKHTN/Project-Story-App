@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'dart:convert';
 
+import '../Models/ChapterPagination.dart';
 import '../Models/ContentStory.dart';
 import '../Models/Story.dart';
 import '../Models/Category.dart' as categoryModel;
@@ -20,18 +20,18 @@ class StoryService {
     }
   }
 
-  Future<List<Story>> fetchSearchStory() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/search/?datasource=Truyen123&search=ta'));
+  Future<List<Story>> fetchSearchStory(String query, String datasource) async {
+    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/search/?datasource=$datasource&search=$query'));
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);
       return jsonData.map((json) => Story.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to fetch story');
+      throw Exception('Failed to fetch search story');
     }
   }
-  Future<Story> fetchDetailStory(String title) async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/detailStory/?datasource=Truyen123&title=choc-tuc-vo-yeu-mua-mot-tang-mot'));
+  Future<Story> fetchDetailStory(String title, String datasource) async {
+    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/detailStory/?datasource=$datasource&title=$title'));
 
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
@@ -39,11 +39,11 @@ class StoryService {
       logger.i(Story.fromJson(jsonData).toString());
       return Story.fromJson(jsonData);
     } else {
-      throw Exception('Failed to fetch story');
+      throw Exception('Failed to fetch detail story');
     }
   }
-  Future<ContentStory> fetchContentStory(String storyTitle) async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/contentStory/?datasource=Truyen123&title=choc-tuc-vo-yeu-mua-mot-tang-mot&chap=1'));
+  Future<ContentStory> fetchContentStory(String storyTitle, int pageNumber, String datasource) async {
+    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/contentStory/?datasource=$datasource&title=$storyTitle&chap=$pageNumber'));
 
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
@@ -53,8 +53,8 @@ class StoryService {
     }
   }
 
-  Future<Map<String, List<Story>>> fetchHomeStory() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/home/?datasource=Truyen123'));
+  Future<Map<String, List<Story>>> fetchHomeStory(String datasource) async {
+    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/home/?datasource=$datasource'));
 
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
@@ -67,7 +67,7 @@ class StoryService {
       return mapStories;
 
     } else {
-      throw Exception("Failed to fetch content of story");
+      throw Exception("Failed to fetch home of story");
     }
   }
 
@@ -76,7 +76,7 @@ class StoryService {
   }
 
   Future<List<categoryModel.Category>> fetchListCategory(String datasource) async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listCategory/?datasource=Truyen123'));
+    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listCategory/?datasource=$datasource'));
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);
@@ -85,7 +85,20 @@ class StoryService {
       logger.i(listCategories[0].toString());
       return listCategories;
     } else {
-      throw Exception("Failed to fetch content of story");
+      throw Exception("Failed to fetch list of category");
     }
   }
+
+  Future<ChapterPagination> fetchChapterPagination(String title, int pageNumber, String datasource) async {
+    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listChapter/?datasource=$datasource&title=$title&page=$pageNumber'));
+
+    if (response.statusCode == 200) {
+      final dynamic jsonData = jsonDecode(response.body);
+      return ChapterPagination.fromJson(jsonData);
+    } else {
+      throw Exception("Failed to fetch Chapter Pagination");
+    }
+  }
+
 }
+

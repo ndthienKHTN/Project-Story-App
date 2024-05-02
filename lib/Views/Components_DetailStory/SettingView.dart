@@ -69,6 +69,7 @@ class _SortSourceBookState extends State<SortSourceBook> {
             sourceBookNotifier.Reorder(oldIndex, newIndex);
             sourceBookNotifier.ChangeIndex(0);
             sourceBookNotifier.ChangeSourceBook(sourceBookNotifier.sourceBooks[0]);
+            sourceBookNotifier.fetchHomeStories(sourceBookNotifier.sourceBooks[0]);
           },
         );
       },

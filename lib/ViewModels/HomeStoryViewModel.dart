@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:project_login/Models/Category.dart';
 import '../Models/Story.dart';
 import '../Services/StoryService.dart';
 
@@ -7,15 +8,16 @@ class HomeStoryViewModel extends ChangeNotifier {
   final StoryService _storyService = StoryService();
   Map<String, List<Story>> _stories = <String, List<Story>>{};
   Map<String, List<Story>> get stories => _stories;
+  List<Category> listCategory=[];
   List<String> sourceBooks=[];
-  late String sourceBook;
+  String sourceBook='';
   int indexSourceBook=0;
   bool listOn=true;
 
-  Future<void> fetchHomeStories() async {
+  Future<void> fetchHomeStories(String datasource) async {
     try {
       _stories.clear();
-      _stories = await _storyService.fetchHomeStory();
+      _stories = await _storyService.fetchHomeStory(datasource);
       notifyListeners();
     } catch (e) {
       // Handle error
@@ -28,8 +30,23 @@ class HomeStoryViewModel extends ChangeNotifier {
       sourceBooks.clear();
       sourceBooks= await _storyService.fetchListNameDataSource();
       if(sourceBooks.isNotEmpty){
-        sourceBook=sourceBooks[0];
+        ChangeSourceBook(sourceBooks[0]);
+        //TODO
+        //fetchHomeCategories();
+        fetchHomeStories(sourceBooks[0]);
       }
+      notifyListeners();
+    }
+    catch (e) {
+      // Handle error
+      print('Error fetching stories: $e');
+    }
+  }
+
+  Future<void> fetchHomeCategories() async{
+    try{
+      listCategory.clear();
+      listCategory=await _storyService.fetchListCategory(sourceBook);
       notifyListeners();
     }
     catch (e) {

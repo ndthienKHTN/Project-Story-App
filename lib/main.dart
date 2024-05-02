@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
 import 'package:project_login/ViewModels/SearchStoryViewModel.dart';
-import 'package:project_login/Views/MainView.dart';
 import 'package:provider/provider.dart';
 import 'ViewModels/DetailStoryViewModel.dart';
+import 'Views/Components_DetailStory/MainView.dart';
 
 void main() {
   runApp(const MyApp());

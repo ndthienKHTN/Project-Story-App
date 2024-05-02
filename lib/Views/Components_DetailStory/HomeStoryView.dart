@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:project_login/Services/StoryService.dart';
 import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
 import 'package:provider/provider.dart';
-
-import '../Models/Story.dart';
-import '../ViewModels/DetailStoryViewModel.dart';
+import '../../ViewModels/DetailStoryViewModel.dart';
 import 'DetailStoryView.dart';
 import 'SearchStoryView.dart';
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -14,7 +13,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  //late Map<String, List<Story>> _stories =  <String, List<Story>>{};
   late HomeStoryViewModel _homeStoryViewModel;
 
   TextEditingController _searchController = TextEditingController();
@@ -23,7 +21,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _homeStoryViewModel = Provider.of<HomeStoryViewModel>(context, listen: false);
 
-    _homeStoryViewModel.fetchHomeStories();
+    //TODO: need to change
+    _homeStoryViewModel.fetchHomeStories("Truyenfull");
   }
 
 
@@ -96,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               MaterialPageRoute(
                                 builder: (context) => ChangeNotifierProvider(
                                   create: (context) => DetailStoryViewModel(),
-                                  child: DetailStoryScreen(storyTitle: 'need to change',),
+                                  child: DetailStoryScreen(storyTitle: story.title, datasource: "Truyenfull",),
                                 ),
                               ),
                             );

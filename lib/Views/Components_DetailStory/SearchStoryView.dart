@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../Services/StoryService.dart';
-import '../ViewModels/DetailStoryViewModel.dart';
-import '../ViewModels/SearchStoryViewModel.dart';
+import '../../Services/StoryService.dart';
+import '../../ViewModels/DetailStoryViewModel.dart';
+import '../../ViewModels/SearchStoryViewModel.dart';
 import 'DetailStoryView.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -20,7 +19,8 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
     _searchStoryViewModel = Provider.of<SearchStoryViewModel>(context, listen: false);
 
-    _searchStoryViewModel.fetchSearchStories();
+    //TODO: need to change
+    _searchStoryViewModel.fetchSearchStories(searchQuery, "Truyenfull");
   }
 
   @override
@@ -60,7 +60,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             MaterialPageRoute(
                               builder: (context) => ChangeNotifierProvider(
                                 create: (context) => DetailStoryViewModel(),
-                                child: DetailStoryScreen(storyTitle: 'need to change',),
+                                child: DetailStoryScreen(storyTitle: story.title, datasource: "Truyenfull",),
                               ),
                             ),
                           );
