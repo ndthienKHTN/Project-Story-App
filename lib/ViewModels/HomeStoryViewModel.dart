@@ -1,14 +1,16 @@
-import 'package:flutter/cupertino.dart';
-import 'package:project_login/Models/Category.dart';
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Models/Story.dart';
 import '../Services/StoryService.dart';
+import '../Models/Category.dart' as categoryModel;
 
 
 class HomeStoryViewModel extends ChangeNotifier {
   final StoryService _storyService = StoryService();
   Map<String, List<Story>> _stories = <String, List<Story>>{};
   Map<String, List<Story>> get stories => _stories;
-  List<Category> listCategory=[];
+  List<categoryModel.Category> listCategory=[];
   List<String> sourceBooks=[];
   String sourceBook='';
   int indexSourceBook=0;
@@ -21,29 +23,59 @@ class HomeStoryViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       // Handle error
-      print('Error fetching stories: $e');
+      if (kDebugMode) {
+        print('Error fetching stories: $e');
+      }
     }
   }
 
   Future<void> fetchHomeSourceBooks() async{
     try{
       sourceBooks.clear();
-      sourceBooks= await _storyService.fetchListNameDataSource();
+      List<String> sourceBookstmp=await _storyService.fetchListNameDataSource();
+      List<String>? sourceBookstmp2=[];
+      sourceBookstmp2 = await getStringList("LIST_SOURCE");
+      List<String>tmp2=[];
+      tmp2.addAll(sourceBookstmp2!);
+      if(checkSimilarity(sourceBookstmp, tmp2)){
+        sourceBooks=sourceBookstmp2;
+      }
+      else{
+        //Kiểm tra nguồn bị xóa và remove
+        for(int i=0;i<sourceBookstmp2.length;i++){
+          if(! sourceBookstmp.contains(sourceBookstmp2[i])){
+            sourceBookstmp2.removeAt(i);
+            i--;
+          }
+        }
+
+        //Kiểm tra có nguồn mới không và thêm vào
+        List<String>tmp3=[];
+        for (var element in sourceBookstmp) {
+          if(!sourceBookstmp2.contains(element)){
+            tmp3.add(element);
+          }
+        }
+        sourceBookstmp2.addAll(tmp3);
+        sourceBooks=sourceBookstmp2;
+        saveStringList("LIST_SOURCE", sourceBooks);
+      }
       if(sourceBooks.isNotEmpty){
         ChangeSourceBook(sourceBooks[0]);
-        //TODO
-        //fetchHomeCategories();
         fetchHomeStories(sourceBooks[0]);
+        fetchHomeCategories(sourceBooks[0]);
       }
       notifyListeners();
     }
     catch (e) {
       // Handle error
-      print('Error fetching stories: $e');
+      if (kDebugMode) {
+        print('Error fetching stories: $e');
+      }
     }
   }
 
-  Future<void> fetchHomeCategories() async{
+  Future<void> fetchHomeCategories(String sourceBook) async{
     try{
       listCategory.clear();
       listCategory=await _storyService.fetchListCategory(sourceBook);
@@ -51,12 +83,14 @@ class HomeStoryViewModel extends ChangeNotifier {
     }
     catch (e) {
       // Handle error
-      print('Error fetching stories: $e');
+      if (kDebugMode) {
+        print('Error fetching stories: $e');
+      }
     }
   }
 
   void ChangeSourceBook(String newSourceBook){
-    this.sourceBook=newSourceBook;
+    sourceBook=newSourceBook;
     notifyListeners();
   }
 
@@ -66,7 +100,7 @@ class HomeStoryViewModel extends ChangeNotifier {
   }
 
   void ChangeIndex(int newIndex){
-    this.indexSourceBook=newIndex;
+    indexSourceBook=newIndex;
     notifyListeners();
   }
 
@@ -89,4 +123,43 @@ class HomeStoryViewModel extends ChangeNotifier {
     sourceBooks.addAll(newSourceBooks);
     notifyListeners();
   }
+
+  Future<void> saveStringList(String key, List<String> valueList) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Chuyển đổi List<String> thành một chuỗi JSON trước khi lưu vào SharedPreferences
+    final jsonString = jsonEncode(valueList);
+    await prefs.setString(key, jsonString);
+  }
+
+  Future<List<String>?> getStringList(String key) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Lấy chuỗi JSON từ SharedPreferences
+    final jsonString = prefs.getString(key);
+    if (jsonString != null) {
+      // Nếu có chuỗi JSON, chuyển đổi nó thành List<String>
+      final List<dynamic> jsonList = jsonDecode(jsonString);
+      return jsonList.map((item) => item.toString()).toList();
+    }
+    // Trả về null nếu không tìm thấy hoặc có lỗi
+    return null;
+  }
+
+  bool checkSimilarity(List<String> list1, List<String> list2) {
+    // Kiểm tra nếu độ dài của hai danh sách không bằng nhau
+    if (list1.length != list2.length) {
+      return false; // Nếu độ dài khác nhau, hai danh sách không giống nhau hoàn toàn
+    }
+    // Sắp xếp cả hai danh sách theo thứ tự tăng dần
+    list1.sort();
+    list2.sort();
+    // So sánh từng phần tử của hai danh sách đã được sắp xếp
+    for (int i = 0; i < list1.length; i++) {
+      if (list1[i] != list2[i]) {
+        return false; // Nếu tìm thấy một cặp phần tử khác nhau, hai danh sách không giống nhau hoàn toàn
+      }
+    }
+    // Nếu không tìm thấy phần tử nào khác nhau và độ dài của cả hai danh sách bằng nhau, hai danh sách giống nhau hoàn toàn
+    return true;
+  }
+
 }

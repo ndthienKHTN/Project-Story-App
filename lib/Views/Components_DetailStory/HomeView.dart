@@ -18,9 +18,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _homeStoryViewModel = Provider.of<HomeStoryViewModel>(context, listen: false);
-    //TODO: need to change
     _homeStoryViewModel.fetchHomeSourceBooks();
-    //_homeStoryViewModel.fetchHomeCategories();
   }
 
   @override
@@ -30,7 +28,6 @@ class _HomePageState extends State<HomePage> {
         //TODO: need to change
         _homeStoryViewModel.fetchHomeSourceBooks();
         _homeStoryViewModel.ChangeIndex(0);
-        //_homeStoryViewModel.fetchHomeCategories();
       },
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -129,6 +126,7 @@ class ListSourceBook extends StatelessWidget {
                     Provider.of<HomeStoryViewModel>(context,listen: false).ChangeIndex(i);
                     storyListViewModel.ChangeSourceBook(storyListViewModel.sourceBooks[i]);
                     Provider.of<HomeStoryViewModel>(context,listen: false).fetchHomeStories(storyListViewModel.sourceBooks[i]);
+                    Provider.of<HomeStoryViewModel>(context,listen: false).fetchHomeCategories(storyListViewModel.sourceBooks[i]);
                   },
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 10),
