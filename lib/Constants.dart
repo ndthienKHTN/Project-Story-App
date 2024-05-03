@@ -14,6 +14,7 @@ const double MIN_TEXT_SIZE = 5;
 const double MAX_TEXT_SIZE = 30;
 const double MIN_LINE_SPACING = 0.5;
 const double MAX_LINE_SPACING = 5;
+const double CHAPTER_ITEM_HEIGHT = 50;
 
 const double DEFAULT_TEXT_SZIE = 13;
 const double DEFAULT_LINE_SPACING = 2;

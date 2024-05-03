@@ -1,7 +1,9 @@
 import 'package:project_login/Models/Story.dart';
 
+import 'ChapterPagination.dart';
+
 class ContentStory {
-  late  String name;
+  late String name;
   late String content;
   late String chap;
   late String title;

@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:project_login/Models/ChapterPagination.dart';
+import 'package:project_login/Models/ReadingHistory.dart';
+import 'package:project_login/Services/LocalDatabase.dart';
 import 'package:project_login/Views/ContentDisplayView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,19 +21,51 @@ import '../Services/StoryService.dart';
 
 class ContentStoryViewModel extends ChangeNotifier {
   final StoryService _storyService = StoryService();
+  final LocalDatabase _localDatabase = LocalDatabase();
 
   ContentStory? _contentStory;
   ContentDisplay contentDisplay = ContentDisplay.defaults();
 
   ContentStory? get contentStory => _contentStory;
   List<String> _fontNames = [];
+  List<String> fakedatas = [];
+  int index = 0;
 
   List<String> get fontNames => _fontNames;
 
-  Future<void> fetchContentStory(String storyTitle) async {
+  Future<void> fetchContentStory(String storyTitle, String chap) async {
     try {
-      _contentStory = await _storyService.fetchContentStory(storyTitle);
+      _contentStory = await _storyService.fetchContentStory(storyTitle, chap);
+      fakedatas = [
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        '10',
+        '11',
+        '12',
+        '13',
+        '14',
+        '15',
+        '16',
+      ];
+      for (int i = 0; i < fakedatas.length; i++) {
+        if (fakedatas[i] == chap) {
+          index = i;
+          break;
+        }
+      }
       notifyListeners();
+
+      // insert reading history to local database
+      int currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
+      // tạm comment
+      // _localDatabase.insertData(ReadingHistory(title: storyTitle, chap: chap, date: currentTimeMillis));
     } catch (e) {
       // Handle error
       print('Error fetching story content: $e');
@@ -72,7 +107,6 @@ class ContentStoryViewModel extends ChangeNotifier {
       print('Error fetching story content: $e');
     }
   }
-
 
   Future<void> saveString(String key, String value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

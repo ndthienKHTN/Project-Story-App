@@ -4,24 +4,46 @@ import 'package:project_login/Views/Components/ChangeDisplayBottomSheet.dart';
 import 'package:project_login/Views/Components/ChooseChapterBottomSheet.dart';
 
 class ContentStoryBottomAppBar extends StatelessWidget {
-  final ContentStoryViewModel _contentStoryViewModel;
+  final ContentStoryViewModel contentStoryViewModel;
   final Function(double) onTextSizeChanged;
   final Function(double) onLineSpacingChanged;
   final Function(String) onFontFamilyChanged;
   final Function(int) onTextColorChanged;
   final Function(int) onBackgroundChanged;
+  final Function(int) onChooseChapter;
+  final Function() navigateToNextChap;
+  final Function() navigateToPrevChap;
 
-  const ContentStoryBottomAppBar(
-      this._contentStoryViewModel,
-      this.onTextSizeChanged,
-      this.onLineSpacingChanged,
-      this.onFontFamilyChanged,
-      this.onTextColorChanged,
-      this.onBackgroundChanged,
-      {super.key});
+  const ContentStoryBottomAppBar({super.key,
+    required this.contentStoryViewModel,
+    required this.onTextSizeChanged,
+    required this.onLineSpacingChanged,
+    required this.onFontFamilyChanged,
+    required this.onTextColorChanged,
+    required this.onBackgroundChanged,
+    required this.onChooseChapter,
+    required this.navigateToNextChap,
+    required this.navigateToPrevChap});
 
   @override
   Widget build(BuildContext context) {
+    bool canNavigateToNextChap = true;
+    bool canNavigateToPrevChap = true;
+
+    if (contentStoryViewModel.contentStory?.chap ==
+        contentStoryViewModel.fakedatas[0]) {
+      canNavigateToPrevChap = false;
+    }
+    if (contentStoryViewModel.contentStory?.chap ==
+        contentStoryViewModel.fakedatas.last) {
+      canNavigateToNextChap = false;
+    }
+
+    Color nextChapIconColor =
+    canNavigateToNextChap ? Colors.black : Colors.grey;
+    Color prevChapIconColor =
+    canNavigateToPrevChap ? Colors.black : Colors.grey;
+
     return Container(
         width: double.infinity,
         height: 55,
@@ -41,42 +63,54 @@ class ContentStoryBottomAppBar extends StatelessWidget {
           type: BottomNavigationBarType.fixed,
           selectedItemColor: Colors.black,
           unselectedItemColor: Colors.black,
-          items: const [
+          items: [
             BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage('assets/images/back_button.png')),
+                icon: ImageIcon(
+                    const AssetImage('assets/images/back_button.png'),
+                    color: prevChapIconColor),
                 label: ''),
-            BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage('assets/images/list_icon.png')), label: ''),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
+                icon: ImageIcon(AssetImage('assets/images/list_icon.png')),
+                label: ''),
+            const BottomNavigationBarItem(
                 icon: Icon(Icons.settings_rounded), label: ''),
             BottomNavigationBarItem(
-                icon: ImageIcon(AssetImage('assets/images/next_button.png')),
+                icon: ImageIcon(
+                  const AssetImage('assets/images/next_button.png'),
+                  color: nextChapIconColor,
+                ),
                 label: '')
           ],
           onTap: (int index) {
             if (index == 0) {
-              print("index 0");
+              if (canNavigateToPrevChap) {
+                navigateToPrevChap();
+              }
             } else if (index == 1) {
               showModalBottomSheet(
                 context: context,
-                builder: (BuildContext context) =>
-                const ChooseChapterBottomSheet(),
+                builder: (BuildContext context) => ChooseChapterBottomSheet(
+                    contentStoryViewModel, onChooseChapter),
               );
             } else if (index == 2) {
               showModalBottomSheet(
                 context: context,
                 builder: (BuildContext context) => ChangeDisplayBottomSheet(
-                    _contentStoryViewModel,
-                    onTextSizeChanged,
-                    onLineSpacingChanged,
-                    onFontFamilyChanged,
-                    onTextColorChanged,
-                    onBackgroundChanged),
+                  contentStoryViewModel,
+                  onTextSizeChanged,
+                  onLineSpacingChanged,
+                  onFontFamilyChanged,
+                  onTextColorChanged,
+                  onBackgroundChanged,
+                ),
               );
             } else if (index == 3) {
-              print("index 3");
+              if (canNavigateToNextChap) {
+                navigateToNextChap();
+              }
             }
           },
         ));
   }
 }
+
