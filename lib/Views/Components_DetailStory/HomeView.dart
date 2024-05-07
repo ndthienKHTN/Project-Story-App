@@ -27,9 +27,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async{
-        //TODO: need to change
         _homeStoryViewModel.fetchHomeSourceBooks();
-        _homeStoryViewModel.ChangeIndex(0);
+        _homeStoryViewModel.changeIndex(0);
+        _homeStoryViewModel.changeCategory("All");
       },
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -57,8 +57,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                IconButton(onPressed: (){
-                  Navigator.push(
+                IconButton(onPressed: () async{
+                  final choisecategory=await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => ChangeNotifierProvider(
@@ -67,6 +67,7 @@ class _HomePageState extends State<HomePage> {
                           )
                       )
                   );
+                  _homeStoryViewModel.changeCategory(choisecategory);
                 },
                     icon: const Icon(Icons.category,color: Colors.white,)
                 )
@@ -135,10 +136,10 @@ class ListSourceBook extends StatelessWidget {
               for (int i = 0; i < storyListViewModel.sourceBooks.length; i++)
                 GestureDetector(
                   onTap: () {
-                    Provider.of<HomeStoryViewModel>(context,listen: false).ChangeIndex(i);
-                    storyListViewModel.ChangeSourceBook(storyListViewModel.sourceBooks[i]);
+                    Provider.of<HomeStoryViewModel>(context,listen: false).changeIndex(i);
+                    storyListViewModel.changeSourceBook(storyListViewModel.sourceBooks[i]);
                     Provider.of<HomeStoryViewModel>(context,listen: false).fetchHomeStories(storyListViewModel.sourceBooks[i]);
-                    Provider.of<HomeStoryViewModel>(context,listen: false).fetchHomeCategories(storyListViewModel.sourceBooks[i]);
+                    storyListViewModel.changeCategory("All");
                   },
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -185,7 +186,7 @@ class _ListOrGridbuttomState extends State<ListOrGridbuttom> {
             onTap: () {
               setState(() {
                 isListButtonPressed = true; // Đặt trạng thái nút danh sách được nhấn
-                Provider.of<HomeStoryViewModel>(context,listen: false).ChangeListOrGrid(true);
+                Provider.of<HomeStoryViewModel>(context,listen: false).changeListOrGrid(true);
               });
             },
             child: Icon(
@@ -200,7 +201,7 @@ class _ListOrGridbuttomState extends State<ListOrGridbuttom> {
             onTap: () {
               setState(() {
                 isListButtonPressed = false;
-                Provider.of<HomeStoryViewModel>(context,listen: false).ChangeListOrGrid(false);// Đặt trạng thái nút danh sách không được nhấn
+                Provider.of<HomeStoryViewModel>(context,listen: false).changeListOrGrid(false);// Đặt trạng thái nút danh sách không được nhấn
               });
             },
             child: Icon(

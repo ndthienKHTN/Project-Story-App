@@ -27,7 +27,6 @@ class ContentStoryViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       // Handle error
-      print('Error fetching story content: $e');
     }
   }
 

@@ -82,7 +82,7 @@ class StoryService {
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
 
-        if (jsonData != null && jsonData.isNotEmpty) {
+        if (jsonData.isNotEmpty) {
           List<categoryModel.Category> listCategories = jsonData.map((json) => categoryModel.Category.fromJson(json)).toList();
 
           return listCategories;

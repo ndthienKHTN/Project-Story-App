@@ -3,14 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Models/Story.dart';
 import '../Services/StoryService.dart';
-import '../Models/Category.dart' as categoryModel;
 
 
 class HomeStoryViewModel extends ChangeNotifier {
   final StoryService _storyService = StoryService();
   Map<String, List<Story>> _stories = <String, List<Story>>{};
   Map<String, List<Story>> get stories => _stories;
-  List<categoryModel.Category> listCategory=[];
   List<String> sourceBooks=[];
   String sourceBook='';
   int indexSourceBook=0;
@@ -36,35 +34,40 @@ class HomeStoryViewModel extends ChangeNotifier {
       List<String> sourceBookstmp=await _storyService.fetchListNameDataSource();
       List<String>? sourceBookstmp2=[];
       sourceBookstmp2 = await getStringList("LIST_SOURCE");
-      List<String>tmp2=[];
-      tmp2.addAll(sourceBookstmp2!);
-      if(checkSimilarity(sourceBookstmp, tmp2)){
-        sourceBooks=sourceBookstmp2;
+      if(sourceBookstmp2 == null){
+        sourceBooks=sourceBookstmp;
       }
       else{
-        //Kiểm tra nguồn bị xóa và remove
-        for(int i=0;i<sourceBookstmp2.length;i++){
-          if(! sourceBookstmp.contains(sourceBookstmp2[i])){
-            sourceBookstmp2.removeAt(i);
-            i--;
-          }
+        List<String>tmp2=[];
+        tmp2.addAll(sourceBookstmp2);
+        if(checkSimilarity(sourceBookstmp, tmp2)){
+          sourceBooks=sourceBookstmp2;
         }
+        else{
+          //Kiểm tra nguồn bị xóa và remove
+          for(int i=0;i<sourceBookstmp2.length;i++){
+            if(! sourceBookstmp.contains(sourceBookstmp2[i])){
+              sourceBookstmp2.removeAt(i);
+              i--;
+            }
+          }
 
-        //Kiểm tra có nguồn mới không và thêm vào
-        List<String>tmp3=[];
-        for (var element in sourceBookstmp) {
-          if(!sourceBookstmp2.contains(element)){
-            tmp3.add(element);
+          //Kiểm tra có nguồn mới không và thêm vào
+          List<String>tmp3=[];
+          for (var element in sourceBookstmp) {
+            if(!sourceBookstmp2.contains(element)){
+              tmp3.add(element);
+            }
           }
+          sourceBookstmp2.addAll(tmp3);
+          sourceBooks=sourceBookstmp2;
+          saveStringList("LIST_SOURCE", sourceBooks);
         }
-        sourceBookstmp2.addAll(tmp3);
-        sourceBooks=sourceBookstmp2;
-        saveStringList("LIST_SOURCE", sourceBooks);
       }
       if(sourceBooks.isNotEmpty){
-        ChangeSourceBook(sourceBooks[0]);
+        saveStringList("LIST_SOURCE", sourceBooks);
+        changeSourceBook(sourceBooks[0]);
         fetchHomeStories(sourceBooks[0]);
-        fetchHomeCategories(sourceBooks[0]);
       }
       notifyListeners();
     }
@@ -76,36 +79,23 @@ class HomeStoryViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchHomeCategories(String sourceBook) async{
-    try{
-      listCategory.clear();
-      listCategory=await _storyService.fetchListCategory(sourceBook);
-      notifyListeners();
-    }
-    catch (e) {
-      // Handle error
-      if (kDebugMode) {
-        print('Error fetching stories: $e');
-      }
-    }
-  }
 
-  void ChangeSourceBook(String newSourceBook){
+  void changeSourceBook(String newSourceBook){
     sourceBook=newSourceBook;
     notifyListeners();
   }
 
-  void ChangeListOrGrid(bool listchange){
+  void changeListOrGrid(bool listchange){
     listOn=listchange;
     notifyListeners();
   }
 
-  void ChangeIndex(int newIndex){
+  void changeIndex(int newIndex){
     indexSourceBook=newIndex;
     notifyListeners();
   }
 
-  void Reorder(int oldIndex, int newIndex) {
+  void reorder(int oldIndex, int newIndex) {
     if (oldIndex < newIndex) {
       newIndex -= 1;
     }
@@ -114,12 +104,12 @@ class HomeStoryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void Changeindex(int newIndex){
+  void changeindex(int newIndex){
     indexSourceBook=newIndex;
     notifyListeners();
   }
 
-  void UpdateSource(List<String> newSourceBooks){
+  void updateSource(List<String> newSourceBooks){
     sourceBooks.clear();
     sourceBooks.addAll(newSourceBooks);
     notifyListeners();
@@ -163,7 +153,7 @@ class HomeStoryViewModel extends ChangeNotifier {
     return true;
   }
 
-  void ChangeCategory(String newCategory){
+  void changeCategory(String newCategory){
     category=newCategory;
     notifyListeners();
   }

@@ -66,12 +66,12 @@ class _SortSourceBookState extends State<SortSourceBook> {
             ),
           ),
           onReorder: (int oldIndex, int newIndex) {
-            sourceBookNotifier.Reorder(oldIndex, newIndex);
-            sourceBookNotifier.ChangeIndex(0);
-            sourceBookNotifier.ChangeSourceBook(sourceBookNotifier.sourceBooks[0]);
+            sourceBookNotifier.reorder(oldIndex, newIndex);
+            sourceBookNotifier.changeIndex(0);
+            sourceBookNotifier.changeSourceBook(sourceBookNotifier.sourceBooks[0]);
             sourceBookNotifier.fetchHomeStories(sourceBookNotifier.sourceBooks[0]);
-            sourceBookNotifier.fetchHomeCategories(sourceBookNotifier.sourceBooks[0]);
             sourceBookNotifier.saveStringList("LIST_SOURCE", sourceBookNotifier.sourceBooks);
+            sourceBookNotifier.changeCategory("All");
           },
         );
       },

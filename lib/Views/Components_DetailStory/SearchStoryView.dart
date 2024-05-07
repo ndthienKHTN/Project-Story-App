@@ -27,17 +27,17 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: const Text('Home'),
       ),
       body: Column(
         children: [
           Container(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
                 ElevatedButton(
-                    onPressed: () => {new StoryService().fetchListCategory("Truyen123")},
-                    child: Text('list categories'))
+                    onPressed: () => {StoryService().fetchListCategory("Truyen123")},
+                    child: const Text('list categories'))
               ],
             ),
           ),
@@ -45,7 +45,7 @@ class _SearchScreenState extends State<SearchScreen> {
             child:Consumer<SearchStoryViewModel>(
               builder: (context, storyListViewModel, _) {
                 if (storyListViewModel.stories.isEmpty) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else {
                   return ListView.builder(
                     itemCount: storyListViewModel.stories.length,
