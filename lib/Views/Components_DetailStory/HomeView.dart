@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project_login/ViewModels/ChoiseCategoryViewModel.dart';
+import 'package:project_login/Views/Components_DetailStory/ChoiseCategoryView.dart';
 import 'package:provider/provider.dart';
 
 import '../../ViewModels/DetailStoryViewModel.dart';
@@ -55,7 +57,17 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                IconButton(onPressed: (){},
+                IconButton(onPressed: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider(
+                            create: (context) => ChoiseCategoryViewModel(),
+                            child: ChoiseCategoryScreen(datasource: _homeStoryViewModel.sourceBook, category: _homeStoryViewModel.category,),
+                          )
+                      )
+                  );
+                },
                     icon: const Icon(Icons.category,color: Colors.white,)
                 )
               ],

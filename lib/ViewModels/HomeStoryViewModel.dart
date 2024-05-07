@@ -15,6 +15,7 @@ class HomeStoryViewModel extends ChangeNotifier {
   String sourceBook='';
   int indexSourceBook=0;
   bool listOn=true;
+  String category="All";
 
   Future<void> fetchHomeStories(String datasource) async {
     try {
@@ -70,7 +71,7 @@ class HomeStoryViewModel extends ChangeNotifier {
     catch (e) {
       // Handle error
       if (kDebugMode) {
-        print('Error fetching stories: $e');
+        print('Error fetching sources: $e');
       }
     }
   }
@@ -162,4 +163,8 @@ class HomeStoryViewModel extends ChangeNotifier {
     return true;
   }
 
+  void ChangeCategory(String newCategory){
+    category=newCategory;
+    notifyListeners();
+  }
 }
