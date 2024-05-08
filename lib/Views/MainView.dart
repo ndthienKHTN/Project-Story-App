@@ -17,7 +17,7 @@ class _MainPageState extends State<MainPage> {
   int _page=1;
 
   final List<Widget> _pages = [
-    const BookShelfPage(),
+    BookShelfPage(),
     const HomePage(),
     const SettingPage(),
   ];

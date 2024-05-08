@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:project_login/Views/DownloadChaptersView.dart';
 import 'package:provider/provider.dart';
 import '../Models/Story.dart';
@@ -29,6 +30,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
 
   Future<void> _fetchStoryDetails() async {
     await _detailStoryViewModel.fetchDetailsStory(widget.storyTitle,widget.datasource);
+
   }
   bool _isBtnDescribePressed = false;
   bool _isBtnChapterPressed = false;
@@ -91,6 +93,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
             return Center(child: CircularProgressIndicator());
           } else {
             final story = storyDetailViewModel.story!;
+            final chapter = storyDetailViewModel.chapterPagination!;
             return Scaffold(
               backgroundColor: Colors.black,
               body: SingleChildScrollView(
@@ -140,7 +143,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
 
                                   ),
                                   Text(
-                                    'Thể loại: ',
+                                    'Thể loại: ${story.categories?.first.content}',
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.white,
@@ -148,7 +151,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
 
                                   ),
                                   Text(
-                                    'Số chương: ',
+                                    'Số chương: ${chapter.maxChapter}',
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.white,
@@ -156,7 +159,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
 
                                   ),
                                   Text(
-                                    'Tác giả: ',
+                                    'Tác giả: ${story.author}',
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.white,
@@ -241,7 +244,12 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                           setState(() {
                                             _isBtnDescribePressed = true;
                                             _isBtnChapterPressed = false;
-                                            _currentData = Text('Example');
+                                            _currentData = SingleChildScrollView(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(5),
+                                                child: Text('${story.description}'),
+                                              ),
+                                            );
                                           });
                                         },
                                         child: Text(
@@ -261,13 +269,35 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                           setState(() {
                                             _isBtnDescribePressed = false;
                                             _isBtnChapterPressed = true;
-                                            _currentData = ListView.builder(
-                                              itemCount: _chapterCount,
-                                              itemBuilder: (context,index) {
-                                                return ListTile(
-                                                  title: Text('$index. Chương $index: '),
-                                                );
-                                              },
+                                            _currentData = Expanded(
+                                                child: Consumer<DetailStoryViewModel>(
+                                                  builder: (context, chapterListViewModel, _) {
+                                                    if (chapterListViewModel.chapterPagination == null) {
+                                                      return Center(child: CircularProgressIndicator());
+                                                    } else {
+                                                      return ListView.builder(
+                                                        itemCount: chapterListViewModel.chapterPagination?.listChapter?.length,
+                                                        itemBuilder: (context, index) {
+                                                          final chapter = chapterListViewModel.chapterPagination!.listChapter?[index];
+                                                          return ListTile(
+                                                            title: Text(chapter!.content),
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => ChangeNotifierProvider(
+                                                                      create: (context) => ContentStoryViewModel(),
+                                                                      child:  ContentStoryScreen(storyTitle: chapter.content, datasource: '',)
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                          );
+                                                        },
+                                                      );
+                                                    }
+                                                  },
+                                                )
                                             );
                                           });
                                         },
@@ -396,7 +426,6 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                       ),
                                   );
                                 },
-
                               );
                             },
                           );

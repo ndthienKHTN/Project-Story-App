@@ -1,4 +1,6 @@
 
+import 'package:logger/logger.dart';
+
 class Chapter {
   String content;
   String url;
