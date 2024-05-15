@@ -330,7 +330,7 @@ class GridViewBook extends StatelessWidget {
         if (storyNotifier.stories.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          List<Story> listStories=storyNotifier.stories['full']!;
+          List<Story> listStories = storyNotifier.stories['full']!;
           return GridView.builder(
             itemCount: listStories.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

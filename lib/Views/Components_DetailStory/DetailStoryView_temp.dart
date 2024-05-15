@@ -12,6 +12,8 @@ class DetailStoryScreen1 extends StatefulWidget {
 
   const DetailStoryScreen1({required this.storyTitle});
 
+  get datasource => null;
+
   @override
   _DetailStoryScreenState1 createState() => _DetailStoryScreenState1();
 }
@@ -62,7 +64,7 @@ class _DetailStoryScreenState1 extends State<DetailStoryScreen1> {
               onPressed: (){
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => DownloadChapters()),
+                  MaterialPageRoute(builder: (context) => DownloadChaptersScreen(storyTitle: widget.storyTitle, datasource: widget.datasource)),
                 );
               },
               icon: SizedBox(

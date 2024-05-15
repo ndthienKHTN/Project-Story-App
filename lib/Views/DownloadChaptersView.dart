@@ -3,9 +3,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+import '../ViewModels/DetailStoryViewModel.dart';
+class DownloadChaptersScreen extends StatefulWidget {
+  final String storyTitle;
+  final String datasource;
+  const DownloadChaptersScreen({super.key, required this.storyTitle,required this.datasource});
 
-class DownloadChapters extends StatelessWidget{
+  @override
+  _DownloadChaptersState createState() => _DownloadChaptersState();
+}
 
+class _DownloadChaptersState extends State<DownloadChaptersScreen>{
+  late DetailStoryViewModel _detailStoryViewModel;
+  final int buttonsPerRow = 3;
+  int _perPage = 27;
+  int _currentPage = 1;
+  late Map<int, bool> selectedButtons;
+  bool _isCheckAll = false;
+  void _fetchChapters() {
+    _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
+  }
+  @override
+  void initState() {
+    super.initState();
+    _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
+    _fetchChapters();
+    selectedButtons = Map.fromIterable(
+      List.generate(_perPage, (index) => index + 1),
+      key: (item) => item,
+      value: (item) => false,
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,167 +53,188 @@ class DownloadChapters extends StatelessWidget{
               fontSize: 23,
               fontWeight: FontWeight.bold,
               color: Colors.white,
-          ),
-          ),
+            ),
+            ),
           ),
         ) ,
       ),
-      body: BodyWidget(),
-    );
-  }
-}
-class BodyWidget extends StatefulWidget {
-  const BodyWidget({super.key});
-  @override
-  State<BodyWidget> createState() => _BodyWidgetState();
-}
-class _BodyWidgetState extends State<BodyWidget> {
-  final int buttonsPerRow = 3;
-  int numberOfButtons = 16;
-  late Map<int, bool> selectedButtons;
-  bool _isCheckAll = false;
-  @override
-  void initState() {
-    super.initState();
-    selectedButtons = Map.fromIterable(
-      List.generate(numberOfButtons, (index) => index + 1),
-      key: (item) => item,
-      value: (item) => false,
-    );
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                  'assets/images/background_home.png',
-                ),
-                fit: BoxFit.cover,
-              )
-            ),
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                'Tổng số chương: ${numberOfButtons}',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
+      body: Consumer<DetailStoryViewModel>(
+        builder: (context, storyDetailViewModel,_) {
+          final chapter = storyDetailViewModel.chapterPagination!;
+          return Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                        'assets/images/background_home.png',
+                      ),
+                      fit: BoxFit.cover,
+                    )
                 ),
               ),
-            ),
-          ),
-          Positioned(
-            top: 50.0,
-            left: 20.0,
-            right: 20.0,
-              bottom: 50,
-              child: GridView.builder(
-                  itemCount: numberOfButtons,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: buttonsPerRow,
-                    mainAxisSpacing: 20.0,
-                    crossAxisSpacing: 20.0,
-                    childAspectRatio: 100 / 40,
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    'Tổng số chương: ${chapter.maxChapter}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
                   ),
-                  itemBuilder: (BuildContext,int index){
-                    return ElevatedButton(
-                      onPressed: (){
-                        setState(() {
-                          selectedButtons[index+1] = !selectedButtons[index+1]!;
-                        });
-                      },
-                      child: Text(
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          '${index+1}'
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: selectedButtons[index+1]! ? Colors.blue : Colors.white,
+                ),
+              ),
+              Positioned(
+                top: 50.0,
+                left: 20.0,
+                right: 20.0,
+                bottom: 50,
+                child: GridView.builder(
+                    itemCount: _currentPage * _perPage >= chapter.maxChapter ? chapter.maxChapter - (_currentPage-1) * _perPage : _perPage,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: buttonsPerRow,
+                      mainAxisSpacing: 20.0,
+                      crossAxisSpacing: 20.0,
+                      childAspectRatio: 100 / 40,
+                    ),
+                    itemBuilder: (BuildContext,int index){
+                      return ElevatedButton(
+                        onPressed: (){
+                          setState(() {
+                            selectedButtons[index+1] = !selectedButtons[index+1]!;
+                          });
+                        },
+                        child: Text(
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                            '${_perPage*(_currentPage-1) + index+1}'
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: selectedButtons[index+1]! ? Colors.yellow : Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
 
-                      ),
-                    );
-                  }
+                        ),
+                      );
+                    }
+                ),
               ),
-          ),
-          Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: BottomAppBar(
-                  child: Row(
-                    children: <Widget>[
-                      Checkbox(
-                          value: _isCheckAll,
-                          onChanged: (bool ?value){
-                            setState(() {
-                              _isCheckAll = value!;
-                              if(_isCheckAll){
-                                selectedButtons = Map.fromIterable(
-                                  List.generate(numberOfButtons, (index) => index + 1),
-                                  key: (item) => item,
-                                  value: (item) => true,
-                                );
-                              }
-                              else{
-                                selectedButtons = Map.fromIterable(
-                                  List.generate(numberOfButtons, (index) => index + 1),
-                                  key: (item) => item,
-                                  value: (item) => false,
-                                );
-                              }
-                            });
-                          }
-                      ),
-                      Text(
+              Positioned(
+                left: 13,
+                bottom: 10,
+                right: 20,
+                top: 540,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: _currentPage == 1 ? Colors.grey : Colors.white,),
+                      onPressed: _currentPage == 1
+                          ? null
+                          : () {
+                        setState(() {
+                          _currentPage--;
+                        });
+                      },
+                    ),
+                    Text(
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          color: Colors.white,
+                          fontSize: 20,
                         ),
-                          'Chọn tất cả'
-                      ),
-                      SizedBox(
-                        width: 40,
-                      ),
-                      VerticalDivider(
-                        color: Colors.black ,
-                        thickness: 2,
-                        width: 20,
-                        indent: 10,
-                        endIndent: 10,
-                      ),
-                      SizedBox(
-                        width: 30,
-                      ),
-                      IconButton(
-                          onPressed: (){
-
-                          },
-                          icon: Icon(Icons.download)
-                      ),
-                      Text(
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                        'Page $_currentPage'
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_forward,
+                        color: _currentPage * _perPage >= chapter.maxChapter ? Colors.grey : Colors.white,),
+                      onPressed: _currentPage * _perPage >= chapter.maxChapter
+                          ? null
+                          : () {
+                        setState(() {
+                          _currentPage++;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: BottomAppBar(
+                    child: Row(
+                      children: <Widget>[
+                        Checkbox(
+                            value: _isCheckAll,
+                            onChanged: (bool ?value){
+                              setState(() {
+                                _isCheckAll = value!;
+                                if(_isCheckAll){
+                                  selectedButtons = Map.fromIterable(
+                                    List.generate(_perPage, (index) => index + 1),
+                                    key: (item) => item,
+                                    value: (item) => true,
+                                  );
+                                }
+                                else{
+                                  selectedButtons = Map.fromIterable(
+                                    List.generate(_perPage, (index) => index + 1),
+                                    key: (item) => item,
+                                    value: (item) => false,
+                                  );
+                                }
+                              });
+                            }
                         ),
-                        'Tải xuống'
-                      )
-                    ],
-                  ),
-          ))
+                        Text(
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                            'Chọn tất cả'
+                        ),
+                        SizedBox(
+                          width: 40,
+                        ),
+                        VerticalDivider(
+                          color: Colors.black ,
+                          thickness: 2,
+                          width: 20,
+                          indent: 10,
+                          endIndent: 10,
+                        ),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        IconButton(
+                            onPressed: (){
 
-
-        ],
+                            },
+                            icon: Icon(Icons.download)
+                        ),
+                        Text(
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            'Tải xuống'
+                        )
+                      ],
+                    ),
+                  )
+              )
+            ],
+          );
+        }
+      )
     );
   }
-
 }

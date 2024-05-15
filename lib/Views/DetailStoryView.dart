@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:logger/web.dart';
 import 'package:project_login/Views/DownloadChaptersView.dart';
 import 'package:provider/provider.dart';
+import '../Models/Chapter.dart';
 import '../Models/Story.dart';
 import '../ViewModels/ContentStoryViewModel.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
@@ -18,31 +20,29 @@ class DetailStoryScreen extends StatefulWidget {
 
 class _DetailStoryScreenState extends State<DetailStoryScreen> {
   late DetailStoryViewModel _detailStoryViewModel;
-
-  @override
-  void initState() {
-    super.initState();
-    _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
-    //_fetchStoryDetails();
-    _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, widget.datasource);
-    _detailStoryViewModel.fetchChapterPagination(widget.storyTitle,1, widget.datasource);
-  }
-
-  Future<void> _fetchStoryDetails() async {
-    await _detailStoryViewModel.fetchDetailsStory(widget.storyTitle,widget.datasource);
-
-  }
+  int _currentPage = 1;
+  final int _perPage = 50; // Số lượng mục trên mỗi trang
+  // Trang hiện tại
   bool _isBtnDescribePressed = false;
   bool _isBtnChapterPressed = false;
   String ? selectedItem ;
-  int _chapterCount = 6;
-  Widget _currentData = Text('Example');
-
+  late int selectedIndex;
+  Widget ?_currentData ;
   final List<String> items = [
     'TruyenFull',
     'Truyen123',
     'TruyenMoi'
   ];
+  void _fetchChapters() {
+    _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
+  }
+  @override
+  void initState() {
+    super.initState();
+    _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
+    _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, widget.datasource);
+    _fetchChapters();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
             onPressed: (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => DownloadChapters()),
+                MaterialPageRoute(builder: (context) => DownloadChaptersScreen(storyTitle: widget.storyTitle, datasource: widget.datasource)),
               );
             },
             icon: SizedBox(
@@ -114,15 +114,13 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                 borderRadius: BorderRadius.circular(15),
                                 border: Border.all(
                                   color: Colors.yellow, // Màu của đường viền
-                                  width: 2.5, // Độ rộng của đường viền
+                                  width: 2, // Độ rộng của đường viền
                                 ),
                               ),
 
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
-                                child: Image.asset(
-                                    'assets/images/naruto.jpg'
-                                ),
+                                child: Image(image: NetworkImage(story.cover)),
                               ),
                             ),
 
@@ -148,7 +146,6 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                       fontSize: 15,
                                       color: Colors.white,
                                     ),
-
                                   ),
                                   Text(
                                     'Số chương: ${chapter.maxChapter}',
@@ -186,7 +183,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                             decoration: BoxDecoration(
                               border: Border.all(
                                 color: Colors.yellow, // Màu của đường viền
-                                width: 2, // Độ rộng của đường viền
+                                width: 1.5, // Độ rộng của đường viền
                               ),
                               borderRadius: BorderRadius.circular(10), // Độ cong của góc viền
                             ),
@@ -206,6 +203,15 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                 }).toList(),
                                 onChanged: (String? newValue) {
                                   setState(() {
+                                    if (newValue != null) {
+                                      // Tìm index của mục mới được chọn
+                                      int newIndex = items.indexOf(newValue);
+                                      // Di chuyển mục mới lên đầu danh sách
+                                      items.insert(0, items.removeAt(newIndex));
+                                      // Cập nhật selectedItem và selectedIndex
+                                      selectedItem = newValue;
+                                      selectedIndex = 0;
+                                    }
                                     selectedItem = newValue;
                                   });
                                 },
@@ -215,7 +221,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                     ),
                                     '${items[0]}'
                                 ),
-                                dropdownColor: Colors.grey,
+                                dropdownColor: Colors.black54,
                               ),
                             )
                         ),
@@ -269,25 +275,27 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                           setState(() {
                                             _isBtnDescribePressed = false;
                                             _isBtnChapterPressed = true;
-                                            _currentData = Expanded(
+                                            _currentData = Column(
+                                              children: [
+                                                Expanded(
                                                 child: Consumer<DetailStoryViewModel>(
-                                                  builder: (context, chapterListViewModel, _) {
+                                                    builder: (context, chapterListViewModel, _) {
                                                     if (chapterListViewModel.chapterPagination == null) {
                                                       return Center(child: CircularProgressIndicator());
                                                     } else {
                                                       return ListView.builder(
                                                         itemCount: chapterListViewModel.chapterPagination?.listChapter?.length,
                                                         itemBuilder: (context, index) {
-                                                          final chapter = chapterListViewModel.chapterPagination!.listChapter?[index];
+                                                          final chapter_page = chapterListViewModel.chapterPagination!.listChapter?[index];
                                                           return ListTile(
-                                                            title: Text(chapter!.content),
+                                                            title: Text(chapter_page!.content),
                                                             onTap: () {
                                                               Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
                                                                   builder: (context) => ChangeNotifierProvider(
                                                                       create: (context) => ContentStoryViewModel(),
-                                                                      child:  ContentStoryScreen(storyTitle: chapter.content, datasource: '',)
+                                                                      child:  ContentStoryScreen(storyTitle: chapter_page.content, datasource: '',)
                                                                   ),
                                                                 ),
                                                               );
@@ -297,9 +305,41 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                                       );
                                                     }
                                                   },
-                                                )
+                                                ),
+                                                ),
+
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    IconButton(
+                                                      icon: Icon(Icons.arrow_back),
+                                                      onPressed: _currentPage == 1
+                                                          ? null
+                                                          : () {
+                                                        setState(() {
+                                                          _currentPage--;
+                                                          _fetchChapters();
+                                                        });
+                                                      },
+                                                    ),
+                                                    Text('Page $_currentPage'),
+                                                    IconButton(
+                                                      icon: Icon(Icons.arrow_forward),
+                                                      onPressed: _currentPage * _perPage >= chapter.maxChapter
+                                                          ? null
+                                                          : () {
+                                                        setState(() {
+                                                          _currentPage++;
+                                                          _fetchChapters();
+                                                        });
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
                                             );
-                                          });
+                                          }
+                                          );
                                         },
                                         child: Text(
                                             style: TextStyle(
@@ -362,7 +402,6 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                               ]
                           )
                       ),
-
                     ],
                   ),
                 ),
