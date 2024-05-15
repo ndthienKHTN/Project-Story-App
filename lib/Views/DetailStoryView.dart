@@ -55,8 +55,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
             Icons.arrow_back,
           ),
           onPressed: () {
-            // Xử lý sự kiện khi nút "Back" được nhấn
-            Navigator.of(context).pop(); // Quay lại trang trước đó
+            Navigator.of(context).pop();
           },
         ),
         backgroundColor: Colors.black,
@@ -81,7 +80,6 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                       fit: BoxFit.contain,
                       'assets/images/download_icon.png'
                   ),
-
                 )
             ),
           ),
@@ -117,13 +115,11 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                   width: 2, // Độ rộng của đường viền
                                 ),
                               ),
-
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
                                 child: Image(image: NetworkImage(story.cover)),
                               ),
                             ),
-
                             SizedBox(
                               width: 10,
                             ),
@@ -138,7 +134,6 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
                                     ),
-
                                   ),
                                   Text(
                                     'Thể loại: ${story.categories?.first.content}',
@@ -278,64 +273,67 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                             _currentData = Column(
                                               children: [
                                                 Expanded(
-                                                child: Consumer<DetailStoryViewModel>(
-                                                    builder: (context, chapterListViewModel, _) {
-                                                    if (chapterListViewModel.chapterPagination == null) {
-                                                      return Center(child: CircularProgressIndicator());
-                                                    } else {
-                                                      return ListView.builder(
-                                                        itemCount: chapterListViewModel.chapterPagination?.listChapter?.length,
-                                                        itemBuilder: (context, index) {
-                                                          final chapter_page = chapterListViewModel.chapterPagination!.listChapter?[index];
-                                                          return ListTile(
-                                                            title: Text(chapter_page!.content),
-                                                            onTap: () {
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder: (context) => ChangeNotifierProvider(
-                                                                      create: (context) => ContentStoryViewModel(),
-                                                                      child:  ContentStoryScreen(storyTitle: chapter_page.content, datasource: '',)
+                                                  child: Consumer<DetailStoryViewModel>(
+                                                      builder: (context, chapterListViewModel, _) {
+                                                      if (chapterListViewModel.chapterPagination == null) {
+                                                        return Center(child: CircularProgressIndicator());
+                                                      } else {
+                                                        return ListView.builder(
+                                                          itemCount: chapterListViewModel.chapterPagination?.listChapter?.length,
+                                                          itemBuilder: (context, index) {
+                                                            final chapter_page = chapterListViewModel.chapterPagination!.listChapter?[index];
+                                                            return ListTile(
+                                                              title: Text(chapter_page!.content),
+                                                              onTap: () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder: (context) => ChangeNotifierProvider(
+                                                                        create: (context) => ContentStoryViewModel(),
+                                                                        child:  ContentStoryScreen(storyTitle: chapter_page.content, datasource: widget.datasource,)
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                              );
-                                                            },
-                                                          );
-                                                        },
-                                                      );
-                                                    }
+                                                                );
+                                                              },
+                                                            );
+                                                          },
+                                                        );
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                                Consumer<DetailStoryViewModel>(
+                                                  builder: (context, chapterListViewModel, _) {
+                                                    return Row(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        IconButton(
+                                                          icon: Icon(Icons.arrow_back),
+                                                          onPressed: _currentPage == 1
+                                                              ? null
+                                                              : () {
+                                                            setState(() {
+                                                              _currentPage--;
+                                                              _fetchChapters();
+                                                            });
+                                                          },
+                                                        ),
+                                                        Text('Page $_currentPage'),
+                                                        IconButton(
+                                                          icon: Icon(Icons.arrow_forward),
+                                                          onPressed: _currentPage * _perPage >= chapter.maxChapter
+                                                              ? null
+                                                              : () {
+                                                            setState(() {
+                                                              _currentPage++;
+                                                              _fetchChapters();
+                                                            });
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
                                                   },
-                                                ),
-                                                ),
-
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    IconButton(
-                                                      icon: Icon(Icons.arrow_back),
-                                                      onPressed: _currentPage == 1
-                                                          ? null
-                                                          : () {
-                                                        setState(() {
-                                                          _currentPage--;
-                                                          _fetchChapters();
-                                                        });
-                                                      },
-                                                    ),
-                                                    Text('Page $_currentPage'),
-                                                    IconButton(
-                                                      icon: Icon(Icons.arrow_forward),
-                                                      onPressed: _currentPage * _perPage >= chapter.maxChapter
-                                                          ? null
-                                                          : () {
-                                                        setState(() {
-                                                          _currentPage++;
-                                                          _fetchChapters();
-                                                        });
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
+                                                )
                                               ],
                                             );
                                           }

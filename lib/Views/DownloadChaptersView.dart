@@ -247,7 +247,6 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
 void _showDialogWithDropdown(BuildContext context) {
   String? selectedValue;
   List<String> dropdownItems = ['pdf', 'prc', 'epub'];
-
   showDialog(
     context: context,
     builder: (BuildContext context) {
