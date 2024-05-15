@@ -216,17 +216,23 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
                         ),
                         IconButton(
                             onPressed: (){
-
+                              _showDialogWithDropdown(context);
                             },
                             icon: Icon(Icons.download)
                         ),
-                        Text(
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            'Tải xuống'
-                        )
+                        TextButton(
+                            onPressed: () {
+                                _showDialogWithDropdown(context);
+                                },
+                            child: Text(
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                              'Tải xuống'
+                            )
+                        ),
                       ],
                     ),
                   )
@@ -237,4 +243,52 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
       )
     );
   }
+}
+void _showDialogWithDropdown(BuildContext context) {
+  String? selectedValue;
+  List<String> dropdownItems = ['pdf', 'prc', 'epub'];
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Select an Option'),
+        content: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return DropdownButton<String>(
+              value: selectedValue,
+              hint: Text('Choose an option'),
+              items: dropdownItems.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (newValue) {
+                setState(() {
+                  selectedValue = newValue;
+                });
+              },
+            );
+          },
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              // Handle the selected value here
+              print('Selected value: $selectedValue');
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
