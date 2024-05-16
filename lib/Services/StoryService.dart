@@ -47,8 +47,8 @@ class StoryService {
     throw Exception('Failed to fetch story');
     }
   }
-  Future<ContentStory> fetchContentStory(String storyTitle, String chap) async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/contentStory/?datasource=Truyenfull&title=$storyTitle&chap=$chap'));
+  Future<ContentStory> fetchContentStory(String dataSource, String storyTitle, String chap) async {
+    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/contentStory/?datasource=$dataSource&title=$storyTitle&chap=$chap'));
 
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
@@ -95,7 +95,7 @@ class StoryService {
   }
 
   Future<ChapterPagination> fetchChapterPagination(String datasource, String title, String pageNumber) async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/listChapter/?datasource=Truyenfull&title=vo-than-chua-te&page=1'));
+    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/listChapter/?datasource=$datasource&title=$title&page=$pageNumber'));
 
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);

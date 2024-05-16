@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_login/ViewModels/ContentStoryViewModel.dart';
-import 'package:project_login/Views/Components/ChangeDisplayBottomSheet.dart';
+import 'package:project_login/Views/Components/SettingContentStoryBottomSheet.dart';
 import 'package:project_login/Views/Components/ChooseChapterBottomSheet.dart';
 
 class ContentStoryBottomAppBar extends StatelessWidget {
@@ -10,39 +10,45 @@ class ContentStoryBottomAppBar extends StatelessWidget {
   final Function(String) onFontFamilyChanged;
   final Function(int) onTextColorChanged;
   final Function(int) onBackgroundChanged;
-  final Function(int) onChooseChapter;
+  final Function(int, int) onChooseChapter;
   final Function() navigateToNextChap;
   final Function() navigateToPrevChap;
+  final Function(String) onSourceChange;
 
-  const ContentStoryBottomAppBar({super.key,
-    required this.contentStoryViewModel,
-    required this.onTextSizeChanged,
-    required this.onLineSpacingChanged,
-    required this.onFontFamilyChanged,
-    required this.onTextColorChanged,
-    required this.onBackgroundChanged,
-    required this.onChooseChapter,
-    required this.navigateToNextChap,
-    required this.navigateToPrevChap});
+  const ContentStoryBottomAppBar(
+      {super.key,
+      required this.contentStoryViewModel,
+      required this.onTextSizeChanged,
+      required this.onLineSpacingChanged,
+      required this.onFontFamilyChanged,
+      required this.onTextColorChanged,
+      required this.onBackgroundChanged,
+      required this.onChooseChapter,
+      required this.navigateToNextChap,
+      required this.navigateToPrevChap,
+      required this.onSourceChange});
 
   @override
   Widget build(BuildContext context) {
     bool canNavigateToNextChap = true;
     bool canNavigateToPrevChap = true;
 
-    if (contentStoryViewModel.contentStory?.chap ==
-        contentStoryViewModel.fakedatas[0]) {
+    if (contentStoryViewModel.chapterPagination.currentPage == 1 &&
+        contentStoryViewModel.chapterPagination.listChapter?[0].content ==
+            contentStoryViewModel.contentStory?.chapterTitle) {
       canNavigateToPrevChap = false;
     }
-    if (contentStoryViewModel.contentStory?.chap ==
-        contentStoryViewModel.fakedatas.last) {
+    if (contentStoryViewModel.chapterPagination.currentPage ==
+            contentStoryViewModel.chapterPagination.maxPage &&
+        contentStoryViewModel.contentStory?.chapterTitle ==
+            contentStoryViewModel.chapterPagination.listChapter?.last.content) {
       canNavigateToNextChap = false;
     }
 
     Color nextChapIconColor =
-    canNavigateToNextChap ? Colors.black : Colors.grey;
+        canNavigateToNextChap ? Colors.black : Colors.grey;
     Color prevChapIconColor =
-    canNavigateToPrevChap ? Colors.black : Colors.grey;
+        canNavigateToPrevChap ? Colors.black : Colors.grey;
 
     return Container(
         width: double.infinity,
@@ -95,13 +101,15 @@ class ContentStoryBottomAppBar extends StatelessWidget {
             } else if (index == 2) {
               showModalBottomSheet(
                 context: context,
-                builder: (BuildContext context) => ChangeDisplayBottomSheet(
-                  contentStoryViewModel,
-                  onTextSizeChanged,
-                  onLineSpacingChanged,
-                  onFontFamilyChanged,
-                  onTextColorChanged,
-                  onBackgroundChanged,
+                builder: (BuildContext context) =>
+                    SettingContentStoryBottomSheet(
+                  contentStoryViewModel: contentStoryViewModel,
+                  onTextSizeChanged: onTextSizeChanged,
+                  onLineSpacingChanged: onLineSpacingChanged,
+                  onFontFamilyChanged: onFontFamilyChanged,
+                  onTextColorChanged: onTextColorChanged,
+                  onBackgroundChanged: onBackgroundChanged,
+                  onSourceChange: onSourceChange,
                 ),
               );
             } else if (index == 3) {
@@ -113,4 +121,3 @@ class ContentStoryBottomAppBar extends StatelessWidget {
         ));
   }
 }
-

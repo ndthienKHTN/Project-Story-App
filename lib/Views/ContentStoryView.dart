@@ -9,13 +9,15 @@ import 'Components/ContentStoryBottomAppBar.dart';
 class ContentStoryScreen extends StatefulWidget {
   final String storyTitle;
   final String chap;
-  static const double MIN_TEXT_SIZE = 5;
-  static const double MAX_TEXT_SIZE = 30;
-  static const double MIN_LINE_SPACING = 0.5;
-  static const double MAX_LINE_SPACING = 5;
+  final String dataSource;
+  final int pageNumber;
 
   const ContentStoryScreen(
-      {super.key, required this.storyTitle, required this.chap});
+      {super.key,
+      required this.storyTitle,
+      required this.chap,
+      required this.dataSource,
+      required this.pageNumber});
 
   @override
   State<StatefulWidget> createState() => _ContentStoryScreenState();
@@ -29,8 +31,19 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     super.initState();
     _contentStoryViewModel =
         Provider.of<ContentStoryViewModel>(context, listen: false);
-    _contentStoryViewModel.fetchContentStory(widget.storyTitle, widget.chap);
-    _contentStoryViewModel.fetchContentDisplay();
+    _fetchData();
+  }
+
+  void _fetchData() async {
+    await _contentStoryViewModel.fetchChapterPagination(
+        widget.dataSource, widget.storyTitle, widget.pageNumber, true);
+    await Future.wait([
+      _contentStoryViewModel.fetchContentStory(
+          widget.dataSource, widget.storyTitle, widget.chap),
+      _contentStoryViewModel.fetchContentDisplay(),
+      _contentStoryViewModel.fetchSourceBooks(),
+      _contentStoryViewModel.fetchFormatList(),
+    ]);
   }
 
   @override
@@ -63,15 +76,12 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
                     color: intToColor(
                         contentStoryViewModel.contentDisplay.backgroundColor),
                   ),
-                  child: contentStoryViewModel.contentStory !=
-                          null // sửa lại != null khi load được data
+                  child: contentStoryViewModel.contentStory != null
                       ? SingleChildScrollView(
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Text(
-                              contentStoryViewModel.contentStory?.content ??
-                                  'content', // load data
-                              //'contffffffffffffffffffffffffffffffffffffffffent\ncontent', // fake data
+                              contentStoryViewModel.contentStory?.content ?? 'content',
                               style: TextStyle(
                                   fontSize: contentStoryViewModel
                                       .contentDisplay.textSize,
@@ -105,14 +115,17 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
                   onBackgroundChanged: (newColor) {
                     onBackgroundChanged(newColor);
                   },
-                  onChooseChapter: (index) {
-                    navigateToNewChap(index);
+                  onChooseChapter: (index, pageNumber) {
+                    navigateToNewChap(index, pageNumber);
                   },
                   navigateToNextChap: () {
                     navigateToNextChap();
                   },
                   navigateToPrevChap: () {
                     navigateToPrevChap();
+                  },
+                  onSourceChange: (source) {
+                    onSourceChange(source);
                   },
                 )
               : null,
@@ -164,22 +177,68 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
 
   void navigateToNextChap() {
     setState(() {
-      _contentStoryViewModel.fetchContentStory(widget.storyTitle,
-          _contentStoryViewModel.fakedatas[++_contentStoryViewModel.index]);
+      if (_contentStoryViewModel.chapterPagination.listChapter?.last.content ==
+          _contentStoryViewModel.contentStory?.chapterTitle) {
+        _contentStoryViewModel
+            .fetchChapterPagination(
+                _contentStoryViewModel.currentSource,
+                widget.storyTitle,
+                ++_contentStoryViewModel.currentPageNumber,
+                true)
+            .then((_) => _contentStoryViewModel.fetchContentStory(
+                _contentStoryViewModel.currentSource,
+                widget.storyTitle,
+                _contentStoryViewModel
+                    .chapterPagination.listChapter![0].content));
+      } else {
+        _contentStoryViewModel.fetchContentStory(
+            _contentStoryViewModel.currentSource,
+            widget.storyTitle,
+            _contentStoryViewModel.chapterPagination
+                .listChapter![++_contentStoryViewModel.indexChapter].content);
+      }
     });
   }
 
   void navigateToPrevChap() {
     setState(() {
-      _contentStoryViewModel.fetchContentStory(widget.storyTitle,
-          _contentStoryViewModel.fakedatas[--_contentStoryViewModel.index]);
+      if (_contentStoryViewModel.chapterPagination.listChapter?[0].content ==
+          _contentStoryViewModel.contentStory?.chapterTitle) {
+        _contentStoryViewModel
+            .fetchChapterPagination(
+                _contentStoryViewModel.currentSource,
+                widget.storyTitle,
+                --_contentStoryViewModel.currentPageNumber,
+                true)
+            .then((value) => _contentStoryViewModel.fetchContentStory(
+                _contentStoryViewModel.currentSource,
+                widget.storyTitle,
+                _contentStoryViewModel
+                    .chapterPagination.listChapter![50].content));
+      } else {
+        _contentStoryViewModel.fetchContentStory(
+            _contentStoryViewModel.currentSource,
+            widget.storyTitle,
+            _contentStoryViewModel.chapterPagination
+                .listChapter![--_contentStoryViewModel.indexChapter].content);
+      }
     });
   }
 
-  void navigateToNewChap(int index) {
+  void navigateToNewChap(int index, int pageNumber) {
+    _contentStoryViewModel.currentPageNumber = pageNumber;
     setState(() {
       _contentStoryViewModel.fetchContentStory(
-          widget.storyTitle, _contentStoryViewModel.fakedatas[index]);
+          _contentStoryViewModel.currentSource,
+          widget.storyTitle,
+          _contentStoryViewModel.chapterPagination.listChapter![index].content);
+    });
+  }
+
+  void onSourceChange(String newSource) {
+    setState(() {
+      _contentStoryViewModel.fetchContentStory(
+          newSource, widget.storyTitle, widget.chap);
     });
   }
 }

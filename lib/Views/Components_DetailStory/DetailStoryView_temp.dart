@@ -308,7 +308,7 @@ class _DetailStoryScreenState1 extends State<DetailStoryScreen1> {
                                      MaterialPageRoute(
                                        builder: (context) => ChangeNotifierProvider(
                                         create: (_) => ContentStoryViewModel(),
-                                         child: ContentStoryScreen(storyTitle: storyDetailViewModel.story?.name != null ? storyDetailViewModel.story!.name : "", chap: '10',),
+                                         child: ContentStoryScreen(storyTitle: storyDetailViewModel.story?.name != null ? storyDetailViewModel.story!.name : "", chap: '10', dataSource: 'Truyenfull', pageNumber: 1,),
                                        ),
                                      ),
                                    );
