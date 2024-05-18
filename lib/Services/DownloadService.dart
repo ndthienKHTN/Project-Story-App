@@ -22,7 +22,7 @@ class DownloadService {
     HttpClient httpClient = HttpClient();
     HttpClientRequest request = await httpClient.getUrl(
         Uri.parse(
-          "http://10.0.2.2:3000/api/v1/download/downloadChapter/?datasource=$datasource&title=$storyTitle&chap=$chapter&type=$fileType"
+          "http://localhost:3000/api/v1/download/downloadChapter/?datasource=$datasource&title=$storyTitle&chap=$chapter&type=$fileType"
         ));
     HttpClientResponse response = await request.close();
     List<int> bytes = await consolidateHttpClientResponseBytes(response);

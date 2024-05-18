@@ -35,6 +35,8 @@ class ContentStoryViewModel extends ChangeNotifier {
   Future<void> fetchContentStory(String storyTitle, int pageNumber, String datasource) async {
     try {
       _contentStory = await _storyService.fetchContentStory(storyTitle, pageNumber, datasource);
+      Logger logger = Logger();
+      logger.i(_contentStory.toString());
       notifyListeners();
     } catch (e) {
       // Handle error
