@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_login/ViewModels/DownloadChatersViewModel.dart';
 import 'package:project_login/Views/DownloadChaptersView.dart';
 import 'package:provider/provider.dart';
 import '../Models/Story.dart';
@@ -64,7 +65,10 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
             onPressed: (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => DownloadChapters()),
+                MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
+                  create: (_) => DownloadChaptersViewModel(),
+                  child: DownloadChapters(storyTitle: widget.storyTitle, datasource: widget.datasource)
+                )),
               );
             },
             icon: SizedBox(

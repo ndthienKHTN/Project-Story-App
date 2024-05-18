@@ -42,7 +42,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   http: ^1.2.1
   curved_navigation_bar: ^1.0.3
-
+  archive: ^3.1.2
 
 dev_dependencies:
   flutter_test:

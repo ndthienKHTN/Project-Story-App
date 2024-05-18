@@ -62,7 +62,7 @@ class _DetailStoryScreenState1 extends State<DetailStoryScreen1> {
               onPressed: (){
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => DownloadChapters()),
+                  MaterialPageRoute(builder: (context) => DownloadChapters(storyTitle: widget.storyTitle, datasource: "Truyenfull")),
                 );
               },
               icon: SizedBox(

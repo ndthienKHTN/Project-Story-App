@@ -3,9 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:project_login/ViewModels/DownloadChatersViewModel.dart';
+import 'package:provider/provider.dart';
+
+import '../Services/DownloadService.dart';
 
 class DownloadChapters extends StatelessWidget{
 
+  final String storyTitle;
+  final String datasource;
+  const DownloadChapters({super.key, required this.storyTitle, required this.datasource});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,12 +36,14 @@ class DownloadChapters extends StatelessWidget{
           ),
         ) ,
       ),
-      body: BodyWidget(),
+      body:  BodyWidget(storyTitle: this.storyTitle, datasource: this.datasource),
     );
   }
 }
 class BodyWidget extends StatefulWidget {
-  const BodyWidget({super.key});
+  final String storyTitle;
+  final String datasource;
+  const BodyWidget({super.key, required this.storyTitle, required this.datasource});
   @override
   State<BodyWidget> createState() => _BodyWidgetState();
 }
@@ -43,6 +52,7 @@ class _BodyWidgetState extends State<BodyWidget> {
   int numberOfButtons = 16;
   late Map<int, bool> selectedButtons;
   bool _isCheckAll = false;
+  late DownloadChaptersViewModel _downloadChaptersViewModel;
   @override
   void initState() {
     super.initState();
@@ -51,6 +61,7 @@ class _BodyWidgetState extends State<BodyWidget> {
       key: (item) => item,
       value: (item) => false,
     );
+    _downloadChaptersViewModel = Provider.of<DownloadChaptersViewModel>(context, listen: false);
   }
   @override
   Widget build(BuildContext context) {
@@ -167,7 +178,7 @@ class _BodyWidgetState extends State<BodyWidget> {
                       ),
                       IconButton(
                           onPressed: (){
-
+                            _downloadChaptersViewModel.downloadChaptersOfStory(widget.storyTitle, ["1"], "HTML", widget.datasource);
                           },
                           icon: Icon(Icons.download)
                       ),
