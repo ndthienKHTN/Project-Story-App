@@ -33,18 +33,18 @@ class DownloadService {
     Directory? externalDir = await getExternalStorageDirectory();
     String? externalPath = externalDir?.path;
     Logger logger = Logger();
-    logger.i(externalPath);
+    //logger.i(externalPath);
 
     // Get the document directory path
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
     //logger.i(appDocPath);
-    
+
+    String? downloadDirectory = await getDownloadDirectory();
+
     // Create the target folder
-    String targetFolderPath = '$externalPath/$folderName';
+    String targetFolderPath = '$downloadDirectory/$folderName';
     Directory(targetFolderPath).createSync(recursive: true);
-
-
 
     // Extract the files from the ZIP archive
     for (ArchiveFile file in archive) {
@@ -60,8 +60,19 @@ class DownloadService {
     print('ZIP file extracted successfully to $targetFolderPath');
 
     // Get the file path of the extracted .txt file
+    for (ArchiveFile file in archive) {
+      if (!file.isFile) continue;
+      String filePath = '$externalPath/$folderName/${file.name}';
+      if (filePath.toLowerCase().endsWith('.txt')) {
+        List<int> data = file.content as List<int>;
+        File(filePath)
+          ..createSync(recursive: true)
+          ..writeAsBytesSync(data);
+        break;
+      }
+    }
     String txtFilePath = await findTxtFilePath(archive);
-    String absoluteTxtFilePath = '$targetFolderPath/$txtFilePath';
+    String absoluteTxtFilePath = '$externalPath/$folderName/$txtFilePath';
     print('Path of the extracted .txt file: $absoluteTxtFilePath');
 
     // Delete the ZIP file
@@ -78,6 +89,23 @@ class DownloadService {
     }*/
 
     return absoluteTxtFilePath;
+  }
+
+  Future<String?> getDownloadDirectory() async {
+    Directory? directory;
+    try {
+      if (Platform.isIOS) {
+        directory = await getApplicationDocumentsDirectory();
+      } else {
+        directory = Directory('/storage/emulated/0/Download');
+        // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
+        // ignore: avoid_slow_async_io
+        if (!await directory.exists()) directory = await getExternalStorageDirectory();
+      }
+    } catch (err, stack) {
+      print("Cannot get download folder path");
+    }
+    return directory?.path;
   }
 
   Future<List<String>> getAllFilePaths(String directoryPath) async {

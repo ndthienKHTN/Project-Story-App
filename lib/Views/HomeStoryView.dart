@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../Models/Story.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
 import 'DetailStoryView.dart';
-import 'Components_DetailStory/DetailStoryView_temp.dart';
 import 'SearchStoryView.dart';
 
 class HomeScreen extends StatefulWidget {
