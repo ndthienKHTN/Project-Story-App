@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'ViewModels/DetailStoryViewModel.dart';
 import 'ViewModels/HomeStoryViewModel.dart';
 import 'ViewModels/SearchStoryViewModel.dart';
+import 'Views/MainView.dart';
 void main() {
   runApp(MyApp());
 }

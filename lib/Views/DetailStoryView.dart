@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../Models/Story.dart';
 import '../ViewModels/ContentStoryViewModel.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
+import '../ViewModels/DownloadChatersViewModel.dart';
 import 'ContentStoryView.dart';
 
 class DetailStoryScreen extends StatefulWidget {
@@ -37,7 +38,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
   Widget _currentData = Text('Example');
 
   final List<String> items = [
-    'TruyenFull',
+    'Truyenfull',
     'Truyen123',
     'TruyenMoi'
   ];
@@ -313,7 +314,16 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                         MaterialPageRoute(
                                           builder: (context) => ChangeNotifierProvider(
                                             create: (_) => ContentStoryViewModel(),
-                                            child: ContentStoryScreen(storyTitle: storyDetailViewModel.story?.name != null ? storyDetailViewModel.story!.name : ""),
+                                            child: ContentStoryScreen(
+                                              storyTitle: storyDetailViewModel.story?.title != null ?
+                                                          storyDetailViewModel.story!.title
+                                                              : "",
+                                              title:  storyDetailViewModel.story?.name != null ?
+                                                      storyDetailViewModel.story!.name
+                                                        : "",
+                                              chap: 1,
+                                              dataSource: items[0],
+                                              pageNumber: 1,),
                                           ),
                                         ),
                                       );

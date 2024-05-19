@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:project_login/Views/ContentDisplayView.dart';
 import 'package:project_login/Models/ChapterPagination.dart';
 import 'package:project_login/Models/ReadingHistory.dart';
 import 'package:project_login/Services/LocalDatabase.dart';
@@ -36,39 +35,41 @@ class ContentStoryViewModel extends ChangeNotifier {
       0; // to get the index of current source in sourceBooks (only using when automatically change source)
   String currentSource = '';
   List<String> formatList = []; // list of format user can choose when download
-  ChapterPagination chapterPagination = ChapterPagination.defaults();
-
+  ChapterPagination _chapterPagination = ChapterPagination.defaults();
+  ChapterPagination get chapterPagination => _chapterPagination;
   // chapterPagination change when user see chapter in ChooseChapterBottomSheet so we need this variable to track current page number
   int currentPageNumber = 0;
 
   ContentStory? get contentStory => _contentStory;
-  List<String> _fontNames = [];
 
   List<String> get fontNames => _fontNames;
 
-  Future<void> fetchContentStory(
-      String dataSource, String storyTitle, String chap) async {
-  ChapterPagination? _chapterPagination;
-  ChapterPagination? get chapterPagination => _chapterPagination;
 
-  Future<void> fetchContentStory(String storyTitle, int pageNumber, String datasource) async {
+ /* ChapterPagination? _chapterPagination;
+  ChapterPagination? get chapterPagination => _chapterPagination;*/
+
+  Future<void> fetchContentStory(String storyTitle, int chapNumber, String datasource) async {
     try {
       _contentStory =
-          await _storyService.fetchContentStory(dataSource, storyTitle, chap);
+          await _storyService.fetchContentStory(storyTitle, chapNumber, datasource);
       _indexSource = 0;
       print(currentPageNumber.toString());
-      print(chap);
+      print(chapNumber);
 
       // calculate indexChapter
       for (int i = 0; i < chapterPagination.listChapter!.length; i++) {
-        if (chapterPagination.listChapter?[i].content == chap) {
+        if (chapterPagination.listChapter?[i].content == chapNumber) {
           indexChapter = i;
           break;
         }
       }
+
+      // TODO: them number of chap per page trong chapter pagination
+      indexChapter = 0;
+
       print(indexChapter.toString());
       // save current data source
-      currentSource = dataSource;
+      currentSource = datasource;
       notifyListeners();
 
       // insert reading history to local database
@@ -76,8 +77,8 @@ class ContentStoryViewModel extends ChangeNotifier {
       // tạm comment
       // _localDatabase.insertData(ReadingHistory(title: storyTitle, chap: chap, date: currentTimeMillis));
     } catch (e) {
-      print('Error fetching story content source $dataSource: $e');
-      fetchContentStory(sourceBooks[_indexSource++], storyTitle, chap);
+      print('Error fetching story content source $datasource: $e');
+      fetchContentStory( storyTitle, chapNumber, sourceBooks[_indexSource++]);
     }
   }
 
@@ -117,20 +118,21 @@ class ContentStoryViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchChapterPagination(String title, int pageNumber, String datasource) async {
+  Future<void> fetchChapterPagination(String storyTitle, int pageNumber, String datasource, bool changePageNumber) async {
     try {
       // Fetch story details from the API using the storyId
-      _chapterPagination = await _storyService.fetchChapterPagination(title,pageNumber,datasource);
+      _chapterPagination = await _storyService.fetchChapterPagination(storyTitle,pageNumber,datasource);
+      if (changePageNumber) {
+        currentPageNumber = pageNumber;
+      }
       Logger logger = Logger();
       logger.i(_chapterPagination.toString());
       notifyListeners();
     } catch (e) {
       // Handle error
-      print('Error fetching chapter pagination: $e');
+      print('Error fetching chapter pagination list: $e');
     }
   }
-
-
   Future<void> fetchSourceBooks() async {
     try {
       //sourceBooks= await _storyService.fetchListNameDataSource();
@@ -148,20 +150,6 @@ class ContentStoryViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print('Error fetching format list: $e');
-    }
-  }
-
-  Future<void> fetchChapterPagination(
-      String dataSource, String title, int page, bool changePageNumber) async {
-    try {
-      chapterPagination = await _storyService.fetchChapterPagination(
-          dataSource, title, page.toString());
-      if (changePageNumber) {
-        currentPageNumber = page;
-      }
-      notifyListeners();
-    } catch (e) {
-      print('Error fetching chapter pagination list: $e');
     }
   }
 

@@ -72,9 +72,10 @@ class _ChooseChapterBottomSheetState extends State<ChooseChapterBottomSheet> {
                         });
 
                         contentStoryViewModel.fetchChapterPagination(
-                            widget._contentStoryViewModel.currentSource,
                             widget._contentStoryViewModel.contentStory!.title,
-                            currentPageNumber, false).then((_) {
+                            currentPageNumber,
+                            widget._contentStoryViewModel.currentSource,
+                            false).then((_) {
                           setState(() {
                             // Update UI after data has been fetched
                           });
@@ -99,9 +100,10 @@ class _ChooseChapterBottomSheetState extends State<ChooseChapterBottomSheet> {
                               currentPageNumber = int.parse(newValue);
 
                               contentStoryViewModel.fetchChapterPagination(
-                                  widget._contentStoryViewModel.currentSource,
                                   widget._contentStoryViewModel.contentStory!.title,
-                                  currentPageNumber, false).then((_) {
+                                  currentPageNumber,
+                                  widget._contentStoryViewModel.currentSource,
+                                  false).then((_) {
                                 setState(() {
                                   // Update UI after data has been fetched
                                 });
@@ -137,9 +139,10 @@ class _ChooseChapterBottomSheetState extends State<ChooseChapterBottomSheet> {
                         });
 
                         contentStoryViewModel.fetchChapterPagination(
-                            widget._contentStoryViewModel.currentSource,
                             widget._contentStoryViewModel.contentStory!.title,
-                            currentPageNumber, false).then((_) {
+                            currentPageNumber,
+                            widget._contentStoryViewModel.currentSource,
+                            false).then((_) {
                           setState(() {
                             // Update UI after data has been fetched
                           });

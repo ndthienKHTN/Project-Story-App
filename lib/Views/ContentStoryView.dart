@@ -8,7 +8,11 @@ import 'Components/ContentStoryBottomAppBar.dart';
 
 class ContentStoryScreen extends StatefulWidget {
   final String storyTitle;
-  final String chap;
+  final String title;
+
+  //TODO: này phải chương số mấy không
+  final int chap;
+
   final String dataSource;
   final int pageNumber;
 
@@ -20,6 +24,7 @@ class ContentStoryScreen extends StatefulWidget {
   const ContentStoryScreen(
       {super.key,
       required this.storyTitle,
+        required this.title,
       required this.chap,
       required this.dataSource,
       required this.pageNumber});
@@ -41,10 +46,10 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
 
   void _fetchData() async {
     await _contentStoryViewModel.fetchChapterPagination(
-        widget.dataSource, widget.storyTitle, widget.pageNumber, true);
+        widget.storyTitle, widget.pageNumber,widget.dataSource,  true);
     await Future.wait([
       _contentStoryViewModel.fetchContentStory(
-          widget.dataSource, widget.storyTitle, widget.chap),
+          widget.storyTitle, widget.chap,  widget.dataSource),
       _contentStoryViewModel.fetchContentDisplay(),
       _contentStoryViewModel.fetchSourceBooks(),
       _contentStoryViewModel.fetchFormatList(),
@@ -186,21 +191,26 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
           _contentStoryViewModel.contentStory?.chapterTitle) {
         _contentStoryViewModel
             .fetchChapterPagination(
-                _contentStoryViewModel.currentSource,
                 widget.storyTitle,
                 ++_contentStoryViewModel.currentPageNumber,
+                _contentStoryViewModel.currentSource,
                 true)
             .then((_) => _contentStoryViewModel.fetchContentStory(
-                _contentStoryViewModel.currentSource,
                 widget.storyTitle,
-                _contentStoryViewModel
-                    .chapterPagination.listChapter![0].content));
+                //TODO: need to change
+                1,
+                /*_contentStoryViewModel
+                    .chapterPagination.listChapter![0].content,*/
+                _contentStoryViewModel.currentSource));
       } else {
         _contentStoryViewModel.fetchContentStory(
-            _contentStoryViewModel.currentSource,
+
             widget.storyTitle,
-            _contentStoryViewModel.chapterPagination
-                .listChapter![++_contentStoryViewModel.indexChapter].content);
+            //TODO: need to change
+            1,
+            /*_contentStoryViewModel.chapterPagination
+                .listChapter![++_contentStoryViewModel.indexChapter].content,*/
+            _contentStoryViewModel.currentSource);
       }
     });
   }
@@ -211,21 +221,26 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
           _contentStoryViewModel.contentStory?.chapterTitle) {
         _contentStoryViewModel
             .fetchChapterPagination(
-                _contentStoryViewModel.currentSource,
                 widget.storyTitle,
                 --_contentStoryViewModel.currentPageNumber,
+                _contentStoryViewModel.currentSource,
                 true)
             .then((value) => _contentStoryViewModel.fetchContentStory(
-                _contentStoryViewModel.currentSource,
                 widget.storyTitle,
-                _contentStoryViewModel
-                    .chapterPagination.listChapter![50].content));
+                //TODO: need to change
+                1,
+                /*_contentStoryViewModel
+                    .chapterPagination.listChapter![50].content,*/
+                _contentStoryViewModel.currentSource,));
       } else {
         _contentStoryViewModel.fetchContentStory(
-            _contentStoryViewModel.currentSource,
+
             widget.storyTitle,
-            _contentStoryViewModel.chapterPagination
-                .listChapter![--_contentStoryViewModel.indexChapter].content);
+          //TODO: need to change
+          1,
+            /*_contentStoryViewModel.chapterPagination
+                .listChapter![--_contentStoryViewModel.indexChapter].content*/
+          _contentStoryViewModel.currentSource);
       }
     });
   }
@@ -234,16 +249,18 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     _contentStoryViewModel.currentPageNumber = pageNumber;
     setState(() {
       _contentStoryViewModel.fetchContentStory(
-          _contentStoryViewModel.currentSource,
           widget.storyTitle,
-          _contentStoryViewModel.chapterPagination.listChapter![index].content);
+          //TODO: need to change
+          1,
+          /*_contentStoryViewModel.chapterPagination.listChapter![index].content*/
+          _contentStoryViewModel.currentSource);
     });
   }
 
   void onSourceChange(String newSource) {
     setState(() {
       _contentStoryViewModel.fetchContentStory(
-          newSource, widget.storyTitle, widget.chap);
+          widget.storyTitle, widget.chap, newSource);
     });
   }
 }

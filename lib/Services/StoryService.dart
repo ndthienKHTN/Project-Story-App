@@ -47,8 +47,8 @@ class StoryService {
       throw Exception('Failed to fetch detail story');
     }
   }
-  Future<ContentStory> fetchContentStory(String storyTitle, int pageNumber, String datasource) async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/contentStory/?datasource=$datasource&title=$storyTitle&chap=$pageNumber'));
+  Future<ContentStory> fetchContentStory(String storyTitle, int chapNumber, String datasource) async {
+    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/contentStory/?datasource=$datasource&title=$storyTitle&chap=$chapNumber'));
 
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
