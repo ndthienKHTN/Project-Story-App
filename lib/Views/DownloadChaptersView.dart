@@ -20,6 +20,7 @@ class DownloadChaptersScreen extends StatefulWidget {
 
 class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   late DetailStoryViewModel _detailStoryViewModel;
+  //late DownloadChaptersViewModel _downloadChaptersViewModel;
   final int buttonsPerRow = 3;
   int _perPage = 27;
   int _currentPage = 1;
@@ -32,6 +33,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   void initState() {
     super.initState();
     _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
+    //_downloadChaptersViewModel = DownloadChaptersViewModel();
     _fetchChapters();
     selectedButtons = Map.fromIterable(
       List.generate(_perPage, (index) => index + 1),
