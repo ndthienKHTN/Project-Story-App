@@ -90,7 +90,10 @@ flutter:
   - assets/images/text_size_decrease_icon.png
   - assets/images/text_size_increase_icon.png
   - assets/images/naruto.jpg
-
+  - assets/images/Logo.png
+  - assets/images/Splash.png
+  - assets/images/default_image.png
+  - assets/images/empty-box.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

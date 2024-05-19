@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:project_login/Constants.dart';
-import '../../ViewModels/ContentStoryViewModel.dart';
-import '../Components/ContentStoryBottomAppBar.dart';
-import '../Components/ContentStoryTopAppBar.dart';
+import '../ViewModels/ContentStoryViewModel.dart';
+import 'Components/ContentStoryBottomAppBar.dart';
+import 'Components/ContentStoryTopAppBar.dart';
 
 
 class ContentStoryScreen extends StatefulWidget {

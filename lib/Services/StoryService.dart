@@ -55,7 +55,6 @@ class StoryService {
 
   Future<Map<String, List<Story>>> fetchHomeStory(String datasource) async {
     final response = await http.get(Uri.parse('http://localhost:3000/api/v1/home/?datasource=$datasource'));
-
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
       Map<String, List<Story>> mapStories = <String, List<Story>>{};
@@ -78,7 +77,6 @@ class StoryService {
   Future<List<categoryModel.Category>> fetchListCategory(String datasource) async {
     try {
       final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listCategory/?datasource=$datasource'));
-
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
 
