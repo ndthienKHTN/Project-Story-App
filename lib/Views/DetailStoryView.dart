@@ -68,7 +68,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                 context,
                 MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
                   create: (_) => DownloadChaptersViewModel(),
-                  child: DownloadChapters(storyTitle: widget.storyTitle, datasource: widget.datasource)
+                  child: DownloadChaptersScreen(storyTitle: widget.storyTitle, datasource: widget.datasource)
                 )),
               );
             },
@@ -296,7 +296,13 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                                                   MaterialPageRoute(
                                                                     builder: (context) => ChangeNotifierProvider(
                                                                         create: (context) => ContentStoryViewModel(),
-                                                                        child:  ContentStoryScreen(storyTitle: chapter_page.content, datasource: widget.datasource,)
+                                                                        child:  ContentStoryScreen(
+                                                                          storyTitle: widget.storyTitle,
+                                                                          title: storyDetailViewModel.story!.title,
+                                                                          //TODO: need to change
+                                                                          chap: 1,
+                                                                          dataSource: widget.datasource,
+                                                                          pageNumber: 1,)
                                                                     ),
                                                                   ),
                                                                 );

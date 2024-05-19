@@ -18,9 +18,6 @@ class DownloadChaptersScreen extends StatefulWidget {
   _DownloadChaptersState createState() => _DownloadChaptersState();
 }
 
-  final String storyTitle;
-  final String datasource;
-  const DownloadChapters({super.key, required this.storyTitle, required this.datasource});
 class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   late DetailStoryViewModel _detailStoryViewModel;
   final int buttonsPerRow = 3;
