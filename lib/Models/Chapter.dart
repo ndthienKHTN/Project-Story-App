@@ -1,9 +1,12 @@
-
 class Chapter {
   String content;
   String url;
 
   Chapter({required this.content, required this.url});
+
+  Chapter.defaults()
+      : content = '',
+        url = '';
 
   @override
   String toString() {

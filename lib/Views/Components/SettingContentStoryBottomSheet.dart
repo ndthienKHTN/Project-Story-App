@@ -1,44 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:project_login/Views/ContentStoryView.dart';
 
 import '../../Constants.dart';
 import '../../ViewModels/ContentStoryViewModel.dart';
 
-class ChangeDisplayBottomSheet extends StatefulWidget {
-  final ContentStoryViewModel _contentStoryViewModel;
+class SettingContentStoryBottomSheet extends StatefulWidget {
+  final ContentStoryViewModel contentStoryViewModel;
   final Function(double) onTextSizeChanged;
   final Function(double) onLineSpacingChanged;
   final Function(String) onFontFamilyChanged;
   final Function(int) onTextColorChanged;
   final Function(int) onBackgroundChanged;
+  final Function(String) onSourceChange;
 
-  const ChangeDisplayBottomSheet(
-      this._contentStoryViewModel,
-      this.onTextSizeChanged,
-      this.onLineSpacingChanged,
-      this.onFontFamilyChanged,
-      this.onTextColorChanged,
-      this.onBackgroundChanged,
-      {super.key});
+  const SettingContentStoryBottomSheet(
+      {required this.contentStoryViewModel,
+      required this.onTextSizeChanged,
+      required this.onLineSpacingChanged,
+      required this.onFontFamilyChanged,
+      required this.onTextColorChanged,
+      required this.onBackgroundChanged,
+      required this.onSourceChange,
+      super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _ChangeDisplayBottomSheetState();
+    return _SettingContentStoryBottomSheetState();
   }
 }
 
-class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
-  ContentStoryViewModel get contentStoryViewModel =>
-      widget._contentStoryViewModel;
+class _SettingContentStoryBottomSheetState extends State<SettingContentStoryBottomSheet> {
 
-  late String dropdownValue;
+  late String dropdownValueFont;
+  late String dropdownValueSource;
 
   @override
   void initState() {
     super.initState();
-    dropdownValue = contentStoryViewModel.contentDisplay.fontFamily;
+    dropdownValueFont = widget.contentStoryViewModel.contentDisplay.fontFamily;
+    dropdownValueSource = widget.contentStoryViewModel.currentSource;
   }
 
   @override
@@ -61,11 +61,56 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
         ),
         child: Column(
           children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Row(
+                  children: [
+                    Text(
+                      "Nguồn truyện",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(color: Colors.white),
+                          child: DropdownButton<String>(
+                            value: dropdownValueSource,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                dropdownValueSource = newValue!;
+                                widget.onSourceChange(dropdownValueSource);
+                              });
+                            },
+                            items: widget.contentStoryViewModel.sourceBooks
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: Text(value),
+                                ),
+                              );
+                            }).toList(),
+                            isExpanded: true,
+                            menuMaxHeight: screenHeight / 4,
+                            underline: Container(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             const Align(
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding:
-                EdgeInsets.only(top: 20, bottom: 10, left: 20, right: 20),
+                    EdgeInsets.only(top: 20, bottom: 10, left: 20, right: 20),
                 child: Text(
                   "Size",
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -87,13 +132,13 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                   child: InkWell(
                     onTap: () {
                       setState(() {
-                        if (contentStoryViewModel.contentDisplay.textSize -
-                            textSizeChange >=
+                        if (widget.contentStoryViewModel.contentDisplay.textSize -
+                                textSizeChange >=
                             MIN_TEXT_SIZE) {
                           double newTextSize =
-                              contentStoryViewModel.contentDisplay.textSize -
+                              widget.contentStoryViewModel.contentDisplay.textSize -
                                   textSizeChange;
-                          contentStoryViewModel.contentDisplay.textSize =
+                          widget.contentStoryViewModel.contentDisplay.textSize =
                               newTextSize;
                           widget.onTextSizeChanged(newTextSize);
                         }
@@ -101,16 +146,16 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                     },
                     child: const Padding(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                      child: ImageIcon(
-                          AssetImage('assets/images/text_size_decrease_icon.png')),
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                      child: ImageIcon(AssetImage(
+                          'assets/images/text_size_decrease_icon.png')),
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(15),
                   child: Text(
-                    contentStoryViewModel.contentDisplay.textSize.toString(),
+                    widget.contentStoryViewModel.contentDisplay.textSize.toString(),
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -126,13 +171,13 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                   child: InkWell(
                     onTap: () {
                       setState(() {
-                        if (contentStoryViewModel.contentDisplay.textSize +
-                            textSizeChange <=
+                        if (widget.contentStoryViewModel.contentDisplay.textSize +
+                                textSizeChange <=
                             MAX_TEXT_SIZE) {
                           double newTextSize =
-                              contentStoryViewModel.contentDisplay.textSize +
+                              widget.contentStoryViewModel.contentDisplay.textSize +
                                   textSizeChange;
-                          contentStoryViewModel.contentDisplay.textSize =
+                          widget.contentStoryViewModel.contentDisplay.textSize =
                               newTextSize;
                           widget.onTextSizeChanged(newTextSize);
                         }
@@ -140,9 +185,9 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                     },
                     child: const Padding(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                      child: ImageIcon(
-                          AssetImage('assets/images/text_size_increase_icon.png')),
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                      child: ImageIcon(AssetImage(
+                          'assets/images/text_size_increase_icon.png')),
                     ),
                   ),
                 ),
@@ -163,13 +208,13 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                   child: InkWell(
                     onTap: () {
                       setState(() {
-                        if (contentStoryViewModel.contentDisplay.lineSpacing -
-                            lineSpacingChange >=
+                        if (widget.contentStoryViewModel.contentDisplay.lineSpacing -
+                                lineSpacingChange >=
                             MIN_LINE_SPACING) {
                           double newlineSpacing =
-                              contentStoryViewModel.contentDisplay.lineSpacing -
+                              widget.contentStoryViewModel.contentDisplay.lineSpacing -
                                   lineSpacingChange;
-                          contentStoryViewModel.contentDisplay.lineSpacing =
+                          widget.contentStoryViewModel.contentDisplay.lineSpacing =
                               newlineSpacing;
                           widget.onLineSpacingChanged(newlineSpacing);
                         }
@@ -177,16 +222,16 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                     },
                     child: const Padding(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                      child: ImageIcon(
-                          AssetImage('assets/images/line_spacing_decrease_icon.png')),
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                      child: ImageIcon(AssetImage(
+                          'assets/images/line_spacing_decrease_icon.png')),
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(15),
                   child: Text(
-                    contentStoryViewModel.contentDisplay.lineSpacing.toString(),
+                    widget.contentStoryViewModel.contentDisplay.lineSpacing.toString(),
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -202,18 +247,23 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
                   child: InkWell(
                     onTap: () {
                       setState(() {
-                        if (contentStoryViewModel.contentDisplay.lineSpacing + lineSpacingChange <= MAX_LINE_SPACING) {
-                          double newlineSpacing = contentStoryViewModel.contentDisplay.lineSpacing + lineSpacingChange;
-                          contentStoryViewModel.contentDisplay.lineSpacing = newlineSpacing;
+                        if (widget.contentStoryViewModel.contentDisplay.lineSpacing +
+                                lineSpacingChange <=
+                            MAX_LINE_SPACING) {
+                          double newlineSpacing =
+                              widget.contentStoryViewModel.contentDisplay.lineSpacing +
+                                  lineSpacingChange;
+                          widget.contentStoryViewModel.contentDisplay.lineSpacing =
+                              newlineSpacing;
                           widget.onLineSpacingChanged(newlineSpacing);
                         }
                       });
                     },
                     child: const Padding(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                      child: ImageIcon(
-                          AssetImage('assets/images/line_spacing_increase_icon.png')),
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                      child: ImageIcon(AssetImage(
+                          'assets/images/line_spacing_increase_icon.png')),
                     ),
                   ),
                 ),
@@ -234,14 +284,14 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
               decoration: const BoxDecoration(color: Colors.white),
               width: screenWidth - 50,
               child: DropdownButton<String>(
-                value: dropdownValue,
+                value: dropdownValueFont,
                 onChanged: (String? newValue) {
                   setState(() {
-                    dropdownValue = newValue!;
-                    widget.onFontFamilyChanged(dropdownValue);
+                    dropdownValueFont = newValue!;
+                    widget.onFontFamilyChanged(dropdownValueFont);
                   });
                 },
-                items: contentStoryViewModel.fontNames
+                items: widget.contentStoryViewModel.fontNames
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -260,7 +310,7 @@ class _ChangeDisplayBottomSheetState extends State<ChangeDisplayBottomSheet> {
               alignment: Alignment.centerLeft,
               child: Padding(
                   padding:
-                  EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
+                      EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
                   child: Row(
                     children: [
                       Text(

@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../ViewModels/ContentStoryViewModel.dart';
+import 'DownloadSingleChapterDialog.dart';
 
-class ContentStoryTopAppBar extends StatefulWidget{
+class ContentStoryTopAppBar extends StatefulWidget {
   final ContentStoryViewModel _contentStoryViewModel;
 
   const ContentStoryTopAppBar(this._contentStoryViewModel, {super.key});
@@ -14,7 +15,7 @@ class ContentStoryTopAppBar extends StatefulWidget{
   }
 }
 
-class _ContentStoryTopAppBarState extends State<ContentStoryTopAppBar>{
+class _ContentStoryTopAppBarState extends State<ContentStoryTopAppBar> {
   ContentStoryViewModel get contentStoryViewModel =>
       widget._contentStoryViewModel;
 
@@ -33,12 +34,16 @@ class _ContentStoryTopAppBarState extends State<ContentStoryTopAppBar>{
         IconButton(
           icon: Image.asset('assets/images/download_icon.png'),
           onPressed: () {
-            // Xử lý khi nhấn vào icon bên phải
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return DownloadSingleChapterDialog(contentStoryViewModel);
+                });
           },
         ),
       ],
       title: Text(
-        contentStoryViewModel.contentStory?.title ?? 'title',
+        contentStoryViewModel.contentStory?.chapterTitle ?? 'chapterTitle',
         textAlign: TextAlign.center,
         style: const TextStyle(
           color: Colors.white,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project_login/ViewModels/DownloadChatersViewModel.dart';
 import 'package:project_login/Views/DownloadChaptersView.dart';
 import 'package:provider/provider.dart';
 import '../Models/Story.dart';
@@ -314,7 +313,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                         MaterialPageRoute(
                                           builder: (context) => ChangeNotifierProvider(
                                             create: (_) => ContentStoryViewModel(),
-                                            child: ContentStoryScreen(storyTitle: storyDetailViewModel.story?.title != null ? storyDetailViewModel.story!.title : "", datasource: widget.datasource,),
+                                            child: ContentStoryScreen(storyTitle: storyDetailViewModel.story?.name != null ? storyDetailViewModel.story!.name : ""),
                                           ),
                                         ),
                                       );

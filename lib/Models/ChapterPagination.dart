@@ -6,22 +6,30 @@ class ChapterPagination {
   int currentPage;
   int maxPage;
 
-  ChapterPagination({required this.listChapter,
-                    required this.maxChapter,
-                    required this.currentPage,
-                    required this.maxPage});
+  ChapterPagination(
+      {required this.listChapter,
+      required this.maxChapter,
+      required this.currentPage,
+      required this.maxPage});
+
+  ChapterPagination.defaults()
+      : listChapter = [Chapter.defaults()],
+        maxChapter = 0,
+        currentPage = 0,
+        maxPage = 0;
 
   factory ChapterPagination.fromJson(Map<String, dynamic> json) {
     List<Chapter>? listChapterFromApi = json['listChapter'] != null
-        ? (json['listChapter'] as List<dynamic>).map(
-            (chapter) => Chapter.fromJson(chapter)
-    ).toList()
+        ? (json['listChapter'] as List<dynamic>)
+            .map((chapter) => Chapter.fromJson(chapter))
+            .toList()
         : null;
 
-    return ChapterPagination(listChapter: listChapterFromApi,
-                              maxChapter: json['maxChapter'],
-                              currentPage: json['currentPage'],
-                              maxPage: json['maxPage']);
+    return ChapterPagination(
+        listChapter: listChapterFromApi,
+        maxChapter: json['maxChapter'],
+        currentPage: json['currentPage'],
+        maxPage: json['maxPage']);
   }
 
   @override
