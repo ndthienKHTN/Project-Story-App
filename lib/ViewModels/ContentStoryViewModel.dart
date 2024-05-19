@@ -11,18 +11,6 @@ import '../Constants.dart';
 import '../Models/ChapterPagination.dart';
 import '../Models/ContentStory.dart';
 import '../Services/StoryService.dart';
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:project_login/Models/ContentDisplay.dart';
-import 'package:yaml/yaml.dart';
-
-import '../Models/ContentStory.dart';
-import '../Services/StoryService.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:project_login/Constants.dart';
-import '../Views/Components_DetailStory/ContentDisplayView.dart';
 
 class ContentStoryViewModel extends ChangeNotifier {
   final StoryService _storyService = StoryService();

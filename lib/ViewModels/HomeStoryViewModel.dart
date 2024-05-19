@@ -12,16 +12,16 @@ import '../Services/StoryService.dart';
 class HomeStoryViewModel extends ChangeNotifier {
   final StoryService _storyService = StoryService();
   Map<String, List<Story>> _stories = <String, List<Story>>{};
-  Map<String, List<Story>> get stories => _stories;
-  List<String> sourceBooks=[];
-  String sourceBook='';
-  int indexSourceBook=0;
-  bool listOn=true;
-  String category="All";
 
-  Future<void> fetchHomeStories(String datasource) async {
-  List<Category> _listCategories = <Category>[];
-  List<Category> get listCategories => _listCategories;
+  Map<String, List<Story>> get stories => _stories;
+  List<String> sourceBooks = [];
+  String sourceBook = '';
+  int indexSourceBook = 0;
+  bool listOn = true;
+  String category = "All";
+
+/*  List<Category> _listCategories = <Category>[];
+  List<Category> get listCategories => _listCategories;*/
   Future<void> fetchHomeStories(String datasource) async {
     try {
       _stories.clear();
@@ -36,7 +36,7 @@ class HomeStoryViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchListCategories(String datasource) async {
+  /*Future<void> fetchListCategories(String datasource) async {
     try {
       _listCategories = await _storyService.fetchListCategory(datasource);
       notifyListeners();
@@ -44,72 +44,21 @@ class HomeStoryViewModel extends ChangeNotifier {
       // Handle error
       print('Error fetching home stories - list categories: $e');
     }
-  }
-
-  Future<void> fetchHomeSourceBooks() async{
-    try{
-      sourceBooks.clear();
-      List<String> sourceBookstmp=await _storyService.fetchListNameDataSource();
-      List<String>? sourceBookstmp2=[];
-      sourceBookstmp2 = await getStringList("LIST_SOURCE");
-      if(sourceBookstmp2 == null){
-        sourceBooks=sourceBookstmp;
-      }
-      else{
-        List<String>tmp2=[];
-        tmp2.addAll(sourceBookstmp2);
-        if(checkSimilarity(sourceBookstmp, tmp2)){
-          sourceBooks=sourceBookstmp2;
-        }
-        else{
-          //Kiểm tra nguồn bị xóa và remove
-          for(int i=0;i<sourceBookstmp2.length;i++){
-            if(! sourceBookstmp.contains(sourceBookstmp2[i])){
-              sourceBookstmp2.removeAt(i);
-              i--;
-            }
-          }
-
-          //Kiểm tra có nguồn mới không và thêm vào
-          List<String>tmp3=[];
-          for (var element in sourceBookstmp) {
-            if(!sourceBookstmp2.contains(element)){
-              tmp3.add(element);
-            }
-          }
-          sourceBookstmp2.addAll(tmp3);
-          sourceBooks=sourceBookstmp2;
-          saveStringList("LIST_SOURCE", sourceBooks);
-        }
-      }
-      if(sourceBooks.isNotEmpty){
-        saveStringList("LIST_SOURCE", sourceBooks);
-        changeSourceBook(sourceBooks[0]);
-        fetchHomeStories(sourceBooks[0]);
-      }
-      notifyListeners();
-    }
-    catch (e) {
-      // Handle error
-      if (kDebugMode) {
-        print('Error fetching sources: $e');
-      }
-    }
-  }
+  }*/
 
 
-  void changeSourceBook(String newSourceBook){
-    sourceBook=newSourceBook;
+  void changeSourceBook(String newSourceBook) {
+    sourceBook = newSourceBook;
     notifyListeners();
   }
 
-  void changeListOrGrid(bool listchange){
-    listOn=listchange;
+  void changeListOrGrid(bool listchange) {
+    listOn = listchange;
     notifyListeners();
   }
 
-  void changeIndex(int newIndex){
-    indexSourceBook=newIndex;
+  void changeIndex(int newIndex) {
+    indexSourceBook = newIndex;
     notifyListeners();
   }
 
@@ -122,12 +71,12 @@ class HomeStoryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeindex(int newIndex){
-    indexSourceBook=newIndex;
+  void changeindex(int newIndex) {
+    indexSourceBook = newIndex;
     notifyListeners();
   }
 
-  void updateSource(List<String> newSourceBooks){
+  void updateSource(List<String> newSourceBooks) {
     sourceBooks.clear();
     sourceBooks.addAll(newSourceBooks);
     notifyListeners();
@@ -171,8 +120,61 @@ class HomeStoryViewModel extends ChangeNotifier {
     return true;
   }
 
-  void changeCategory(String newCategory){
-    category=newCategory;
+  void changeCategory(String newCategory) {
+    category = newCategory;
     notifyListeners();
   }
+
+  Future<void> fetchHomeSourceBooks() async {
+    try {
+      sourceBooks.clear();
+      List<String> sourceBookstmp = await _storyService
+          .fetchListNameDataSource();
+      List<String>? sourceBookstmp2 = [];
+      sourceBookstmp2 = await getStringList("LIST_SOURCE");
+      if (sourceBookstmp2 == null) {
+        sourceBooks = sourceBookstmp;
+      }
+      else {
+        List<String>tmp2 = [];
+        tmp2.addAll(sourceBookstmp2);
+        if (checkSimilarity(sourceBookstmp, tmp2)) {
+          sourceBooks = sourceBookstmp2;
+        }
+        else {
+          //Kiểm tra nguồn bị xóa và remove
+          for (int i = 0; i < sourceBookstmp2.length; i++) {
+            if (!sourceBookstmp.contains(sourceBookstmp2[i])) {
+              sourceBookstmp2.removeAt(i);
+              i--;
+            }
+          }
+
+          //Kiểm tra có nguồn mới không và thêm vào
+          List<String>tmp3 = [];
+          for (var element in sourceBookstmp) {
+            if (!sourceBookstmp2.contains(element)) {
+              tmp3.add(element);
+            }
+          }
+          sourceBookstmp2.addAll(tmp3);
+          sourceBooks = sourceBookstmp2;
+          saveStringList("LIST_SOURCE", sourceBooks);
+        }
+      }
+      if (sourceBooks.isNotEmpty) {
+        saveStringList("LIST_SOURCE", sourceBooks);
+        changeSourceBook(sourceBooks[0]);
+        fetchHomeStories(sourceBooks[0]);
+      }
+      notifyListeners();
+    }
+    catch (e) {
+      // Handle error
+      if (kDebugMode) {
+        print('Error fetching sources: $e');
+      }
+    }
+  }
 }
+

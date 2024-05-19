@@ -5,7 +5,7 @@ import 'package:project_login/Views/HomeStoryView.dart';
 import 'package:provider/provider.dart';
 
 import 'ViewModels/DetailStoryViewModel.dart';
-import 'Views/Components_DetailStory/MainView.dart';
+import 'Views/MainView.dart';
 
 import 'ViewModels/HomeStoryViewModel.dart';
 import 'ViewModels/SearchStoryViewModel.dart';
