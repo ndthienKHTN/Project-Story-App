@@ -44,10 +44,6 @@ dependencies:
   http: ^1.2.1
   curved_navigation_bar: ^1.0.3
   archive: ^3.1.2
-  google_fonts: ^6.2.1
-  flutter_material_color_picker: ^1.2.0
-  shared_preferences: ^2.2.3
-  yaml: ^3.1.2
 
 
 dev_dependencies:
@@ -90,27 +86,6 @@ flutter:
     - assets/images/text_size_decrease_icon.png
     - assets/images/text_size_increase_icon.png
     - assets/images/naruto.jpg
-  - assets/background.png
-  - assets/clock.png
-  - assets/light-1.png
-  - assets/light-2.png
-  - assets/login_image.jpg
-  - assets/images/background.png
-  - assets/images/clock.png
-  - assets/images/light-1.png
-  - assets/images/light-2.png
-  - assets/images/login_image.jpg
-  - assets/images/back_icon.png
-  - assets/images/download_icon.png
-  - assets/images/background_home.png
-  - assets/images/back_button.png
-  - assets/images/next_button.png
-  - assets/images/list_icon.png
-  - assets/images/line_spacing_decrease_icon.png
-  - assets/images/line_spacing_increase_icon.png
-  - assets/images/text_size_decrease_icon.png
-  - assets/images/text_size_increase_icon.png
-  - assets/images/naruto.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
