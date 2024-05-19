@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
+import 'package:project_login/ViewModels/SearchStoryViewModel.dart';
 import 'package:project_login/Views/HomeStoryView.dart';
 import 'package:provider/provider.dart';
 
 import 'ViewModels/DetailStoryViewModel.dart';
+import 'Views/Components_DetailStory/MainView.dart';
+
 import 'ViewModels/HomeStoryViewModel.dart';
 import 'ViewModels/SearchStoryViewModel.dart';
 import 'Views/MainView.dart';
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -22,7 +25,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => DetailStoryViewModel()),
         ChangeNotifierProvider(create: (context) => HomeStoryViewModel()),
       ],
-      child:  MaterialApp(
+      child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Story App',
         home: MainPage(), //HomeScreen(),
@@ -30,4 +33,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

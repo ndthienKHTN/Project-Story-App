@@ -20,6 +20,9 @@ import 'package:yaml/yaml.dart';
 
 import '../Models/ContentStory.dart';
 import '../Services/StoryService.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:project_login/Constants.dart';
+import '../Views/Components_DetailStory/ContentDisplayView.dart';
 
 class ContentStoryViewModel extends ChangeNotifier {
   final StoryService _storyService = StoryService();

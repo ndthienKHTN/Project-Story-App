@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'dart:convert';
 import '../Models/ChapterPagination.dart';
+
+import '../Models/ChapterPagination.dart';
 import '../Models/ContentStory.dart';
 import '../Models/Story.dart';
 import '../Models/Category.dart' as categoryModel;
@@ -82,6 +84,8 @@ class StoryService {
 
   Future<List<categoryModel.Category>> fetchListCategory(String datasource) async {
     final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listCategory/?datasource=$datasource'));
+    try {
+      final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listCategory/?datasource=$datasource'));
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);
@@ -91,6 +95,24 @@ class StoryService {
       return listCategories;
     } else {
       throw Exception("Failed to fetch list of category");
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = jsonDecode(response.body);
+
+        if (jsonData.isNotEmpty) {
+          List<categoryModel.Category> listCategories = jsonData.map((json) => categoryModel.Category.fromJson(json)).toList();
+
+          return listCategories;
+        } else {
+          // Trường hợp danh sách trả về rỗng
+          throw Exception("Empty list of categories");
+        }
+      } else {
+        // Trường hợp không nhận được response 200 từ server
+        throw Exception("Failed to fetch list of category: ${response.statusCode}");
+      }
+    } catch (e) {
+      // Bắt các lỗi khác có thể xảy ra trong quá trình gọi API
+      throw Exception("Failed to fetch list of category: $e");
     }
   }
 
@@ -106,3 +128,4 @@ class StoryService {
   }
 
 }
+
