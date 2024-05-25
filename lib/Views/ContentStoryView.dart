@@ -2,29 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:project_login/Constants.dart';
 import 'package:project_login/Views/Components/ContentStoryTopAppBar.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ViewModels/ContentStoryViewModel.dart';
 import 'Components/ContentStoryBottomAppBar.dart';
 
 class ContentStoryScreen extends StatefulWidget {
   final String storyTitle;
-  final String title;
-
-  //TODO: này phải chương số mấy không
   final int chap;
-
   final String dataSource;
   final int pageNumber;
-
-  static const double MIN_TEXT_SIZE = 5;
-  static const double MAX_TEXT_SIZE = 30;
-  static const double MIN_LINE_SPACING = 0.5;
-  static const double MAX_LINE_SPACING = 5;
 
   const ContentStoryScreen(
       {super.key,
       required this.storyTitle,
-        required this.title,
       required this.chap,
       required this.dataSource,
       required this.pageNumber});
@@ -35,6 +26,7 @@ class ContentStoryScreen extends StatefulWidget {
 
 class _ContentStoryScreenState extends State<ContentStoryScreen> {
   late ContentStoryViewModel _contentStoryViewModel;
+  bool isLoadingSuccess = true;
 
   @override
   void initState() {
@@ -45,13 +37,24 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
   }
 
   void _fetchData() async {
-    await _contentStoryViewModel.fetchChapterPagination(
-        widget.storyTitle, widget.pageNumber,widget.dataSource,  true);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    _contentStoryViewModel.setPreferences(sharedPreferences);
+
     await Future.wait([
-      _contentStoryViewModel.fetchContentStory(
-          widget.storyTitle, widget.chap,  widget.dataSource),
+      _contentStoryViewModel.fetchChapterPagination(
+          widget.storyTitle, widget.pageNumber, widget.dataSource, true),
+      _contentStoryViewModel.fetchSourceBooks()
+    ]);
+
+    isLoadingSuccess = await _contentStoryViewModel.fetchContentStory(
+        widget.storyTitle, widget.chap, widget.dataSource, widget.dataSource);
+
+    if (!isLoadingSuccess){
+      showMyDialog(_contentStoryViewModel.currentSource);
+    }
+
+    await Future.wait([
       _contentStoryViewModel.fetchContentDisplay(),
-      _contentStoryViewModel.fetchSourceBooks(),
       _contentStoryViewModel.fetchFormatList(),
     ]);
   }
@@ -91,7 +94,8 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Text(
-                              contentStoryViewModel.contentStory?.content ?? 'content',
+                              contentStoryViewModel.contentStory?.content ??
+                                  'content',
                               style: TextStyle(
                                   fontSize: contentStoryViewModel
                                       .contentDisplay.textSize,
@@ -187,80 +191,89 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
 
   void navigateToNextChap() {
     setState(() {
-      if (_contentStoryViewModel.chapterPagination.listChapter?.last.content ==
-          _contentStoryViewModel.contentStory?.chapterTitle) {
-        _contentStoryViewModel
-            .fetchChapterPagination(
-                widget.storyTitle,
-                ++_contentStoryViewModel.currentPageNumber,
-                _contentStoryViewModel.currentSource,
-                true)
-            .then((_) => _contentStoryViewModel.fetchContentStory(
-                widget.storyTitle,
-                //TODO: need to change
-                1,
-                /*_contentStoryViewModel
-                    .chapterPagination.listChapter![0].content,*/
-                _contentStoryViewModel.currentSource));
-      } else {
-        _contentStoryViewModel.fetchContentStory(
-
+      if (_contentStoryViewModel.currentChapNumber %
+              _contentStoryViewModel.chapterPagination.chapterPerPage ==
+          0) {
+        _contentStoryViewModel.fetchChapterPagination(
             widget.storyTitle,
-            //TODO: need to change
-            1,
-            /*_contentStoryViewModel.chapterPagination
-                .listChapter![++_contentStoryViewModel.indexChapter].content,*/
-            _contentStoryViewModel.currentSource);
+            ++_contentStoryViewModel.currentPageNumber,
+            _contentStoryViewModel.currentSource,
+            true);
       }
+      _contentStoryViewModel.fetchContentStory(
+          widget.storyTitle,
+          ++_contentStoryViewModel.currentChapNumber,
+          _contentStoryViewModel.currentSource,
+          _contentStoryViewModel.currentSource);
     });
   }
 
   void navigateToPrevChap() {
     setState(() {
-      if (_contentStoryViewModel.chapterPagination.listChapter?[0].content ==
-          _contentStoryViewModel.contentStory?.chapterTitle) {
-        _contentStoryViewModel
-            .fetchChapterPagination(
-                widget.storyTitle,
-                --_contentStoryViewModel.currentPageNumber,
-                _contentStoryViewModel.currentSource,
-                true)
-            .then((value) => _contentStoryViewModel.fetchContentStory(
-                widget.storyTitle,
-                //TODO: need to change
-                1,
-                /*_contentStoryViewModel
-                    .chapterPagination.listChapter![50].content,*/
-                _contentStoryViewModel.currentSource,));
-      } else {
-        _contentStoryViewModel.fetchContentStory(
-
+      if (_contentStoryViewModel.currentChapNumber %
+              _contentStoryViewModel.chapterPagination.chapterPerPage ==
+          1) {
+        _contentStoryViewModel.fetchChapterPagination(
             widget.storyTitle,
-          //TODO: need to change
-          1,
-            /*_contentStoryViewModel.chapterPagination
-                .listChapter![--_contentStoryViewModel.indexChapter].content*/
-          _contentStoryViewModel.currentSource);
+            --_contentStoryViewModel.currentPageNumber,
+            _contentStoryViewModel.currentSource,
+            true);
       }
+      _contentStoryViewModel.fetchContentStory(
+          widget.storyTitle,
+          --_contentStoryViewModel.currentChapNumber,
+          _contentStoryViewModel.currentSource,
+          _contentStoryViewModel.currentSource);
     });
   }
 
   void navigateToNewChap(int index, int pageNumber) {
     _contentStoryViewModel.currentPageNumber = pageNumber;
+    _contentStoryViewModel.currentChapNumber = (pageNumber - 1) *
+            _contentStoryViewModel.chapterPagination.chapterPerPage +
+        index +
+        1;
+    print(_contentStoryViewModel.currentChapNumber.toString());
     setState(() {
       _contentStoryViewModel.fetchContentStory(
           widget.storyTitle,
-          //TODO: need to change
-          1,
-          /*_contentStoryViewModel.chapterPagination.listChapter![index].content*/
+          _contentStoryViewModel.currentChapNumber,
+          _contentStoryViewModel.currentSource,
           _contentStoryViewModel.currentSource);
     });
   }
 
-  void onSourceChange(String newSource) {
-    setState(() {
-      _contentStoryViewModel.fetchContentStory(
-          widget.storyTitle, widget.chap, newSource);
-    });
+  void onSourceChange(String newSource) async {
+    bool result = await _contentStoryViewModel.fetchContentStory(
+        widget.storyTitle,
+        _contentStoryViewModel.currentChapNumber,
+        newSource,
+        newSource);
+
+    // if we cannot load content from newSource (result == false), show dialog
+    if (!result) {
+      showMyDialog(newSource);
+    }
+  }
+
+  void showMyDialog(String newSource){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Tải thất bại'),
+          content: Text(
+              'Không thể tải truyện từ $newSource. Tải truyện từ ${_contentStoryViewModel.currentSource} để thay thế'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

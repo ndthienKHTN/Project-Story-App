@@ -9,7 +9,9 @@ class LocalDatabase {
       join(await getDatabasesPath(), 'story_database.db'),
       onCreate: (db, version) {
         return db.execute(
-          'CREATE TABLE READING_HISTORY(title TEXT PRIMARY KEY, chap TEXT, date INTEGER)',
+          'CREATE TABLE READING_HISTORY(title TEXT PRIMARY KEY, '
+              'name TEXT, chap INTEGER, date INTEGER, author TEXT, '
+              'cover TEXT, pageNumber INTEGER, dataSource TEXT)',
         );
       },
       version: 1,
@@ -30,10 +32,14 @@ class LocalDatabase {
     final List<Map<String, dynamic>> maps = await db.query('READING_HISTORY');
     return List.generate(maps.length, (i) {
       return ReadingHistory(
-        title: maps[i]['title'],
-        chap: maps[i]['chap'],
-        date: maps[i]['date'],
-      );
+          pageNumber: maps[i]['pageNumber'],
+          title: maps[i]['title'],
+          name: maps[i]['name'],
+          chap: maps[i]['chap'],
+          date: maps[i]['date'],
+          author: maps[i]['author'],
+          cover: maps[i]['cover'],
+          dataSource: maps[i]['dataSource']);
     });
   }
 }
