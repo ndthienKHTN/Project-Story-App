@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:project_login/Services/StoryService.dart';
 import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
 import 'package:provider/provider.dart';
-
-import '../Models/Story.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
-import 'DetailStoryView.dart';
-import 'Components_DetailStory/DetailStoryView_temp.dart';
+import './DetailStoryView.dart';
 import 'SearchStoryView.dart';
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -15,7 +13,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  //late Map<String, List<Story>> _stories =  <String, List<Story>>{};
   late HomeStoryViewModel _homeStoryViewModel;
 
   TextEditingController _searchController = TextEditingController();

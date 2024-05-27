@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../Services/StoryService.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
 import '../ViewModels/SearchStoryViewModel.dart';
-import 'DetailStoryView.dart';
-import '../ViewModels/DetailStoryViewModel.dart';
-import '../ViewModels/SearchStoryViewModel.dart';
-import 'Components_DetailStory/DetailStoryView_temp.dart';
+import './DetailStoryView.dart';
 
 class SearchScreen extends StatefulWidget {
   late String searchQuery;
@@ -31,17 +27,17 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: const Text('Home'),
       ),
       body: Column(
         children: [
           Container(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
                 ElevatedButton(
-                    onPressed: () => {new StoryService().fetchListCategory("Truyen123")},
-                    child: Text('list categories'))
+                    onPressed: () => {StoryService().fetchListCategory("Truyen123")},
+                    child: const Text('list categories'))
               ],
             ),
           ),
@@ -49,7 +45,7 @@ class _SearchScreenState extends State<SearchScreen> {
             child:Consumer<SearchStoryViewModel>(
               builder: (context, storyListViewModel, _) {
                 if (storyListViewModel.stories.isEmpty) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else {
                   return ListView.builder(
                     itemCount: storyListViewModel.stories.length,
@@ -64,7 +60,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             MaterialPageRoute(
                               builder: (context) => ChangeNotifierProvider(
                                 create: (context) => DetailStoryViewModel(),
-                                child: DetailStoryScreen(storyTitle: story.title,datasource: "Truyenfull",),
+                                child: DetailStoryScreen(storyTitle: story.title, datasource: "Truyenfull",),
                               ),
                             ),
                           );

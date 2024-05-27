@@ -2,6 +2,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:project_login/Models/ChapterPagination.dart';
+import '../Models/ChapterPagination.dart';
 import '../Models/Story.dart';
 import '../Services/StoryService.dart';
 

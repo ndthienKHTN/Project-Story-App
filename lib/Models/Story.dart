@@ -40,7 +40,7 @@ class Story {
         link: json['link'],
         author: json['author'],
         title: json['title'],
-        view: json['view'],
+        view: json.containsKey('detail') ? json['view'] : null,
         description: json['description'],
         authorLink: json['authorLink'],
         categories: categoryList,
@@ -50,7 +50,7 @@ class Story {
   @override
   String toString() {
     String? str = categories?.join(" === ");
-    return 'Story{name: $name,detail: $detail, categories: $str}';
+    return 'Story{name: $name,detail: $detail,cover: $cover, categories: $str}';
     //return 'Story{name: $name, link: $link, title: $title, cover: $cover, description: $description, author: $author, authorLink: $authorLink, view: $view, detail: $detail, categories: $str}';
   }
 }

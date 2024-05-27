@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:project_login/ViewModels/DownloadChatersViewModel.dart';
+import 'package:provider/provider.dart';
+
+import '../Services/DownloadService.dart';
 import 'package:provider/provider.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
+import '../ViewModels/DownloadChatersViewModel.dart';
 class DownloadChaptersScreen extends StatefulWidget {
   final String storyTitle;
   final String datasource;
@@ -13,21 +18,29 @@ class DownloadChaptersScreen extends StatefulWidget {
   @override
   _DownloadChaptersState createState() => _DownloadChaptersState();
 }
+late List<String> chapters;
 
 class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   late DetailStoryViewModel _detailStoryViewModel;
+  late DownloadChaptersViewModel _downloadChaptersViewModel;
   final int buttonsPerRow = 3;
   int _perPage = 27;
   int _currentPage = 1;
   late Map<int, bool> selectedButtons;
   bool _isCheckAll = false;
+
   void _fetchChapters() {
     _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
+  }
+  void _downloadChapters(String storyTitle,List<String> chapters,String fileType,String datasource){
+    _downloadChaptersViewModel.downloadChaptersOfStory(storyTitle, chapters, fileType, datasource);
   }
   @override
   void initState() {
     super.initState();
     _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
+    _downloadChaptersViewModel = Provider.of<DownloadChaptersViewModel>(context, listen: false);
+    _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, widget.datasource);
     _fetchChapters();
     selectedButtons = Map.fromIterable(
       List.generate(_perPage, (index) => index + 1),
@@ -35,6 +48,63 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
       value: (item) => false,
     );
   }
+  void _showDialogWithDropdown(BuildContext context) {
+    String? selectedValue;
+    List<String> dropdownItems = ['TXT', 'HTML', 'epub'];
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Consumer<DetailStoryViewModel>(
+          builder: (context,storyViewModel,_){
+            if(storyViewModel.story == null){
+              return Center(child: CircularProgressIndicator());
+            }
+            final story = storyViewModel.story!;
+              return AlertDialog(
+                title: Text('Select an Option'),
+                content: StatefulBuilder(
+                  builder: (BuildContext context, StateSetter setState) {
+                    return DropdownButton<String>(
+                      value: selectedValue,
+                      hint: Text('Choose an option'),
+                      items: dropdownItems.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedValue = newValue;
+                        });
+
+                      },
+                    );
+                  },
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Cancel'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                      _downloadChapters(story.title, chapters, "TXT", widget.datasource);
+                      print('Selected value: $selectedValue');
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+          }
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,11 +170,18 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
                       childAspectRatio: 100 / 40,
                     ),
                     itemBuilder: (BuildContext,int index){
+                      final chapter_page = storyDetailViewModel.chapterPagination!.listChapter?[index];
                       return ElevatedButton(
                         onPressed: (){
                           setState(() {
                             selectedButtons[index+1] = !selectedButtons[index+1]!;
                           });
+                          if(selectedButtons[index+1] == true){
+                            chapters.add(chapter_page!.content);
+                          }
+                          else{
+                            chapters.removeAt(index);
+                          }
                         },
                         child: Text(
                             style: TextStyle(
@@ -243,51 +320,4 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
       )
     );
   }
-}
-void _showDialogWithDropdown(BuildContext context) {
-  String? selectedValue;
-  List<String> dropdownItems = ['pdf', 'prc', 'epub'];
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Select an Option'),
-        content: StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return DropdownButton<String>(
-              value: selectedValue,
-              hint: Text('Choose an option'),
-              items: dropdownItems.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  selectedValue = newValue;
-                });
-              },
-            );
-          },
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Cancel'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: Text('OK'),
-            onPressed: () {
-              // Handle the selected value here
-              print('Selected value: $selectedValue');
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
-  );
 }

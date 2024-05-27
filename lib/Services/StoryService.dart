@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'dart:convert';
 import '../Models/ChapterPagination.dart';
+
+import '../Models/ChapterPagination.dart';
 import '../Models/ContentStory.dart';
 import '../Models/Story.dart';
 import '../Models/Category.dart' as categoryModel;
@@ -47,8 +49,8 @@ class StoryService {
       throw Exception('Failed to fetch detail story');
     }
   }
-  Future<ContentStory> fetchContentStory(String storyTitle, int pageNumber, String datasource) async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/contentStory/?datasource=$datasource&title=$storyTitle&chap=$pageNumber'));
+  Future<ContentStory> fetchContentStory(String storyTitle, int chapNumber, String datasource) async {
+    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/contentStory/?datasource=$datasource&title=$storyTitle&chap=$chapNumber'));
 
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
@@ -81,16 +83,26 @@ class StoryService {
   }
 
   Future<List<categoryModel.Category>> fetchListCategory(String datasource) async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/listCategory/?datasource=$datasource'));
+    try {
+      final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/listCategory/?datasource=$datasource'));
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = jsonDecode(response.body);
 
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonData = jsonDecode(response.body);
-      List<categoryModel.Category> listCategories =  (jsonData.map((json) => categoryModel.Category.fromJson(json))).toList();
-      Logger logger = Logger();
-      logger.i(listCategories[0].toString());
-      return listCategories;
-    } else {
-      throw Exception("Failed to fetch list of category");
+        if (jsonData.isNotEmpty) {
+          List<categoryModel.Category> listCategories = jsonData.map((json) => categoryModel.Category.fromJson(json)).toList();
+
+          return listCategories;
+        } else {
+          // Trường hợp danh sách trả về rỗng
+          throw Exception("Empty list of categories");
+        }
+      } else {
+        // Trường hợp không nhận được response 200 từ server
+        throw Exception("Failed to fetch list of category: ${response.statusCode} ");
+      }
+    } catch (e) {
+      // Bắt các lỗi khác có thể xảy ra trong quá trình gọi API
+      throw Exception("Failed to fetch list of category: $e");
     }
   }
 
@@ -106,3 +118,4 @@ class StoryService {
   }
 
 }
+

@@ -7,6 +7,10 @@ class Chapter {
 
   Chapter({required this.content, required this.url});
 
+  Chapter.defaults()
+      : content = '',
+        url = '';
+
   @override
   String toString() {
     return 'Chapter{content: $content, url: $url}';
