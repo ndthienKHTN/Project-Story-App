@@ -42,7 +42,7 @@ class ContentStoryViewModel extends ChangeNotifier {
   Future<void> fetchContentStory(String storyTitle, int chapNumber, String datasource) async {
     try {
       _contentStory =
-          await _storyService.fetchContentStory(storyTitle, chapNumber, datasource);
+          await _storyService.fetchContentStory(storyTitle, chapNumber , datasource);//(storyTitle, chapNumber, datasource);
       _indexSource = 0;
       print(currentPageNumber.toString());
       print(chapNumber);

@@ -4,14 +4,10 @@ import 'package:logger/logger.dart';
 import 'dart:convert';
 import '../Models/ChapterPagination.dart';
 
-import '../Models/ChapterPagination.dart';
 import '../Models/ContentStory.dart';
 import '../Models/Story.dart';
 import '../Models/Category.dart' as categoryModel;
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import '../Models/ContentStory.dart';
-import '../Models/Story.dart';
+
 
 
 class StoryService {
@@ -27,8 +23,8 @@ class StoryService {
     }
   }
 
-  Future<List<Story>> fetchSearchStory(String query, String datasource) async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/search/?datasource=$datasource&search=$query'));
+  Future<List<Story>> fetchSearchStory(String query, String datasource, int page) async {
+    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/search/?datasource=$datasource&search=$query&page=$page'));
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);
@@ -36,6 +32,19 @@ class StoryService {
     } else {
       throw Exception('Failed to fetch search story');
     }
+  }
+  Future<List<Story>> fetchSearchStoryByCategory(String query, String datasource, int page, String category) async {
+    final response = await http.get(
+        Uri.parse(
+            'http://localhost:3000/api/v1/search/?datasource=$datasource&search=$query&page=$page&category=$category'
+        ));
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = jsonDecode(response.body);
+      return jsonData.map((json) => Story.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch search story by category');
+    }
+
   }
   Future<Story> fetchDetailStory(String title, String datasource) async {
     final response = await http.get(Uri.parse('http://localhost:3000/api/v1/detailStory/?datasource=$datasource&title=$title'));
