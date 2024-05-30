@@ -27,6 +27,7 @@ class ContentStoryScreen extends StatefulWidget {
 class _ContentStoryScreenState extends State<ContentStoryScreen> {
   late ContentStoryViewModel _contentStoryViewModel;
   bool isLoadingSuccess = true;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -34,6 +35,18 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     _contentStoryViewModel =
         Provider.of<ContentStoryViewModel>(context, listen: false);
     _fetchData();
+    // scroll to top when change chapter
+    _contentStoryViewModel.addListener(_scrollToTop);
+  }
+
+  void _scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   void _fetchData() async {
@@ -57,6 +70,14 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
       _contentStoryViewModel.fetchContentDisplay(),
       _contentStoryViewModel.fetchFormatList(),
     ]);
+  }
+
+  @override
+  void dispose() {
+    // Remove the listener when the widget is disposed
+    _contentStoryViewModel.removeListener(_scrollToTop);
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -91,6 +112,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
                   ),
                   child: contentStoryViewModel.contentStory != null
                       ? SingleChildScrollView(
+                    controller: _scrollController,
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Text(
