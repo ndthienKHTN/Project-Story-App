@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:project_login/ViewModels/ChoiseCategoryViewModel.dart';
+import 'package:project_login/ViewModels/ListStoryByTypeViewModel.dart';
 import 'package:project_login/Views/ChoiseCategoryView.dart';
+import 'package:project_login/Views/ListStoryByTypeView.dart';
 import 'package:provider/provider.dart';
 
 import '../ViewModels/DetailStoryViewModel.dart';
@@ -371,7 +373,17 @@ class ListViewBook extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 40),
-                      child: ElevatedButton.icon(onPressed: (){},
+                      child: ElevatedButton.icon(onPressed: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChangeNotifierProvider(
+                              create: (context) => ListStoryByTypeViewModel(),
+                              child: ListStoryByTypeScreen(listStoryType: liststoryname, datasource: storyNotifier.sourceBook,),
+                            ),
+                          ),
+                        );
+                      },
                           label: const Text('Xem thêm'),
                           icon:const Icon(Icons.playlist_add_sharp)
                       ),
@@ -513,7 +525,17 @@ class GridViewBook extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(bottom: 40),
-                              child: ElevatedButton.icon(onPressed: (){},
+                              child: ElevatedButton.icon(onPressed: (){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChangeNotifierProvider(
+                                      create: (context) => ListStoryByTypeViewModel(),
+                                      child: ListStoryByTypeScreen(listStoryType: liststoryname, datasource: storyNotifier.sourceBook,),
+                                    ),
+                                  ),
+                                );
+                              },
                                 label: const Text('Xem thêm'),
                                 icon:const Icon(Icons.playlist_add_sharp)
                               ),

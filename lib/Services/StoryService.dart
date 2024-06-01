@@ -125,6 +125,18 @@ class StoryService {
       throw Exception("Failed to fetch Chapter Pagination");
     }
   }
+  Future<List<Story>> fetchListStoryByType(String typeOfList, int pageNumber, String datasource) async {
+    final response = await http.get(
+        Uri.parse(
+            'http://localhost:3000/api/v1/listStory/?datasource=$datasource&type=$typeOfList&page=$pageNumber'
+        ));
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = jsonDecode(response.body);
+      return jsonData.map((json) => Story.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch list story by type');
+    }
+  }
 
 }
 
