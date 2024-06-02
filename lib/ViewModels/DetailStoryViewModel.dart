@@ -31,7 +31,11 @@ class DetailStoryViewModel extends ChangeNotifier {
   Future<void> fetchChapterPagination(String title, int pageNumber, String datasource) async {
     try {
       // Fetch story details from the API using the storyId
+      pageNumber = 2;
       _chapterPagination = await _storyService.fetchChapterPagination(title,pageNumber,datasource);
+      print('title: $title');
+      print('pageNumber: $pageNumber');
+      print('datasource: $datasource');
       Logger logger = Logger();
       logger.i(_chapterPagination.toString());
       notifyListeners();

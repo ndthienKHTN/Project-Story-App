@@ -33,15 +33,11 @@ class ContentStoryBottomAppBar extends StatelessWidget {
     bool canNavigateToNextChap = true;
     bool canNavigateToPrevChap = true;
 
-    if (contentStoryViewModel.chapterPagination.currentPage == 1 &&
-        contentStoryViewModel.chapterPagination.listChapter?[0].content ==
-            contentStoryViewModel.contentStory?.chapterTitle) {
+    if (contentStoryViewModel.currentChapNumber == 1) {
       canNavigateToPrevChap = false;
     }
-    if (contentStoryViewModel.chapterPagination.currentPage ==
-            contentStoryViewModel.chapterPagination.maxPage &&
-        contentStoryViewModel.contentStory?.chapterTitle ==
-            contentStoryViewModel.chapterPagination.listChapter?.last.content) {
+
+    if (contentStoryViewModel.currentChapNumber == contentStoryViewModel.chapterPagination.maxChapter) {
       canNavigateToNextChap = false;
     }
 

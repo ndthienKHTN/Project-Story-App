@@ -26,7 +26,8 @@ class _ChooseChapterBottomSheetState extends State<ChooseChapterBottomSheet> {
   @override
   void initState() {
     super.initState();
-    for (int i = 1; i < contentStoryViewModel.chapterPagination.maxPage; i++) {
+    print('contentStoryViewModel.chapterPagination.maxPage: ${contentStoryViewModel.chapterPagination.maxPage}');
+    for (int i = 1; i <= contentStoryViewModel.chapterPagination.maxPage; i++) {
       chapterPaginationList.add(i.toString());
     }
     dropdownValue =
@@ -132,6 +133,8 @@ class _ChooseChapterBottomSheetState extends State<ChooseChapterBottomSheet> {
                   ),
                   InkWell(
                     onTap: () {
+                      print('object $currentPageNumber');
+                      print('object ${contentStoryViewModel.chapterPagination.maxPage}');
                       if (currentPageNumber < contentStoryViewModel.chapterPagination.maxPage) {
                         setState(() {
                           currentPageNumber++;
@@ -161,7 +164,6 @@ class _ChooseChapterBottomSheetState extends State<ChooseChapterBottomSheet> {
                 controller: scrollController,
                 itemCount: contentStoryViewModel.chapterPagination.listChapter
                     ?.length,
-                itemExtent: CHAPTER_ITEM_HEIGHT,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
                     title: Text(

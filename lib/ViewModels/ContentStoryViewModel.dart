@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -15,61 +17,75 @@ import '../Services/StoryService.dart';
 class ContentStoryViewModel extends ChangeNotifier {
   final StoryService _storyService = StoryService();
   final LocalDatabase _localDatabase = LocalDatabase();
+  late final SharedPreferences prefs;
 
   ContentStory? _contentStory;
   ContentDisplay contentDisplay = ContentDisplay.defaults();
   List<String> _fontNames =
       []; // list of fonts user can choose to change display of content story
-  int indexChapter = 0; // to get the index of current chapter in chapterList
+  int currentChapNumber = 1;
   List<String> sourceBooks = []; // list of data source app can get story from
   int _indexSource =
       0; // to get the index of current source in sourceBooks (only using when automatically change source)
   String currentSource = '';
   List<String> formatList = []; // list of format user can choose when download
   ChapterPagination _chapterPagination = ChapterPagination.defaults();
+
   ChapterPagination get chapterPagination => _chapterPagination;
-  // chapterPagination change when user see chapter in ChooseChapterBottomSheet so we need this variable to track current page number
-  int currentPageNumber = 0;
+
+  // chapterPagination change when user see chapter in ChooseChapterBottomSheet
+  // so we need this variable to track page number of current chapter
+  int currentPageNumber = 1;
 
   ContentStory? get contentStory => _contentStory;
 
   List<String> get fontNames => _fontNames;
 
+  void setPreferences(SharedPreferences sharedPreferences) {
+    prefs = sharedPreferences;
+  }
 
- /* ChapterPagination? _chapterPagination;
-  ChapterPagination? get chapterPagination => _chapterPagination;*/
-
-  Future<void> fetchContentStory(String storyTitle, int chapNumber, String datasource) async {
+  Future<bool> fetchContentStory(String storyTitle, int chapNumber,
+      String dataSource, String chosenDataSource) async {
     try {
-      _contentStory =
-          await _storyService.fetchContentStory(storyTitle, chapNumber , datasource);//(storyTitle, chapNumber, datasource);
+      print('storyTitle: $storyTitle');
+      print('chapNumber: $chapNumber');
+      print('datasource: $dataSource');
+      _contentStory = await _storyService.fetchContentStory(
+          storyTitle, chapNumber, dataSource);
+      // Logger logger = Logger();
+      // logger.i(_contentStory.toString());
       _indexSource = 0;
       print(currentPageNumber.toString());
       print(chapNumber);
+      currentChapNumber = chapNumber;
 
-      // calculate indexChapter
-      for (int i = 0; i < chapterPagination.listChapter!.length; i++) {
-        if (chapterPagination.listChapter?[i].content == chapNumber) {
-          indexChapter = i;
-          break;
-        }
-      }
-
-      // TODO: them number of chap per page trong chapter pagination
-      indexChapter = 0;
-
-      print(indexChapter.toString());
       // save current data source
-      currentSource = datasource;
+      currentSource = dataSource;
       notifyListeners();
+
+      // reload chapterPagination when navigate to next or previous chapter
+      // or reload when fetching chapterPagination failed
+      if (currentPageNumber != chapterPagination.currentPage || chapterPagination.currentPage == 0) {
+        fetchChapterPagination(storyTitle, currentPageNumber, dataSource, true);
+      }
 
       // insert reading history to local database
       int currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
-      // tạm comment
-      // _localDatabase.insertData(ReadingHistory(title: storyTitle, chap: chap, date: currentTimeMillis));
+      _localDatabase.insertData(ReadingHistory(
+          pageNumber: currentPageNumber,
+          title: _contentStory!.title,
+          name: _contentStory!.name,
+          chap: chapNumber,
+          date: currentTimeMillis,
+          author: _contentStory!.author,
+          cover: _contentStory!.cover,
+          dataSource: currentSource));
+      return (dataSource == chosenDataSource);
     } catch (e) {
-      print('Error fetching story content source $datasource: $e');
-      fetchContentStory( storyTitle, chapNumber, sourceBooks[_indexSource++]);
+      print('Error fetching story content source $dataSource: $e');
+      return fetchContentStory(storyTitle, chapNumber,
+          sourceBooks[_indexSource++], chosenDataSource);
     }
   }
 
@@ -89,7 +105,12 @@ class ContentStoryViewModel extends ChangeNotifier {
         getString(FONT_FAMILY_KEY).then((value) => fontFamily = value),
       ]);
 
-      _fontNames = fonts.map<String>((font) => font().fontFamily!).toList();
+      int? isTesting = await getInt(IS_TESTING_KEY);
+
+      if (isTesting != 1){
+        _fontNames = fonts.map<String>((font) => font().fontFamily!).toList();
+      }
+
       if (!_fontNames.contains(fontFamily)) {
         if (_fontNames.isNotEmpty) {
           fontFamily = _fontNames[0];
@@ -109,10 +130,15 @@ class ContentStoryViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchChapterPagination(String storyTitle, int pageNumber, String datasource, bool changePageNumber) async {
+  Future<void> fetchChapterPagination(String storyTitle, int pageNumber,
+      String datasource, bool changePageNumber) async {
     try {
+      print('storyTitle: $storyTitle');
+      print('pageNumber: $pageNumber');
+      print('datasource: $datasource');
       // Fetch story details from the API using the storyId
-      _chapterPagination = await _storyService.fetchChapterPagination(storyTitle,pageNumber,datasource);
+      _chapterPagination = await _storyService.fetchChapterPagination(
+          storyTitle, pageNumber, datasource);
       if (changePageNumber) {
         currentPageNumber = pageNumber;
       }
@@ -124,10 +150,34 @@ class ContentStoryViewModel extends ChangeNotifier {
       print('Error fetching chapter pagination list: $e');
     }
   }
+
   Future<void> fetchSourceBooks() async {
     try {
-      //sourceBooks= await _storyService.fetchListNameDataSource();
-      sourceBooks = await ['Truyen123', 'Truyenfull', 'Truyenmoi'];
+      List<String> sourceBooksApi =
+          await _storyService.fetchListNameDataSource();
+      List<String>? sourceBooksLocal = [];
+      sourceBooksLocal = await getStringList("LIST_SOURCE");
+      if (sourceBooksLocal == null) {
+        // if user don't save order of source in local, use order in api
+        sourceBooks = sourceBooksApi;
+      } else {
+        sourceBooks = sourceBooksLocal;
+        // remove old source in SharePreferences from sourceBooks
+        for (int i = 0; i < sourceBooksLocal.length; i++) {
+          if (!sourceBooksApi.contains(sourceBooksLocal[i])) {
+            sourceBooks.removeAt(i);
+            i--;
+          }
+        }
+        // add all new source in api to sourceBooks
+        for (int i = 0; i < sourceBooksApi.length; i++) {
+          if (!sourceBooks.contains(sourceBooksApi[i])) {
+            sourceBooks.add(sourceBooksApi[i]);
+          }
+        }
+      }
+      // save order of source to SharePreferences
+      saveStringList("LIST_SOURCE", sourceBooks);
       notifyListeners();
     } catch (e) {
       // Handle error
@@ -145,32 +195,44 @@ class ContentStoryViewModel extends ChangeNotifier {
   }
 
   Future<void> saveString(String key, String value) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(key, value);
   }
 
   Future<void> saveInt(String key, int value) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt(key, value);
   }
 
   Future<void> saveDouble(String key, double value) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setDouble(key, value);
   }
 
   Future<String?> getString(String key) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(key);
   }
 
   Future<int?> getInt(String key) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getInt(key);
   }
 
   Future<double?> getDouble(String key) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getDouble(key);
+  }
+
+  Future<List<String>?> getStringList(String key) async {
+    // Lấy chuỗi JSON từ SharedPreferences
+    final jsonString = prefs.getString(key);
+    if (jsonString != null) {
+      // Nếu có chuỗi JSON, chuyển đổi nó thành List<String>
+      final List<dynamic> jsonList = jsonDecode(jsonString);
+      return jsonList.map((item) => item.toString()).toList();
+    }
+    // Trả về null nếu không tìm thấy hoặc có lỗi
+    return null;
+  }
+
+  Future<void> saveStringList(String key, List<String> valueList) async {
+    // Chuyển đổi List<String> thành một chuỗi JSON trước khi lưu vào SharedPreferences
+    final jsonString = jsonEncode(valueList);
+    await prefs.setString(key, jsonString);
   }
 }
