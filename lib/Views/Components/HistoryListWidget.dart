@@ -57,6 +57,7 @@ class _HistoryListWidgetState extends State<HistoryListWidget> {
               chap: readingHistory.chap,
               dataSource: readingHistory.dataSource,
               pageNumber: readingHistory.pageNumber,
+              name: readingHistory.name,
             )),
       ),
     );

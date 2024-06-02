@@ -12,11 +12,13 @@ class ContentStoryScreen extends StatefulWidget {
   final int chap;
   final String dataSource;
   final int pageNumber;
+  final String name;
 
   const ContentStoryScreen(
       {super.key,
       required this.storyTitle,
       required this.chap,
+      required this.name,
       required this.dataSource,
       required this.pageNumber});
 

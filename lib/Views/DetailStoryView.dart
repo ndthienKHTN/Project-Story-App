@@ -303,7 +303,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                                                         create: (context) => ContentStoryViewModel(),
                                                                         child:  ContentStoryScreen(
                                                                           storyTitle: widget.storyTitle,
-                                                                          title: storyDetailViewModel.story!.title,
+                                                                          name: storyDetailViewModel.story!.name,
                                                                           chap: index+1,
                                                                           dataSource: widget.datasource,
                                                                           pageNumber: _currentPage,)
@@ -398,7 +398,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                               storyTitle: storyDetailViewModel.story?.title != null ?
                                                           storyDetailViewModel.story!.title
                                                               : "",
-                                              title:  storyDetailViewModel.story?.name != null ?
+                                              name:  storyDetailViewModel.story?.name != null ?
                                                       storyDetailViewModel.story!.name
                                                         : "",
                                               chap: 1,
