@@ -22,7 +22,7 @@ class DownloadService {
     throw Exception('No .txt file found in the ZIP archive');
   }
 
-  Future<String> downloadAndUnzipFile(String storyTitle, String chapter, String fileType, String datasource) async {
+  Future<String> downloadAndUnzipFile(String storyTitle, int chapter, String fileType, String datasource) async {
     String folderName = "DownloadedFile";
     HttpClient httpClient = HttpClient();
     HttpClientRequest request = await httpClient.getUrl(

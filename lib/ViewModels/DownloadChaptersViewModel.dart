@@ -12,10 +12,10 @@ class DownloadChaptersViewModel extends ChangeNotifier {
   List<String> _listFileExtension = [];
   List<String> get listFileExtension => _listFileExtension;
 
-  Future<void> downloadChaptersOfStory(String storyTitle, List<String> chapters, String fileType, String datasource) async {
+  Future<void> downloadChaptersOfStory(String storyTitle, List<int> chapters, String fileType, String datasource) async {
     try {
         _downloadedTxtFilePath.clear();
-        for (String chapter in chapters) {
+        for (int chapter in chapters) {
           String filePath = await downloadService.downloadAndUnzipFile(storyTitle, chapter, fileType, datasource);
           Logger logger = Logger();
           logger.i("File path" + filePath);

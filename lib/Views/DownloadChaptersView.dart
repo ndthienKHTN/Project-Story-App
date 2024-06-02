@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:project_login/ViewModels/DownloadChatersViewModel.dart';
+import 'package:project_login/ViewModels/DownloadChaptersViewModel.dart';
 import 'package:provider/provider.dart';
 
 import '../Services/DownloadService.dart';
 import 'package:provider/provider.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
-import '../ViewModels/DownloadChatersViewModel.dart';
+import '../ViewModels/DownloadChaptersViewModel.dart';
 class DownloadChaptersScreen extends StatefulWidget {
   final String storyTitle;
   final String datasource;
@@ -18,7 +18,7 @@ class DownloadChaptersScreen extends StatefulWidget {
   @override
   _DownloadChaptersState createState() => _DownloadChaptersState();
 }
-late List<String> chapters =[];
+late List<int> chapters =[];
 
 class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   late DetailStoryViewModel _detailStoryViewModel;
@@ -32,7 +32,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   void _fetchChapters() {
     _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
   }
-  void _downloadChapters(String storyTitle,List<String> chapters,String fileType,String datasource){
+  void _downloadChapters(String storyTitle,List<int> chapters,String fileType,String datasource){
     _downloadChaptersViewModel.downloadChaptersOfStory(storyTitle, chapters, fileType, datasource);
   }
   @override
@@ -182,7 +182,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
                             selectedButtons[index+1] = !selectedButtons[index+1]!;
                           });
                           if(selectedButtons[index+1] == true){
-                            chapters.add((index+1).toString());
+                            chapters.add((index+1));
                           }
                           else{
                             chapters.removeAt(index + 1);

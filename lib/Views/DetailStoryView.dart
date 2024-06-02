@@ -7,7 +7,7 @@ import '../Models/Chapter.dart';
 import '../Models/Story.dart';
 import '../ViewModels/ContentStoryViewModel.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
-import '../ViewModels/DownloadChatersViewModel.dart';
+import '../ViewModels/DownloadChaptersViewModel.dart';
 import 'ContentStoryView.dart';
 import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
 
