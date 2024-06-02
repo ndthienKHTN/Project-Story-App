@@ -72,23 +72,31 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/background.png
-    - assets/images/clock.png
-    - assets/images/light-1.png
-    - assets/images/light-2.png
-    - assets/images/login_image.jpg
-    - assets/images/back_icon.png
-    - assets/images/download_icon.png
-    - assets/images/background_home.png
-    - assets/images/back_button.png
-    - assets/images/next_button.png
-    - assets/images/list_icon.png
-    - assets/images/line_spacing_decrease_icon.png
-    - assets/images/line_spacing_increase_icon.png
-    - assets/images/text_size_decrease_icon.png
-    - assets/images/text_size_increase_icon.png
-    - assets/images/naruto.jpg
-
+  - assets/background.png
+  - assets/clock.png
+  - assets/light-1.png
+  - assets/light-2.png
+  - assets/login_image.jpg
+  - assets/images/background.png
+  - assets/images/clock.png
+  - assets/images/light-1.png
+  - assets/images/light-2.png
+  - assets/images/login_image.jpg
+  - assets/images/back_icon.png
+  - assets/images/download_icon.png
+  - assets/images/background_home.png
+  - assets/images/back_button.png
+  - assets/images/next_button.png
+  - assets/images/list_icon.png
+  - assets/images/line_spacing_decrease_icon.png
+  - assets/images/line_spacing_increase_icon.png
+  - assets/images/text_size_decrease_icon.png
+  - assets/images/text_size_increase_icon.png
+  - assets/images/naruto.jpg
+  - assets/images/Logo.png
+  - assets/images/Splash.png
+  - assets/images/default_image.png
+  - assets/images/empty-box.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

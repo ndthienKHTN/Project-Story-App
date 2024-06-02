@@ -109,13 +109,14 @@ class StoryService {
         }
       } else {
         // Trường hợp không nhận được response 200 từ server
-        throw Exception("Failed to fetch list of category: ${response.statusCode} ");
+        throw Exception("Failed to fetch list of category: ${response.statusCode}");
       }
     } catch (e) {
       // Bắt các lỗi khác có thể xảy ra trong quá trình gọi API
       throw Exception("Failed to fetch list of category: $e");
     }
   }
+
 
   Future<ChapterPagination> fetchChapterPagination(String title, int pageNumber, String datasource) async {
     final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listChapter/?datasource=$datasource&title=$title&page=$pageNumber'));

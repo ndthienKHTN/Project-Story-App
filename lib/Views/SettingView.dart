@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
 import 'package:provider/provider.dart';
 
@@ -7,21 +8,32 @@ class SettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Column(
-          children: <Widget>[
-            Container(
-                alignment: AlignmentDirectional.topCenter,
-                child: const Text('List Source Book',style: TextStyle(
-                  fontSize: 40,
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),)),
-            const Expanded(
-              child: SortSourceBook(),
-            )
-          ],
-        )
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+          child: Column(
+            children: <Widget>[
+              Container(
+                  margin: const EdgeInsets.only(bottom: 20),
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                      border: Border(bottom:
+                      BorderSide(
+                          color: Colors.white,
+                          width: 4.0
+                      ))
+                  ),
+                  child: const Text('List Source Book',style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),)),
+              const Expanded(
+                child: SortSourceBook(),
+              )
+            ],
+          )
+      ),
     );
   }
 }
@@ -54,12 +66,18 @@ class _SortSourceBookState extends State<SortSourceBook> {
                   borderRadius: BorderRadius.circular(20.0),
                   color: Colors.white
               ),
-              child: ListTile(
-                title: Text(
-                  sourceBookNotifier.sourceBooks[index],
-                  style: const TextStyle(
-                    color: Colors.blueAccent,
-                    fontSize: 20,
+              child: Container(
+                child: ListTile(
+                  title: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      sourceBookNotifier.sourceBooks[index],
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
                   ),
                 ),
               ),
