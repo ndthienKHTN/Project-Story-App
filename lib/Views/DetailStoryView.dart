@@ -36,16 +36,20 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
     _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
   }
   void _fetchDatasource(){
-      for(int i=0;i<_homeStoryViewModel.sourceBooks.length;i++){
+      /*for(int i=0;i<_homeStoryViewModel.sourceBooks.length;i++){
         items.add(_homeStoryViewModel.sourceBooks[i]);
-      }
+      }*/
+      items.add("TangThuVien");
+      items.add("Truyenfull");
+      items.add("Truyen123");
   }
   @override
   void initState() {
     super.initState();
     _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
     _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, widget.datasource);
-    _homeStoryViewModel = Provider.of<HomeStoryViewModel>(context,listen: false);
+    //TODO: lấy datasource từ shared reference or sql lite
+    _homeStoryViewModel = HomeStoryViewModel();//Provider.of<HomeStoryViewModel>(context,listen: false);
     _fetchChapters();
     _fetchDatasource();
   }
@@ -72,7 +76,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
-                  create: (_) => DownloadChaptersViewModel(),
+                  create: (_) => DetailStoryViewModel(),
                   child: DownloadChaptersScreen(storyTitle: widget.storyTitle, datasource: widget.datasource)
                 )),
               );

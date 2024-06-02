@@ -38,8 +38,9 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   @override
   void initState() {
     super.initState();
-    _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
-    _downloadChaptersViewModel = Provider.of<DownloadChaptersViewModel>(context, listen: false);
+    //TODO: FIX here
+    _detailStoryViewModel =Provider.of<DetailStoryViewModel>(context, listen: false);// DetailStoryViewModel(); /
+   // _downloadChaptersViewModel = Provider.of<DownloadChaptersViewModel>(context, listen: false);
     _downloadChaptersViewModel = DownloadChaptersViewModel();
     _downloadChaptersViewModel.fetchListFileExtension();
     _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, widget.datasource);
@@ -326,50 +327,4 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
     );
   }
 }
-void _showDialogWithDropdown(BuildContext context) {
-  String? selectedValue;
-  List<String> dropdownItems = ['pdf', 'prc', 'epub'];
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Select an Option'),
-        content: StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return DropdownButton<String>(
-              value: selectedValue,
-              hint: Text('Choose an option'),
-              items: dropdownItems.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (newValue) {
-                setState(() {
-                  selectedValue = newValue;
-                });
-              },
-            );
-          },
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Cancel'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: Text('OK'),
-            onPressed: () {
-              // Handle the selected value here
-              print('Selected value: $selectedValue');
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
+
