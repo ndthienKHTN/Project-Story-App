@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:project_login/Models/ChapterPagination.dart';
 import 'package:project_login/Models/ReadingHistory.dart';
+import 'package:project_login/Services/DownloadService.dart';
 import 'package:project_login/Services/LocalDatabase.dart';
 import 'package:project_login/Models/ContentDisplay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +18,7 @@ import '../Services/StoryService.dart';
 class ContentStoryViewModel extends ChangeNotifier {
   final StoryService _storyService = StoryService();
   final LocalDatabase _localDatabase = LocalDatabase();
+  final DownloadService _downloadService = DownloadService();
   late final SharedPreferences prefs;
 
   ContentStory? _contentStory;
@@ -187,7 +189,7 @@ class ContentStoryViewModel extends ChangeNotifier {
 
   Future<void> fetchFormatList() async {
     try {
-      formatList = await ['pdf', 'txt', 'epub', 'prc'];
+      formatList = await _downloadService.fetchListFileExtension();
       notifyListeners();
     } catch (e) {
       print('Error fetching format list: $e');
