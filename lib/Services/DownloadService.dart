@@ -6,8 +6,10 @@ import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
-class DownloadService {
 
+
+
+class DownloadService {
 
   Future<String> findTxtFilePath(Archive archive) async {
     for (ArchiveFile file in archive) {

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
 import 'package:project_login/ViewModels/ReadingHistoryViewModel.dart';
 import 'package:project_login/ViewModels/SearchStoryViewModel.dart';
+import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
+import 'package:project_login/ViewModels/SearchStoryViewModel.dart';
 import 'package:project_login/Views/HomeStoryView.dart';
 import 'package:provider/provider.dart';
 

@@ -8,6 +8,7 @@ class DownloadChaptersViewModel extends ChangeNotifier {
 
   List<String> _downloadedTxtFilePath = [];
   List<String> get downloadedTxtFilePath => _downloadedTxtFilePath;
+
   List<String> _listFileExtension = [];
   List<String> get listFileExtension => _listFileExtension;
 
@@ -16,6 +17,8 @@ class DownloadChaptersViewModel extends ChangeNotifier {
         _downloadedTxtFilePath.clear();
         for (String chapter in chapters) {
           String filePath = await downloadService.downloadAndUnzipFile(storyTitle, chapter, fileType, datasource);
+          Logger logger = Logger();
+          logger.i("File path" + filePath);
           _downloadedTxtFilePath.add(filePath);
         }
         notifyListeners();

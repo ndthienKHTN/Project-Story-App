@@ -9,6 +9,7 @@ import '../ViewModels/ContentStoryViewModel.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
 import '../ViewModels/DownloadChatersViewModel.dart';
 import 'ContentStoryView.dart';
+import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
 
 class DetailStoryScreen extends StatefulWidget {
   final String storyTitle;
@@ -21,6 +22,7 @@ class DetailStoryScreen extends StatefulWidget {
 
 class _DetailStoryScreenState extends State<DetailStoryScreen> {
   late DetailStoryViewModel _detailStoryViewModel;
+  late HomeStoryViewModel _homeStoryViewModel;
   int _currentPage = 1;
   final int _perPage = 50; // Số lượng mục trên mỗi trang
   // Trang hiện tại
@@ -29,20 +31,23 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
   String ? selectedItem ;
   late int selectedIndex;
   Widget ?_currentData ;
-  final List<String> items = [
-    'Truyenfull',
-    'Truyen123',
-    'TruyenMoi'
-  ];
+  late List<String> items =[];
   void _fetchChapters() {
     _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
+  }
+  void _fetchDatasource(){
+      for(int i=0;i<_homeStoryViewModel.sourceBooks.length;i++){
+        items.add(_homeStoryViewModel.sourceBooks[i]);
+      }
   }
   @override
   void initState() {
     super.initState();
     _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
     _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, widget.datasource);
+    _homeStoryViewModel = Provider.of<HomeStoryViewModel>(context,listen: false);
     _fetchChapters();
+    _fetchDatasource();
   }
 
   @override
@@ -92,7 +97,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
       ),
       body: Consumer<DetailStoryViewModel>(
         builder: (context, storyDetailViewModel, _) {
-          if (storyDetailViewModel.story == null) {
+          if (storyDetailViewModel.story == null || storyDetailViewModel.chapterPagination == null) {
             return Center(child: CircularProgressIndicator());
           } else {
             final story = storyDetailViewModel.story!;
@@ -179,7 +184,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Container(
-                            width: 120,
+                            width: 130,
                             height: 40,
                             decoration: BoxDecoration(
                               border: Border.all(
@@ -298,11 +303,10 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                                                         create: (context) => ContentStoryViewModel(),
                                                                         child:  ContentStoryScreen(
                                                                           storyTitle: widget.storyTitle,
-                                                                          //title: storyDetailViewModel.story!.title,
-                                                                          //TODO: need to change
-                                                                          chap: 1,
+                                                                          title: storyDetailViewModel.story!.title,
+                                                                          chap: index+1,
                                                                           dataSource: widget.datasource,
-                                                                          pageNumber: 1,)
+                                                                          pageNumber: _currentPage,)
                                                                     ),
                                                                   ),
                                                                 );
@@ -394,9 +398,9 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                               storyTitle: storyDetailViewModel.story?.title != null ?
                                                           storyDetailViewModel.story!.title
                                                               : "",
-                                              // title:  storyDetailViewModel.story?.name != null ?
-                                              //         storyDetailViewModel.story!.name
-                                              //           : "",
+                                              title:  storyDetailViewModel.story?.name != null ?
+                                                      storyDetailViewModel.story!.name
+                                                        : "",
                                               chap: 1,
                                               dataSource: items[0],
                                               pageNumber: 1,),
@@ -485,7 +489,6 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                       ),
                                   );
                                 },
-
                               );
                             },
                           );
