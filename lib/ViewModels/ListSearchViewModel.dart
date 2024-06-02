@@ -27,11 +27,30 @@ class ListSearchViewModel extends ChangeNotifier{
 
   String category='All';
 
+  int page=1;
+
   Future<void> fetchSearchStories(String datasource) async {
     try {
-      _stories.clear();
-      List<Story> tmp = await _storyService.fetchSearchStory(searchString,datasource);
-      _stories[searchString]=tmp;
+      print("fetch ");
+      print(page);
+
+      List<Story> tmp;
+      if(category!='All'){
+        tmp = await _storyService.fetchSearchStoryByCategory(searchString,datasource,page,category);
+      }
+      else{
+        tmp = await _storyService.fetchSearchStoryByCategory(searchString,datasource,page,"");
+      }
+      if(page==1){
+        _stories.clear();
+        _stories[searchString]=tmp;
+      }
+      else{
+        if(tmp!=null){
+          _stories[searchString]?.addAll(tmp);
+        }
+      }
+      print(_stories[searchString]!.length);
       notifyListeners();
     } catch (e) {
       // Handle error
@@ -153,6 +172,16 @@ class ListSearchViewModel extends ChangeNotifier{
 
   void changeSearchString(String newSearchString){
     searchString=newSearchString;
+    notifyListeners();
+  }
+
+  void changepage(int newpage){
+    page=newpage;
+    notifyListeners();
+  }
+
+  void insertpage(){
+    ++page;
     notifyListeners();
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:project_login/ViewModels/ChoiseCategoryViewModel.dart';
+import 'package:project_login/ViewModels/ListTypeViewModel.dart';
 import 'package:project_login/Views/ChoiseCategoryView.dart';
+import 'package:project_login/Views/ListTypeView.dart';
 import 'package:provider/provider.dart';
 
 import '../ViewModels/DetailStoryViewModel.dart';
@@ -18,6 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late HomeStoryViewModel _homeStoryViewModel;
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +35,7 @@ class _HomePageState extends State<HomePage> {
         _homeStoryViewModel.fetchHomeSourceBooks();
         _homeStoryViewModel.changeIndex(0);
         _homeStoryViewModel.changeCategory("All");
+        _homeStoryViewModel.changeIsLoading(true);
       },
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -68,7 +72,46 @@ class _HomePageState extends State<HomePage> {
                   horizontal: 10
               ),
               alignment: Alignment.centerLeft,
-              child: const ListSourceBook(),
+              child: Consumer<HomeStoryViewModel>(builder: (context,storyListViewModel,_){
+                if (storyListViewModel.sourceBooks.isEmpty) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        for (int i = 0; i < storyListViewModel.sourceBooks.length; i++)
+                          GestureDetector(
+                            onTap: storyListViewModel.isLoading?null:() {
+                              Provider.of<HomeStoryViewModel>(context,listen: false).changeIndex(i);
+                              storyListViewModel.changeSourceBook(storyListViewModel.sourceBooks[i]);
+                              Provider.of<HomeStoryViewModel>(context,listen: false).fetchHomeStories(storyListViewModel.sourceBooks[i]);
+                              storyListViewModel.changeCategory("All");
+                              storyListViewModel.changeIsLoading(true);
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 10),
+                              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: Provider.of<HomeStoryViewModel>(context).indexSourceBook==i ? Colors.red : Colors.yellow, width: 2),
+                              ),
+                              child: Text(
+                                storyListViewModel.sourceBooks[i],
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          )
+                      ],
+                    ),
+                  );
+                }
+              }),
             ),
             Container(
               color: Colors.black,
@@ -107,53 +150,6 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-}
-
-class ListSourceBook extends StatelessWidget {
-  const ListSourceBook({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<HomeStoryViewModel>(builder: (context,storyListViewModel,_){
-      if (storyListViewModel.sourceBooks.isEmpty) {
-        return const Center(child: CircularProgressIndicator());
-      } else {
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              for (int i = 0; i < storyListViewModel.sourceBooks.length; i++)
-                GestureDetector(
-                  onTap: () {
-                    Provider.of<HomeStoryViewModel>(context,listen: false).changeIndex(i);
-                    storyListViewModel.changeSourceBook(storyListViewModel.sourceBooks[i]);
-                    Provider.of<HomeStoryViewModel>(context,listen: false).fetchHomeStories(storyListViewModel.sourceBooks[i]);
-                    storyListViewModel.changeCategory("All");
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Provider.of<HomeStoryViewModel>(context).indexSourceBook==i ? Colors.red : Colors.yellow, width: 2),
-                    ),
-                    child: Text(
-                      storyListViewModel.sourceBooks[i],
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                )
-            ],
-          ),
-        );
-      }
-    });
   }
 }
 
@@ -369,8 +365,18 @@ class ListViewBook extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 40),
-                      child: ElevatedButton.icon(onPressed: (){},
-                          label: const Text('Xem thêm'),
+                      child: ElevatedButton.icon(onPressed: (){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChangeNotifierProvider(
+                                  create: (context) => ListTypeViewModel(),
+                                  child: ListTypeScreen(type: liststoryname, source: storyNotifier.sourceBook),
+                                )
+                            )
+                        );
+                      },
+                          label: const Text('More'),
                           icon:const Icon(Icons.playlist_add_sharp)
                       ),
                     ),

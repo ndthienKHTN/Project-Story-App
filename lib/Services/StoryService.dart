@@ -30,6 +30,21 @@ class StoryService {
       throw Exception('Failed to fetch search story');
     }
   }
+
+  Future<List<Story>> fetchSearchStoryByCategory(String query, String datasource, int page, String category) async {
+    final response = await http.get(
+        Uri.parse(
+            'http://localhost:3000/api/v1/search/?datasource=$datasource&search=$query&page=$page&category=$category'
+        ));
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = jsonDecode(response.body);
+      return jsonData.map((json) => Story.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch search story by category');
+    }
+
+  }
+
   Future<Story> fetchDetailStory(String title, String datasource) async {
     final response = await http.get(Uri.parse('http://localhost:3000/api/v1/detailStory/?datasource=$datasource&title=$title'));
 
@@ -107,6 +122,19 @@ class StoryService {
       return ChapterPagination.fromJson(jsonData);
     } else {
       throw Exception("Failed to fetch Chapter Pagination");
+    }
+  }
+
+  Future<List<Story>> fetchListStoryByType(String typeOfList, int pageNumber, String datasource) async {
+    final response = await http.get(
+        Uri.parse(
+            'http://localhost:3000/api/v1/listStory/?datasource=$datasource&type=$typeOfList&page=$pageNumber'
+        ));
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = jsonDecode(response.body);
+      return jsonData.map((json) => Story.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch list story by type');
     }
   }
 

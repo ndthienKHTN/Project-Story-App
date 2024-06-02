@@ -24,10 +24,15 @@ class HomeStoryViewModel extends ChangeNotifier {
 
   String screenType="Home";
 
+  bool isLoading=true;
+
   Future<void> fetchHomeStories(String datasource) async {
     try {
       _stories.clear();
       _stories = await _storyService.fetchHomeStory(datasource);
+      if(stories.isNotEmpty){
+        isLoading=false;
+      }
       notifyListeners();
     } catch (e) {
       // Handle error
@@ -169,6 +174,11 @@ class HomeStoryViewModel extends ChangeNotifier {
 
   void changeScreenType(String newScreenType){
     screenType=newScreenType;
+    notifyListeners();
+  }
+
+  void changeIsLoading(bool check){
+    isLoading=check;
     notifyListeners();
   }
 }
