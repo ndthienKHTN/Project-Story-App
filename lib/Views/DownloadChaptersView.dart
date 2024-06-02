@@ -18,7 +18,7 @@ class DownloadChaptersScreen extends StatefulWidget {
   @override
   _DownloadChaptersState createState() => _DownloadChaptersState();
 }
-late List<String> chapters;
+late List<String> chapters =[];
 
 class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   late DetailStoryViewModel _detailStoryViewModel;
@@ -49,8 +49,8 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
     );
   }
   void _showDialogWithDropdown(BuildContext context) {
-    String? selectedValue;
     List<String> dropdownItems = ['TXT', 'HTML', 'epub'];
+    String? selectedValue = dropdownItems[0];
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -66,7 +66,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
                   builder: (BuildContext context, StateSetter setState) {
                     return DropdownButton<String>(
                       value: selectedValue,
-                      hint: Text('Choose an option'),
+                      hint: Text(selectedValue!),
                       items: dropdownItems.map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -92,7 +92,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
                   TextButton(
                     child: Text('OK'),
                     onPressed: () {
-                      _downloadChapters(story.title, chapters, "TXT", widget.datasource);
+                      _downloadChapters(story.title, chapters, selectedValue!, widget.datasource);
                       print('Selected value: $selectedValue');
                       Navigator.of(context).pop();
                     },
@@ -130,6 +130,9 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
       ),
       body: Consumer<DetailStoryViewModel>(
         builder: (context, storyDetailViewModel,_) {
+          if (storyDetailViewModel.chapterPagination == null) {
+            return Center(child: CircularProgressIndicator());
+          }
           final chapter = storyDetailViewModel.chapterPagination!;
           return Stack(
             children: [
@@ -177,10 +180,10 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
                             selectedButtons[index+1] = !selectedButtons[index+1]!;
                           });
                           if(selectedButtons[index+1] == true){
-                            chapters.add(chapter_page!.content);
+                            chapters.add((index+1).toString());
                           }
                           else{
-                            chapters.removeAt(index);
+                            chapters.removeAt(index + 1);
                           }
                         },
                         child: Text(

@@ -1,5 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:logger/logger.dart';
 import 'package:project_login/Services/DownloadService.dart';
 
 class DownloadChaptersViewModel extends ChangeNotifier {
@@ -14,6 +15,8 @@ class DownloadChaptersViewModel extends ChangeNotifier {
         _downloadedTxtFilePath.clear();
         for (String chapter in chapters) {
           String filePath = await downloadService.downloadAndUnzipFile(storyTitle, chapter, fileType, datasource);
+          Logger logger = Logger();
+          logger.i("File path" + filePath);
           _downloadedTxtFilePath.add(filePath);
         }
         notifyListeners();
