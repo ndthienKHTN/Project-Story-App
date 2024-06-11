@@ -43,10 +43,26 @@ class ContentStoryViewModel extends ChangeNotifier {
 
   List<String> get fontNames => _fontNames;
 
+  ContentStory? _changedStory;
+  ContentStory? get changedStory => _changedStory;
+
   void setPreferences(SharedPreferences sharedPreferences) {
     prefs = sharedPreferences;
   }
 
+  Future<void> fetchChangeContentStoryToThisDataSource(String storyTitle, int chapNumber,
+      String dataSource, String chosenDataSource) async {
+    try {
+      // Fetch story details from the API using the storyId
+      _changedStory = await _storyService.fetchChangeContentStoryToThisDataSource(storyTitle,dataSource, chapNumber);
+      Logger logger = Logger();
+      logger.i(_changedStory.toString());
+      notifyListeners();
+    } catch (e) {
+      // Handle error
+      print('Error fetching change content story to this data source: $e');
+    }
+  }
   Future<bool> fetchContentStory(String storyTitle, int chapNumber,
       String dataSource, String chosenDataSource) async {
     try {

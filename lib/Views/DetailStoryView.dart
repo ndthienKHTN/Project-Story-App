@@ -43,6 +43,12 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
       items.add("Truyenfull");
       items.add("Truyen123");
   }
+  void _fetchChangeDataSource(String dataSource) {
+    //TODO: need to change
+    if (_detailStoryViewModel.story != null && _detailStoryViewModel.story?.name != null) {
+      _detailStoryViewModel.fetchChangeDetailStoryToThisDataSource(_detailStoryViewModel.story!.name, dataSource);
+    }
+  }
   @override
   void initState() {
     super.initState();
@@ -224,6 +230,8 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                     }
                                     selectedItem = newValue;
                                   });
+
+                                  _fetchChangeDataSource(selectedItem!);
                                 },
                                 hint: Text(
                                     style: TextStyle(
