@@ -32,12 +32,12 @@ class _HistoryListWidgetState extends State<HistoryListWidget> {
         builder: (context, readingHistoryViewModel, _) {
       return Expanded(
         child: ListView.builder(
-          itemCount: readingHistoryViewModel.readingHistoryList.length,
+          itemCount: readingHistoryViewModel.readingHistoryList?.length,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 15),
               child: ReadingHistoryItem(
-                  readingHistoryViewModel.readingHistoryList[index],
+                  readingHistoryViewModel.readingHistoryList![index],
                   onClickItem),
             );
           },

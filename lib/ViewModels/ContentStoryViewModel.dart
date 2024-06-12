@@ -23,7 +23,7 @@ class ContentStoryViewModel extends ChangeNotifier {
 
   ContentStory? _contentStory;
   ContentDisplay contentDisplay = ContentDisplay.defaults();
-  List<String> _fontNames =
+  List<String> fontNames =
       []; // list of fonts user can choose to change display of content story
   int currentChapNumber = 1;
   List<String> sourceBooks = []; // list of data source app can get story from
@@ -41,8 +41,6 @@ class ContentStoryViewModel extends ChangeNotifier {
 
   ContentStory? get contentStory => _contentStory;
 
-  List<String> get fontNames => _fontNames;
-
   void setPreferences(SharedPreferences sharedPreferences) {
     prefs = sharedPreferences;
   }
@@ -50,9 +48,6 @@ class ContentStoryViewModel extends ChangeNotifier {
   Future<bool> fetchContentStory(String storyTitle, int chapNumber,
       String dataSource, String chosenDataSource) async {
     try {
-      print('storyTitle: $storyTitle');
-      print('chapNumber: $chapNumber');
-      print('datasource: $dataSource');
       _contentStory = await _storyService.fetchContentStory(
           storyTitle, chapNumber, dataSource);
       // Logger logger = Logger();
@@ -110,12 +105,12 @@ class ContentStoryViewModel extends ChangeNotifier {
       int? isTesting = await getInt(IS_TESTING_KEY);
 
       if (isTesting != 1){
-        _fontNames = fonts.map<String>((font) => font().fontFamily!).toList();
+        fontNames = fonts.map<String>((font) => font().fontFamily!).toList();
       }
 
-      if (!_fontNames.contains(fontFamily)) {
-        if (_fontNames.isNotEmpty) {
-          fontFamily = _fontNames[0];
+      if (!fontNames.contains(fontFamily)) {
+        if (fontNames.isNotEmpty) {
+          fontFamily = fontNames[0];
         }
       }
 
@@ -135,9 +130,6 @@ class ContentStoryViewModel extends ChangeNotifier {
   Future<void> fetchChapterPagination(String storyTitle, int pageNumber,
       String datasource, bool changePageNumber) async {
     try {
-      print('storyTitle: $storyTitle');
-      print('pageNumber: $pageNumber');
-      print('datasource: $datasource');
       // Fetch story details from the API using the storyId
       _chapterPagination = await _storyService.fetchChapterPagination(
           storyTitle, pageNumber, datasource);

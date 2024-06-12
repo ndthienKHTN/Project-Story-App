@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'Views/ReadOfflineFile.dart';
 import 'Views/SplashView.dart';
 
 void main() {
@@ -11,10 +12,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Story App',
-      home: SplashScreen(),
+      //home: SplashScreen(),
+      home: ReadOfflineFile()
     );
   }
 }

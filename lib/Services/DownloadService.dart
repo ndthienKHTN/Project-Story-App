@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 
 
 
@@ -23,6 +24,9 @@ class DownloadService {
   }
 
   Future<String> downloadAndUnzipFile(String storyTitle, int chapter, String fileType, String datasource) async {
+    // Request storage permissions
+    PermissionStatus permission = await Permission.storage.request();
+
     String folderName = "DownloadedFile";
     HttpClient httpClient = HttpClient();
     HttpClientRequest request = await httpClient.getUrl(

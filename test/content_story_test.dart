@@ -1,10 +1,23 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
 import 'package:project_login/Constants.dart';
+import 'package:project_login/Models/ChapterPagination.dart';
+import 'package:project_login/Models/ReadingHistory.dart';
+import 'package:project_login/Services/DownloadService.dart';
+import 'package:project_login/Services/LocalDatabase.dart';
+import 'package:project_login/Services/StoryService.dart';
 import 'package:project_login/ViewModels/ContentStoryViewModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MockSharedPreferences extends Mock implements SharedPreferences {}
+class MockStoryService extends Mock implements StoryService {}
+class MockLocalDatabase extends Mock implements LocalDatabase {}
+class MockReadingHistory extends Mock implements ReadingHistory {}
+class MockNotifier extends Mock implements ContentStoryViewModel {}
+class MockLogger extends Mock implements Logger {}
+class MockDownloadService extends Mock implements DownloadService {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -17,23 +30,6 @@ void main() {
       mockSharedPreferences = MockSharedPreferences();
       viewModel = ContentStoryViewModel();
     });
-
-    // test('Fetch content story', () async {
-    //   final storyTitle = '9891';
-    //   final chapNumber = 1;
-    //   final dataSource = 'Truyenfull';
-    //   final chosenDataSource = 'Truyenfull';
-    //
-    //   await viewModel.fetchContentStory(
-    //     storyTitle,
-    //     chapNumber,
-    //     dataSource,
-    //     chosenDataSource,
-    //   );
-    //
-    //   expect(viewModel.contentStory, isNotNull);
-    //   expect(viewModel.currentChapNumber, chapNumber);
-    // });
 
     test('fetchContentDisplay successfully fetches and sets content display settings', () async {
       // Set up the mock responses

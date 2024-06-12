@@ -65,7 +65,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
         widget.storyTitle, widget.chap, widget.dataSource, widget.dataSource);
 
     if (!isLoadingSuccess){
-      showMyDialog(_contentStoryViewModel.currentSource);
+      showMyDialog(widget.dataSource);
     }
 
     await Future.wait([

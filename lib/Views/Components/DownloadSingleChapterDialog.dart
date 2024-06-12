@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../ViewModels/ContentStoryViewModel.dart';
+import '../../ViewModels/DownloadChaptersViewModel.dart';
 
 class DownloadSingleChapterDialog extends StatefulWidget {
   final ContentStoryViewModel _contentStoryViewModel;
@@ -27,21 +29,22 @@ class _DownloadSingleChapterDialogState extends State<DownloadSingleChapterDialo
 
   @override
   Widget build(BuildContext context) {
+    DownloadChaptersViewModel viewModel = DownloadChaptersViewModel();
     return AlertDialog(
       title: Center(child: Text('Định dạng')),
       content: SingleChildScrollView(
         child: Column(
           children: contentStoryViewModel.formatList
               .map((String format) => RadioListTile<String>(
-                    title: Text(format),
-                    value: format,
-                    groupValue: selectedFormat,
-                    onChanged: (String? value) {
-                      setState(() {
-                        selectedFormat = value;
-                      });
-                    },
-                  ))
+            title: Text(format),
+            value: format,
+            groupValue: selectedFormat,
+            onChanged: (String? value) {
+              setState(() {
+                selectedFormat = value;
+              });
+            },
+          ))
               .toList(),
         ),
       ),
@@ -54,7 +57,13 @@ class _DownloadSingleChapterDialogState extends State<DownloadSingleChapterDialo
         ),
         TextButton(
           onPressed: () {
-            print('Choose ${selectedFormat}');
+            List<int> chapNumberList = [contentStoryViewModel.currentChapNumber];
+
+            viewModel.downloadChaptersOfStory(
+                contentStoryViewModel.contentStory!.title,
+                chapNumberList,
+                selectedFormat!,
+                contentStoryViewModel.currentSource);
             Navigator.of(context).pop();
           },
           child: Text('Ok'),
