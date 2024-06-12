@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 final fonts = [
+  GoogleFonts.roboto,
   GoogleFonts.aBeeZee,
   GoogleFonts.pacifico,
   GoogleFonts.lobster,
@@ -27,3 +28,4 @@ const String LINE_SPACING_KEY = "LINE_SPACING_KEY";
 const String TEXT_COLOR_KEY = "TEXT_COLOR_KEY";
 const String BACKGROUND_COLOR_KEY = "BACKGROUND_COLOR_KEY";
 const String FONT_FAMILY_KEY = "FONT_FAMILY_KEY";
+const String IS_TESTING_KEY = "isTesting";

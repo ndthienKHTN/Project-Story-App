@@ -1,99 +1,108 @@
 import 'package:flutter/material.dart';
 
+import 'Components/HistoryListWidget.dart';
+import 'Components/DownloadListWidget.dart';
+
 class BookShelfPage extends StatelessWidget {
+  const BookShelfPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: BodyWidget(),
     );
   }
 }
+
 class BodyWidget extends StatefulWidget {
   const BodyWidget({super.key});
   @override
   State<BodyWidget> createState() => _BodyWidgetState();
 }
+
 class _BodyWidgetState extends State<BodyWidget> {
-  bool _isBtnHistoryPressed = false;
+  bool _isBtnHistoryPressed = true;
   bool _isBtnDownloadPressed = false;
-  Widget _currentData = Text('Example');
+  Widget _currentData =  HistoryListWidget();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 15,
-              ),
-               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  TextButton(
-                      onPressed: (){
-                        setState(() {
-                          _isBtnHistoryPressed = true;
-                          _isBtnDownloadPressed = false;
-                          _currentData = SingleChildScrollView(
-                            child: Padding(
-                              padding: EdgeInsets.all(5),
-                              child: MyCustomWidget(),
-                            ),
-                          );
-                        });
-                      },
-                      child: Text(
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: _isBtnHistoryPressed ? Colors.red : Colors.white,
-                            fontSize: 25,
-                          ),
-                          'Lịch sử'
-                      )
-                  ),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 15,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TextButton(
+                    onPressed: (){
+                      setState(() {
+                        _isBtnHistoryPressed = true;
+                        _isBtnDownloadPressed = false;
+                        _currentData = HistoryListWidget(); // do not add const
+                      });
+                    },
+                    child: Text(
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: _isBtnHistoryPressed ? Colors.red : Colors.white,
+                          fontSize: 20,
+                        ),
+                        'Lịch sử'
+                    )
+                ),
 
-                  SizedBox(
-                    width: 30,
-                  ),
-                  TextButton(
-                      onPressed: (){
-                        setState(() {
-                          _isBtnDownloadPressed = true;
-                          _isBtnHistoryPressed = false;
-                          _currentData = SingleChildScrollView(
-                            child: Padding(
-                              padding: EdgeInsets.all(5),
-                              child: MyCustomWidget(),
-                            ),
-                          );
-                        });
-                      },
-                      child: Text(
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: _isBtnDownloadPressed ? Colors.red : Colors.white,
-                            fontSize: 25,
-                          ),
-                          'Tải xuống'
-                      )
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              MyCustomWidget(),
-              Divider(color: Colors.white),
-            ],
-          ),
+                const SizedBox(
+                  width: 30,
+                ),
+                TextButton(
+                    onPressed: (){
+                      setState(() {
+                        _isBtnDownloadPressed = true;
+                        _isBtnHistoryPressed = false;
+                        _currentData = DownloadListWidget();
+                      });
+                    },
+                    child: Text(
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: _isBtnDownloadPressed ? Colors.red : Colors.white,
+                          fontSize: 20,
+                        ),
+                        'Tải xuống'
+                    )
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            _currentData, // Hiển thị widget tương ứng
+          ],
         ),
       ),
     );
   }
 }
+
+// class DownloadListWidget extends StatefulWidget {
+//   @override
+//   _DownloadListWidgetState createState() => _DownloadListWidgetState();
+// }
+//
+// class _DownloadListWidgetState extends State<DownloadListWidget> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       child: Text('This is the Download Widget'),
+//     );
+//   }
+// }
+
 class MyCustomWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

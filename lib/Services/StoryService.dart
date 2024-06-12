@@ -4,14 +4,12 @@ import 'package:logger/logger.dart';
 import 'dart:convert';
 import '../Models/ChapterPagination.dart';
 
+
 import '../Models/ChapterPagination.dart';
 import '../Models/ContentStory.dart';
 import '../Models/Story.dart';
 import '../Models/Category.dart' as categoryModel;
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import '../Models/ContentStory.dart';
-import '../Models/Story.dart';
+
 
 
 class StoryService {
@@ -27,8 +25,8 @@ class StoryService {
     }
   }
 
-  Future<List<Story>> fetchSearchStory(String query, String datasource) async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/search/?datasource=$datasource&search=$query'));
+  Future<List<Story>> fetchSearchStory(String query, String datasource, int page) async {
+    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/search/?datasource=$datasource&search=$query&page=$page'));
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);
@@ -36,6 +34,19 @@ class StoryService {
     } else {
       throw Exception('Failed to fetch search story');
     }
+  }
+  Future<List<Story>> fetchSearchStoryByCategory(String query, String datasource, int page, String category) async {
+    final response = await http.get(
+        Uri.parse(
+            'http://10.0.2.2:3000/api/v1/search/?datasource=$datasource&search=$query&page=$page&category=$category'
+        ));
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = jsonDecode(response.body);
+      return jsonData.map((json) => Story.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch search story by category');
+    }
+
   }
   Future<Story> fetchDetailStory(String title, String datasource) async {
     final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/detailStory/?datasource=$datasource&title=$title'));
@@ -98,13 +109,14 @@ class StoryService {
         }
       } else {
         // Trường hợp không nhận được response 200 từ server
-        throw Exception("Failed to fetch list of category: ${response.statusCode} ");
+        throw Exception("Failed to fetch list of category: ${response.statusCode}");
       }
     } catch (e) {
       // Bắt các lỗi khác có thể xảy ra trong quá trình gọi API
       throw Exception("Failed to fetch list of category: $e");
     }
   }
+
 
   Future<ChapterPagination> fetchChapterPagination(String title, int pageNumber, String datasource) async {
     final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/listChapter/?datasource=$datasource&title=$title&page=$pageNumber'));
@@ -114,6 +126,18 @@ class StoryService {
       return ChapterPagination.fromJson(jsonData);
     } else {
       throw Exception("Failed to fetch Chapter Pagination");
+    }
+  }
+  Future<List<Story>> fetchListStoryByType(String typeOfList, int pageNumber, String datasource) async {
+    final response = await http.get(
+        Uri.parse(
+            'http://10.0.2.2:3000/api/v1/listStory/?datasource=$datasource&type=$typeOfList&page=$pageNumber'
+        ));
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = jsonDecode(response.body);
+      return jsonData.map((json) => Story.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch list story by type');
     }
   }
 

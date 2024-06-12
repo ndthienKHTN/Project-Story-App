@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
-import 'package:project_login/ViewModels/SearchStoryViewModel.dart';
-import 'package:project_login/Views/HomeStoryView.dart';
-import 'package:provider/provider.dart';
 
-import 'ViewModels/DetailStoryViewModel.dart';
-import 'Views/MainView.dart';
+import 'Views/SplashView.dart';
 
-import 'ViewModels/HomeStoryViewModel.dart';
-import 'ViewModels/SearchStoryViewModel.dart';
-import 'Views/MainView.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -19,17 +11,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => SearchStoryViewModel()),
-        ChangeNotifierProvider(create: (context) => DetailStoryViewModel()),
-        ChangeNotifierProvider(create: (context) => HomeStoryViewModel()),
-      ],
-      child: const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Story App',
-        home: MainPage(), //HomeScreen(),
-      ),
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Story App',
+      home: SplashScreen(),
     );
   }
 }

@@ -83,6 +83,7 @@ class _SettingContentStoryBottomSheetState extends State<SettingContentStoryBott
                               setState(() {
                                 dropdownValueSource = newValue!;
                                 widget.onSourceChange(dropdownValueSource);
+                                Navigator.pop(context);
                               });
                             },
                             items: widget.contentStoryViewModel.sourceBooks

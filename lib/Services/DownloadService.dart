@@ -1,9 +1,14 @@
 
+import 'dart:convert';
 import 'dart:io';
 import 'package:archive/archive.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
+
+
+
 class DownloadService {
 
   Future<String> findTxtFilePath(Archive archive) async {
@@ -17,7 +22,7 @@ class DownloadService {
     throw Exception('No .txt file found in the ZIP archive');
   }
 
-  Future<String> downloadAndUnzipFile(String storyTitle, String chapter, String fileType, String datasource) async {
+  Future<String> downloadAndUnzipFile(String storyTitle, int chapter, String fileType, String datasource) async {
     String folderName = "DownloadedFile";
     HttpClient httpClient = HttpClient();
     HttpClientRequest request = await httpClient.getUrl(
@@ -121,5 +126,16 @@ class DownloadService {
     }
 
     return filePaths;
+  }
+  Future<List<String>> fetchListFileExtension() async {
+    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/download/listFileExtension/'));
+
+    if (response.statusCode == 200) {
+      final dynamic jsonData = jsonDecode(response.body);
+      List<String> result =  List<String>.from(jsonData['names']);
+      return result;
+    } else {
+      throw Exception("Fail to fetch fetchListNameFileExtension");
+    }
   }
 }

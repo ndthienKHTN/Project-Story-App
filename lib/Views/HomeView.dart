@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:project_login/ViewModels/ChoiseCategoryViewModel.dart';
+import 'package:project_login/ViewModels/ListStoryByTypeViewModel.dart';
+import 'package:project_login/Views/ChoiseCategoryView.dart';
+import 'package:project_login/Views/ListStoryByTypeView.dart';
 import 'package:project_login/Views/ChoiseCategoryView.dart';
 import 'package:provider/provider.dart';
 
 import '../ViewModels/DetailStoryViewModel.dart';
 import '../ViewModels/HomeStoryViewModel.dart';
+import '../ViewModels/DetailStoryViewModel.dart';
+import '../ViewModels/HomeStoryViewModel.dart';
+import '../ViewModels/SearchViewModel.dart';
 import 'DetailStoryView.dart';
+import 'SearchScreen.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -38,38 +46,25 @@ class _HomePageState extends State<HomePage> {
             Row(
               children: [
                 Container(
-                  margin: const EdgeInsets.only(left: 10,right: 8),
-                  height: 36,
-                  width: 320,
-                  child:  TextField(
-                    decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        prefixIcon: const Icon(Icons.search),
-                        prefixIconColor: Colors.grey,
-                        hintText: 'Search here...',
-                        contentPadding: const EdgeInsets.only(top: 2),
-                        hintStyle: const TextStyle(color: Colors.grey),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        )
-                    ),
-                  ),
-                ),
-                IconButton(onPressed: () async{
-                  final choisecategory=await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ChangeNotifierProvider(
-                            create: (context) => ChoiseCategoryViewModel(),
-                            child: ChoiseCategoryScreen(datasource: _homeStoryViewModel.sourceBook, category: _homeStoryViewModel.category,),
-                          )
+                  margin: const EdgeInsets.only(left: 20),
+                  child: IconButton(onPressed: (){
+
+                  },
+                      icon: Image.asset('assets/images/Logo.png',height:60,),
+                ),),
+                const Spacer(),
+                IconButton(onPressed: () {
+                  Navigator.push(
+                      context,MaterialPageRoute(
+                      builder: (context) => ChangeNotifierProvider(
+                        create: (context) => SearchViewModel(),
+                        child: const SearchScreen(),
                       )
+                  )
                   );
-                  _homeStoryViewModel.changeCategory(choisecategory);
-                },
-                    icon: const Icon(Icons.category,color: Colors.white,)
-                )
+                },icon: const Icon(
+                  Icons.search,color: Colors.white,),
+                ),
               ],
             ),
             Container(
@@ -90,7 +85,8 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 10.0),
                       child: Text(
-                        Provider.of<HomeStoryViewModel>(context).sourceBook,
+                        "${Provider.of<HomeStoryViewModel>(context).sourceBook} "
+                            "- ${Provider.of<HomeStoryViewModel>(context).screenType=='Home'?Provider.of<HomeStoryViewModel>(context).screenType:Provider.of<HomeStoryViewModel>(context).category}",
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -305,7 +301,14 @@ class ListViewBook extends StatelessWidget {
                                         border: Border.all(color: Colors.yellow, width: 1),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      child: Image(image: NetworkImage(liststorys[index].cover), height: 101, width: 84),
+                                      child: Image(image: NetworkImage(liststorys[index].cover), height: 101, width: 84,
+                                        errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                          return Image.asset(
+                                            'assets/images/default_image.png',
+                                            height: 101,
+                                            width: 84,
+                                          );
+                                        },),
                                     ),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,7 +374,17 @@ class ListViewBook extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 40),
-                      child: ElevatedButton.icon(onPressed: (){},
+                      child: ElevatedButton.icon(onPressed: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChangeNotifierProvider(
+                              create: (context) => ListStoryByTypeViewModel(),
+                              child: ListStoryByTypeScreen(listStoryType: liststoryname, datasource: storyNotifier.sourceBook,),
+                            ),
+                          ),
+                        );
+                      },
                           label: const Text('Xem thêm'),
                           icon:const Icon(Icons.playlist_add_sharp)
                       ),
@@ -476,6 +489,13 @@ class GridViewBook extends StatelessWidget {
                                           image: NetworkImage(liststorys[index].cover),
                                           height: 120,
                                           width: 110,
+                                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                            return Image.asset(
+                                              'assets/images/default_image.png',
+                                              height: 120,
+                                              width: 110,
+                                            );
+                                          },
                                         ),
                                       ),
                                       Column(
@@ -513,7 +533,17 @@ class GridViewBook extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(bottom: 40),
-                              child: ElevatedButton.icon(onPressed: (){},
+                              child: ElevatedButton.icon(onPressed: (){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChangeNotifierProvider(
+                                      create: (context) => ListStoryByTypeViewModel(),
+                                      child: ListStoryByTypeScreen(listStoryType: liststoryname, datasource: storyNotifier.sourceBook,),
+                                    ),
+                                  ),
+                                );
+                              },
                                 label: const Text('Xem thêm'),
                                 icon:const Icon(Icons.playlist_add_sharp)
                               ),

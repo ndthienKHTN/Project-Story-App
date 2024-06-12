@@ -7,7 +7,7 @@ import '../Models/Chapter.dart';
 import '../Models/Story.dart';
 import '../ViewModels/ContentStoryViewModel.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
-import '../ViewModels/DownloadChatersViewModel.dart';
+import '../ViewModels/DownloadChaptersViewModel.dart';
 import 'ContentStoryView.dart';
 import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
 
@@ -31,23 +31,52 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
   String ? selectedItem ;
   late int selectedIndex;
   Widget ?_currentData ;
-  late List<String> items =[];
+  List<String> items =[];
   void _fetchChapters() {
     _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
   }
-  void _fetchDatasource(){
-      for(int i=0;i<_homeStoryViewModel.sourceBooks.length;i++){
-        items.add(_homeStoryViewModel.sourceBooks[i]);
-      }
+  void _fetchDatasource() async{
+    await Future.wait([_detailStoryViewModel.fetchSourceBooks()]);
+    items = _detailStoryViewModel.sourceBooks;
   }
   @override
   void initState() {
     super.initState();
     _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
     _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, widget.datasource);
-    _homeStoryViewModel = Provider.of<HomeStoryViewModel>(context,listen: false);
+
+    //Chưa sử dụng
+    _homeStoryViewModel = HomeStoryViewModel();
     _fetchChapters();
     _fetchDatasource();
+  }
+  void showMyDialog(String newSource){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Tải thất bại'),
+          content: Text(
+              'Không thể tải truyện từ $newSource. Tải truyện từ ${_detailStoryViewModel.currentSource} để thay thế'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void onSourceChange(String newSource) async {
+    bool result = await _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, newSource);
+    _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, newSource);
+    // if we cannot load content from newSource (result == false), show dialog
+    if (!result) {
+      showMyDialog(newSource);
+    }
   }
 
   @override
@@ -72,7 +101,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ChangeNotifierProvider(
-                  create: (_) => DownloadChaptersViewModel(),
+                  create: (_) => DetailStoryViewModel(),
                   child: DownloadChaptersScreen(storyTitle: widget.storyTitle, datasource: widget.datasource)
                 )),
               );
@@ -210,10 +239,14 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     if (newValue != null) {
+                                      // Tìm index của mục mới được chọn
                                       int newIndex = items.indexOf(newValue);
+                                      // Di chuyển mục mới lên đầu danh sách
                                       items.insert(0, items.removeAt(newIndex));
+                                      // Cập nhật selectedItem và selectedIndex
                                       selectedItem = newValue;
                                       selectedIndex = 0;
+                                      onSourceChange(newValue);
                                     }
                                     selectedItem = newValue;
                                   });
@@ -300,8 +333,8 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                                                         create: (context) => ContentStoryViewModel(),
                                                                         child:  ContentStoryScreen(
                                                                           storyTitle: widget.storyTitle,
-                                                                          title: storyDetailViewModel.story!.title,
-                                                                          chap: index+1,
+                                                                          name: storyDetailViewModel.story!.name,
+                                                                          chap: index + 1,
                                                                           dataSource: widget.datasource,
                                                                           pageNumber: _currentPage,)
                                                                     ),
@@ -395,7 +428,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                               storyTitle: storyDetailViewModel.story?.title != null ?
                                                           storyDetailViewModel.story!.title
                                                               : "",
-                                              title:  storyDetailViewModel.story?.name != null ?
+                                              name:  storyDetailViewModel.story?.name != null ?
                                                       storyDetailViewModel.story!.name
                                                         : "",
                                               chap: 1,
@@ -434,120 +467,3 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
     );
   }
 }
-/* return Scaffold(
-      appBar: AppBar(
-        title: Text('Story Detail'),
-      ),
-      body: Consumer<DetailStoryViewModel>(
-        builder: (context, storyDetailViewModel, _) {
-          if (storyDetailViewModel.story == null) {
-            return Center(child: CircularProgressIndicator());
-          } else {
-            final story = storyDetailViewModel.story!;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Title: ${story.name}'),
-                Text('Description: ${story.link}'),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChangeNotifierProvider(
-                          create: (_) => ContentStoryViewModel(),
-                          child: ContentStoryScreen(storyTitle: storyDetailViewModel.story?.name != null ? storyDetailViewModel.story!.name : ""),
-                        ),
-                      ),
-                    );
-                  },
-                  child: Text('Read'),
-                ),
-                Expanded(
-                    child: Consumer<DetailStoryViewModel>(
-                      builder: (context, chapterListViewModel, _) {
-                        if (chapterListViewModel.chapterPagination == null) {
-                          return Center(child: CircularProgressIndicator());
-                        } else {
-                          return ListView.builder(
-                            itemCount: chapterListViewModel.chapterPagination?.listChapter?.length,
-                            itemBuilder: (context, index) {
-                              final chapter = chapterListViewModel.chapterPagination!.listChapter?[index];
-                              return ListTile(
-                                title: Text(chapter!.content),
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ChangeNotifierProvider(
-                                            create: (context) => ContentStoryViewModel(),
-                                            child:  ContentStoryScreen(storyTitle: chapter.content)
-                                        ),
-                                      ),
-                                  );
-                                },
-
-                              );
-                            },
-                          );
-                        }
-                      },
-                    )
-                )
-              ],
-
-            );
-          }
-        },
-      ),
-    );*/
-/*@override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Story Details'),
-      ),
-      body: Consumer<DetailStoryViewModel>(
-        builder: (context, viewModel, _) {
-          if (viewModel.story != null) {
-            // Display story details
-            final story = viewModel.story!;
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Name: ${story.name}'),
-                  Text('Cover: ${story.cover}'),
-                  // Add more story details here
-                ],
-              ),
-            );
-          } else {
-            // Loading indicator
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
-    );
-  }*/
-
-/*
-class StoryDetailScreen extends StatelessWidget {
-  final Story story;
-
-  const StoryDetailScreen({required this.story});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(story.name),
-      ),
-      body: Center(
-        child: Text('Story details'),
-      ),
-    );
-  }
-}*/

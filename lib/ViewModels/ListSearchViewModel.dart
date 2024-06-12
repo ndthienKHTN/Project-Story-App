@@ -1,15 +1,14 @@
-import 'package:flutter/cupertino.dart';
-import 'package:logger/logger.dart';
-import 'package:project_login/Models/Category.dart';
-
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../Models/Story.dart';
 import '../Services/StoryService.dart';
 
+class ListSearchViewModel extends ChangeNotifier{
 
-class HomeStoryViewModel extends ChangeNotifier {
   final StoryService _storyService = StoryService();
 
   Map<String, List<Story>> _stories = <String, List<Story>>{};
@@ -18,33 +17,31 @@ class HomeStoryViewModel extends ChangeNotifier {
 
   List<String> sourceBooks=[];
 
-  String sourceBook='thi';
+  String sourceBook='';
 
   int indexSourceBook=0;
 
   bool listOn=true;
 
-  String category="All";
+  String searchString='';
 
-/*  List<Category> _listCategories = <Category>[];
-  List<Category> get listCategories => _listCategories;*/
-  String screenType="Home";
+  String category='All';
 
-  Future<void> fetchHomeStories(String datasource) async {
+  Future<void> fetchSearchStories(String datasource) async {
     try {
       _stories.clear();
-      _stories = await _storyService.fetchHomeStory(datasource);
+      List<Story> tmp = await _storyService.fetchSearchStory(searchString,datasource,1);
+      _stories[searchString]=tmp;
       notifyListeners();
     } catch (e) {
       // Handle error
       if (kDebugMode) {
         print('Error fetching stories: $e');
       }
-      print('Error fetching home stories: $e');
     }
   }
 
-  Future<void> fetchHomeSourceBooks() async{
+  Future<void> fetchSearchSourceBooks(String searchString) async{
     try{
       sourceBooks.clear();
       List<String> sourceBookstmp=await _storyService.fetchListNameDataSource();
@@ -83,7 +80,8 @@ class HomeStoryViewModel extends ChangeNotifier {
       if(sourceBooks.isNotEmpty){
         saveStringList("LIST_SOURCE", sourceBooks);
         changeSourceBook(sourceBooks[0]);
-        fetchHomeStories(sourceBooks[0]);
+        changeSearchString(searchString);
+        fetchSearchStories(sourceBooks[0]);
       }
       notifyListeners();
     }
@@ -93,49 +91,6 @@ class HomeStoryViewModel extends ChangeNotifier {
         print('Error fetching sources: $e');
       }
     }
-  }
-
-
-  void changeSourceBook(String newSourceBook) {
-    sourceBook = newSourceBook;
-    notifyListeners();
-  }
-
-  void changeListOrGrid(bool listchange) {
-    listOn = listchange;
-    notifyListeners();
-  }
-
-  void changeIndex(int newIndex) {
-    indexSourceBook = newIndex;
-    notifyListeners();
-  }
-
-  void reorder(int oldIndex, int newIndex) {
-    if (oldIndex < newIndex) {
-      newIndex -= 1;
-    }
-    final String item = sourceBooks.removeAt(oldIndex);
-    sourceBooks.insert(newIndex, item);
-    notifyListeners();
-  }
-
-  void changeindex(int newIndex) {
-    indexSourceBook = newIndex;
-    notifyListeners();
-  }
-
-  void updateSource(List<String> newSourceBooks){
-    sourceBooks.clear();
-    sourceBooks.addAll(newSourceBooks);
-    notifyListeners();
-  }
-
-  Future<void> saveStringList(String key, List<String> valueList) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // Chuyển đổi List<String> thành một chuỗi JSON trước khi lưu vào SharedPreferences
-    final jsonString = jsonEncode(valueList);
-    await prefs.setString(key, jsonString);
   }
 
   Future<List<String>?> getStringList(String key) async {
@@ -169,13 +124,35 @@ class HomeStoryViewModel extends ChangeNotifier {
     return true;
   }
 
-  void changeCategory(String newCategory) {
-    category = newCategory;
+  Future<void> saveStringList(String key, List<String> valueList) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Chuyển đổi List<String> thành một chuỗi JSON trước khi lưu vào SharedPreferences
+    final jsonString = jsonEncode(valueList);
+    await prefs.setString(key, jsonString);
+  }
+
+  void changeSourceBook(String newSourceBook){
+    sourceBook=newSourceBook;
     notifyListeners();
   }
 
-  void changeScreenType(String newScreenType){
-    screenType=newScreenType;
+  void changeListOrGrid(bool listchange){
+    listOn=listchange;
+    notifyListeners();
+  }
+
+  void changeIndex(int newIndex){
+    indexSourceBook=newIndex;
+    notifyListeners();
+  }
+
+  void changeCategory(String newCategory){
+    category=newCategory;
+    notifyListeners();
+  }
+
+  void changeSearchString(String newSearchString){
+    searchString=newSearchString;
     notifyListeners();
   }
 }

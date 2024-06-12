@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:project_login/ViewModels/DetailStoryViewModel.dart';
+import 'package:project_login/ViewModels/ListStoryByTypeViewModel.dart';
+import 'package:project_login/Views/DetailStoryView.dart';
 import 'package:provider/provider.dart';
-import '../Services/StoryService.dart';
-import '../ViewModels/DetailStoryViewModel.dart';
-import '../ViewModels/SearchStoryViewModel.dart';
-import 'DetailStoryView.dart';
-import '../Services/StoryService.dart';
-import '../ViewModels/DetailStoryViewModel.dart';
-import '../ViewModels/SearchStoryViewModel.dart';
-import './DetailStoryView.dart';
 
-class SearchScreen extends StatefulWidget {
-  late String searchQuery;
+class ListStoryByTypeScreen extends StatefulWidget {
+  final String listStoryType;
+  final String datasource;
+
+  const ListStoryByTypeScreen({super.key, required this.listStoryType, required this.datasource});
+
   @override
-  _SearchScreenState createState() => _SearchScreenState();
+  _ListStoryByTypeScreenState createState() => _ListStoryByTypeScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
-  late SearchStoryViewModel _searchStoryViewModel;
-  late String searchQuery;
+class _ListStoryByTypeScreenState extends State<ListStoryByTypeScreen> {
+  late ListStoryByTypeViewModel _listStoryByTypeViewModel;
+
   @override
   void initState() {
     super.initState();
-    _searchStoryViewModel = Provider.of<SearchStoryViewModel>(context, listen: false);
 
-    //TODO: need to change datasource and page
-    _searchStoryViewModel.fetchSearchStories(searchQuery, "Truyenfull",1);
+    _listStoryByTypeViewModel = Provider.of<ListStoryByTypeViewModel>(context, listen: false);
+    _listStoryByTypeViewModel.fetchListStoryByType(widget.listStoryType, 1, widget.datasource);
   }
 
   @override
@@ -35,18 +33,8 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                ElevatedButton(
-                    onPressed: () => {StoryService().fetchListCategory("Truyen123")},
-                    child: const Text('list categories'))
-              ],
-            ),
-          ),
           Expanded(
-            child:Consumer<SearchStoryViewModel>(
+            child:Consumer<ListStoryByTypeViewModel>(
               builder: (context, storyListViewModel, _) {
                 if (storyListViewModel.stories.isEmpty) {
                   return const Center(child: CircularProgressIndicator());
@@ -64,7 +52,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             MaterialPageRoute(
                               builder: (context) => ChangeNotifierProvider(
                                 create: (context) => DetailStoryViewModel(),
-                                child: DetailStoryScreen(storyTitle: story.title, datasource: "Truyenfull",),
+                                child: DetailStoryScreen(storyTitle: story.title, datasource: widget.datasource,),
                               ),
                             ),
                           );
@@ -82,4 +70,3 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 }
-
