@@ -14,7 +14,7 @@ import '../Models/Category.dart' as categoryModel;
 
 class StoryService {
   Future<List<String>> fetchListNameDataSource() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listDataSource/'));
+    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/listDataSource/'));
 
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
@@ -26,7 +26,7 @@ class StoryService {
   }
 
   Future<List<Story>> fetchSearchStory(String query, String datasource, int page) async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/search/?datasource=$datasource&search=$query&page=$page'));
+    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/search/?datasource=$datasource&search=$query&page=$page'));
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);
@@ -38,7 +38,7 @@ class StoryService {
   Future<List<Story>> fetchSearchStoryByCategory(String query, String datasource, int page, String category) async {
     final response = await http.get(
         Uri.parse(
-            'http://localhost:3000/api/v1/search/?datasource=$datasource&search=$query&page=$page&category=$category'
+            'http://10.0.2.2:3000/api/v1/search/?datasource=$datasource&search=$query&page=$page&category=$category'
         ));
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);
@@ -49,7 +49,7 @@ class StoryService {
 
   }
   Future<Story> fetchDetailStory(String title, String datasource) async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/detailStory/?datasource=$datasource&title=$title'));
+    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/detailStory/?datasource=$datasource&title=$title'));
 
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
@@ -61,7 +61,7 @@ class StoryService {
     }
   }
   Future<Story?> fetchChangeDetailStoryToThisDataSource(String title, String datasource) async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/changeDetailStoryDataSource/?datasource=$datasource&title=$title'));
+    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/changeDetailStoryDataSource/?datasource=$datasource&title=$title'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData = jsonDecode(response.body);
@@ -80,7 +80,7 @@ class StoryService {
     }
   }
   Future<ContentStory?> fetchChangeContentStoryToThisDataSource(String title, String datasource, int chap) async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/changeContentStoryDataSource/?datasource=$datasource&title=$title&chap=$chap'));
+    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/changeContentStoryDataSource/?datasource=$datasource&title=$title&chap=$chap'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData = jsonDecode(response.body);
@@ -99,7 +99,7 @@ class StoryService {
     }
   }
   Future<ContentStory> fetchContentStory(String storyTitle, int chapNumber, String datasource) async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/contentStory/?datasource=$datasource&title=$storyTitle&chap=$chapNumber'));
+    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/contentStory/?datasource=$datasource&title=$storyTitle&chap=$chapNumber'));
 
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
@@ -110,7 +110,7 @@ class StoryService {
   }
 
   Future<Map<String, List<Story>>> fetchHomeStory(String datasource) async {
-      final response = await http.get(Uri.parse('http://localhost:3000/api/v1/home/?datasource=$datasource'));
+      final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/home/?datasource=$datasource'));
 
       if (response.statusCode == 200) {
         final dynamic jsonData = jsonDecode(response.body);
@@ -133,7 +133,7 @@ class StoryService {
 
   Future<List<categoryModel.Category>> fetchListCategory(String datasource) async {
     try {
-      final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listCategory/?datasource=$datasource'));
+      final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/listCategory/?datasource=$datasource'));
       if (response.statusCode == 200) {
         final List<dynamic> jsonData = jsonDecode(response.body);
 
@@ -157,7 +157,7 @@ class StoryService {
 
 
   Future<ChapterPagination> fetchChapterPagination(String title, int pageNumber, String datasource) async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listChapter/?datasource=$datasource&title=$title&page=$pageNumber'));
+    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/listChapter/?datasource=$datasource&title=$title&page=$pageNumber'));
 
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
@@ -169,7 +169,7 @@ class StoryService {
   Future<List<Story>> fetchListStoryByType(String typeOfList, int pageNumber, String datasource) async {
     final response = await http.get(
         Uri.parse(
-            'http://localhost:3000/api/v1/listStory/?datasource=$datasource&type=$typeOfList&page=$pageNumber'
+            'http://10.0.2.2:3000/api/v1/listStory/?datasource=$datasource&type=$typeOfList&page=$pageNumber'
         ));
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);

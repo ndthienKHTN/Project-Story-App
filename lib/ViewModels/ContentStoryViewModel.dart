@@ -21,13 +21,13 @@ class ContentStoryViewModel extends ChangeNotifier {
   final DownloadService _downloadService = DownloadService();
   late final SharedPreferences prefs;
 
-  ContentStory? _contentStory;
+  ContentStory? contentStory;
   ContentDisplay contentDisplay = ContentDisplay.defaults();
   List<String> fontNames =
       []; // list of fonts user can choose to change display of content story
   int currentChapNumber = 1;
   List<String> sourceBooks = []; // list of data source app can get story from
-  int _indexSource =
+  int indexSource =
       0; // to get the index of current source in sourceBooks (only using when automatically change source)
   String currentSource = '';
   List<String> formatList = []; // list of format user can choose when download
@@ -39,8 +39,6 @@ class ContentStoryViewModel extends ChangeNotifier {
   // so we need this variable to track page number of current chapter
   int currentPageNumber = 1;
 
-  ContentStory? get contentStory => _contentStory;
-
   ContentStory? _changedStory;
   ContentStory? get changedStory => _changedStory;
 
@@ -48,29 +46,44 @@ class ContentStoryViewModel extends ChangeNotifier {
     prefs = sharedPreferences;
   }
 
-  Future<void> fetchChangeContentStoryToThisDataSource(String storyTitle, int chapNumber,
-      String dataSource, String chosenDataSource) async {
-    try {
-      // Fetch story details from the API using the storyId
-      _changedStory = await _storyService.fetchChangeContentStoryToThisDataSource(storyTitle,dataSource, chapNumber);
-      Logger logger = Logger();
-      logger.i(_changedStory.toString());
-      notifyListeners();
-    } catch (e) {
-      // Handle error
-      print('Error fetching change content story to this data source: $e');
-    }
-  }
+  // Future<bool> fetchChangeContentStoryToThisDataSource(String storyTitle, int chapNumber,
+  //     String dataSource, String chosenDataSource) async {
+  //   print('current index: $indexSource');
+  //   try {
+  //     // Fetch story details from the API using the storyId
+  //     _changedStory = await _storyService.fetchChangeContentStoryToThisDataSource(storyTitle,dataSource, chapNumber);
+  //     // Logger logger = Logger();
+  //     // logger.i(_changedStory.toString());
+  //     if (_changedStory == null) {
+  //       print('changed null');
+  //       fetchChangeContentStoryToThisDataSource(storyTitle, chapNumber, sourceBooks[indexSource++], chosenDataSource);
+  //     } else {
+  //       contentStory = _changedStory?.clone();
+  //       indexSource = 0;
+  //     }
+  //     notifyListeners();
+  //     return (dataSource == chosenDataSource);
+  //   } catch (e) {
+  //     // Handle error
+  //     print('Error fetching change content story to this data source: $e');
+  //     indexSource = 0;
+  //     return false;
+  //   }
+  // }
+
   Future<bool> fetchContentStory(String storyTitle, int chapNumber,
       String dataSource, String chosenDataSource) async {
     try {
-      _contentStory = await _storyService.fetchContentStory(
-          storyTitle, chapNumber, dataSource);
+      if (dataSource == chosenDataSource){
+        contentStory = await _storyService.fetchContentStory(
+            storyTitle, chapNumber, dataSource);
+      } else{
+        contentStory = await _storyService.fetchChangeContentStoryToThisDataSource(
+            storyTitle, dataSource, chapNumber);
+      }
       // Logger logger = Logger();
       // logger.i(_contentStory.toString());
-      _indexSource = 0;
-      print(currentPageNumber.toString());
-      print(chapNumber);
+      indexSource = 0;
       currentChapNumber = chapNumber;
 
       // save current data source
@@ -87,18 +100,19 @@ class ContentStoryViewModel extends ChangeNotifier {
       int currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
       _localDatabase.insertData(ReadingHistory(
           pageNumber: currentPageNumber,
-          title: _contentStory!.title,
-          name: _contentStory!.name,
+          title: contentStory!.title,
+          name: contentStory!.name,
           chap: chapNumber,
           date: currentTimeMillis,
-          author: _contentStory!.author,
-          cover: _contentStory!.cover,
+          author: contentStory!.author,
+          cover: contentStory!.cover,
           dataSource: currentSource));
       return (dataSource == chosenDataSource);
     } catch (e) {
       print('Error fetching story content source $dataSource: $e');
+      //return false;
       return fetchContentStory(storyTitle, chapNumber,
-          sourceBooks[_indexSource++], chosenDataSource);
+          sourceBooks[indexSource++], chosenDataSource);
     }
   }
 

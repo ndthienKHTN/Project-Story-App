@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Story App',
-      //home: SplashScreen(),
-      home: ReadOfflineFile()
+      home: SplashScreen(),
+      //home: ReadOfflineFile()
     );
   }
 }

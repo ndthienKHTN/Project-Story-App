@@ -31,13 +31,17 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
   bool isLoadingSuccess = true;
   final ScrollController _scrollController = ScrollController();
 
-
-  void _fetchChangeDataSource(String dataSource) {
-    //TODO: need to change
-    if (_contentStoryViewModel.contentStory != null && _contentStoryViewModel.contentStory?.name != null) {
-      _contentStoryViewModel.fetchChangeContentStoryToThisDataSource(_contentStoryViewModel.contentStory!.name,1, dataSource,"");
-    }
-  }
+  // void _fetchChangeDataSource(String dataSource) {
+  //   //TODO: need to change
+  //   if (_contentStoryViewModel.contentStory != null &&
+  //       _contentStoryViewModel.contentStory?.title != null) {
+  //     _contentStoryViewModel.fetchChangeContentStoryToThisDataSource(
+  //         _contentStoryViewModel.contentStory!.title,
+  //         1,
+  //         dataSource,
+  //         dataSource);
+  //   }
+  // }
 
   @override
   void initState() {
@@ -72,7 +76,20 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     isLoadingSuccess = await _contentStoryViewModel.fetchContentStory(
         widget.storyTitle, widget.chap, widget.dataSource, widget.dataSource);
 
-    if (!isLoadingSuccess){
+    // await _contentStoryViewModel.fetchContentStory(
+    //     widget.storyTitle, widget.chap, widget.dataSource, widget.dataSource);
+    //
+    // if (_contentStoryViewModel.contentStory == null) {
+    //   isLoadingSuccess =
+    //       await _contentStoryViewModel.fetchChangeContentStoryToThisDataSource(
+    //           widget.storyTitle,
+    //           widget.chap,
+    //           _contentStoryViewModel
+    //               .sourceBooks[_contentStoryViewModel.indexSource++],
+    //           widget.dataSource);
+    // }
+
+    if (!isLoadingSuccess) {
       showMyDialog(widget.dataSource);
     }
 
@@ -122,7 +139,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
                   ),
                   child: contentStoryViewModel.contentStory != null
                       ? SingleChildScrollView(
-                    controller: _scrollController,
+                          controller: _scrollController,
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Text(
@@ -265,7 +282,6 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
             _contentStoryViewModel.chapterPagination.chapterPerPage +
         index +
         1;
-    print(_contentStoryViewModel.currentChapNumber.toString());
     setState(() {
       _contentStoryViewModel.fetchContentStory(
           widget.storyTitle,
@@ -277,7 +293,19 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
 
   void onSourceChange(String newSource) async {
     //TODO: need to change
-    _fetchChangeDataSource(newSource);
+    //_fetchChangeDataSource(newSource);
+
+    // bool result = false;
+    //
+    // if (_contentStoryViewModel.contentStory != null &&
+    //     _contentStoryViewModel.contentStory?.title != null) {
+    //   result =
+    //       await _contentStoryViewModel.fetchChangeContentStoryToThisDataSource(
+    //           _contentStoryViewModel.contentStory!.title,
+    //           _contentStoryViewModel.currentChapNumber,
+    //           newSource,
+    //           newSource);
+    // }
 
     bool result = await _contentStoryViewModel.fetchContentStory(
         widget.storyTitle,
@@ -291,14 +319,14 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     }
   }
 
-  void showMyDialog(String newSource){
+  void showMyDialog(String chosenSource) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Tải thất bại'),
           content: Text(
-              'Không thể tải truyện từ $newSource. Tải truyện từ ${_contentStoryViewModel.currentSource} để thay thế'),
+              'Không thể tải truyện từ $chosenSource. Tải truyện từ ${_contentStoryViewModel.currentSource} để thay thế'),
           actions: <Widget>[
             TextButton(
               child: Text('OK'),

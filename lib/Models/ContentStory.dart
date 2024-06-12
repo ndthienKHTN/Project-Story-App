@@ -19,6 +19,18 @@ class ContentStory {
                 required this.author,
                 required this.cover});
 
+  ContentStory clone() {
+    return ContentStory(
+      name: this.name,
+      title: this.title,
+      chap: this.chap,
+      content: this.content,
+      chapterTitle: this.chapterTitle,
+      author: this.author,
+      cover: this.cover,
+    );
+  }
+
 
   @override
   String toString() {
