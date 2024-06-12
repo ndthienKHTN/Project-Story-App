@@ -38,6 +38,7 @@ class ContentStoryViewModel extends ChangeNotifier {
   // chapterPagination change when user see chapter in ChooseChapterBottomSheet
   // so we need this variable to track page number of current chapter
   int currentPageNumber = 1;
+  String name = ''; // name of story, use to pass to fetchChangeContentStoryToThisDataSource at initState
 
   ContentStory? _changedStory;
   ContentStory? get changedStory => _changedStory;
@@ -46,43 +47,21 @@ class ContentStoryViewModel extends ChangeNotifier {
     prefs = sharedPreferences;
   }
 
-  // Future<bool> fetchChangeContentStoryToThisDataSource(String storyTitle, int chapNumber,
-  //     String dataSource, String chosenDataSource) async {
-  //   print('current index: $indexSource');
-  //   try {
-  //     // Fetch story details from the API using the storyId
-  //     _changedStory = await _storyService.fetchChangeContentStoryToThisDataSource(storyTitle,dataSource, chapNumber);
-  //     // Logger logger = Logger();
-  //     // logger.i(_changedStory.toString());
-  //     if (_changedStory == null) {
-  //       print('changed null');
-  //       fetchChangeContentStoryToThisDataSource(storyTitle, chapNumber, sourceBooks[indexSource++], chosenDataSource);
-  //     } else {
-  //       contentStory = _changedStory?.clone();
-  //       indexSource = 0;
-  //     }
-  //     notifyListeners();
-  //     return (dataSource == chosenDataSource);
-  //   } catch (e) {
-  //     // Handle error
-  //     print('Error fetching change content story to this data source: $e');
-  //     indexSource = 0;
-  //     return false;
-  //   }
-  // }
-
   Future<bool> fetchContentStory(String storyTitle, int chapNumber,
-      String dataSource, String chosenDataSource) async {
+      String dataSource, String chosenDataSource, bool first) async {
     try {
-      if (dataSource == chosenDataSource){
-        contentStory = await _storyService.fetchContentStory(
+      if (first){
+        _changedStory = await _storyService.fetchContentStory(
             storyTitle, chapNumber, dataSource);
-      } else{
-        contentStory = await _storyService.fetchChangeContentStoryToThisDataSource(
-            storyTitle, dataSource, chapNumber);
+      } else {
+        _changedStory = await _storyService.fetchChangeContentStoryToThisDataSource(
+            name, dataSource, chapNumber);
       }
-      // Logger logger = Logger();
-      // logger.i(_contentStory.toString());
+      if (_changedStory == null || _changedStory!.content.isEmpty){
+        throw Exception();
+      } else {
+        contentStory = _changedStory?.clone();
+      }
       indexSource = 0;
       currentChapNumber = chapNumber;
 
@@ -110,9 +89,12 @@ class ContentStoryViewModel extends ChangeNotifier {
       return (dataSource == chosenDataSource);
     } catch (e) {
       print('Error fetching story content source $dataSource: $e');
-      //return false;
-      return fetchContentStory(storyTitle, chapNumber,
-          sourceBooks[indexSource++], chosenDataSource);
+      if (indexSource <= sourceBooks.length - 1) {
+        return fetchContentStory(storyTitle, chapNumber,
+            sourceBooks[indexSource++], chosenDataSource, false);
+      } else {
+        return false;
+      }
     }
   }
 

@@ -31,23 +31,12 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
   bool isLoadingSuccess = true;
   final ScrollController _scrollController = ScrollController();
 
-  // void _fetchChangeDataSource(String dataSource) {
-  //   //TODO: need to change
-  //   if (_contentStoryViewModel.contentStory != null &&
-  //       _contentStoryViewModel.contentStory?.title != null) {
-  //     _contentStoryViewModel.fetchChangeContentStoryToThisDataSource(
-  //         _contentStoryViewModel.contentStory!.title,
-  //         1,
-  //         dataSource,
-  //         dataSource);
-  //   }
-  // }
-
   @override
   void initState() {
     super.initState();
     _contentStoryViewModel =
         Provider.of<ContentStoryViewModel>(context, listen: false);
+    _contentStoryViewModel.name = widget.name;
     _fetchData();
     // scroll to top when change chapter
     _contentStoryViewModel.addListener(_scrollToTop);
@@ -74,20 +63,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     ]);
 
     isLoadingSuccess = await _contentStoryViewModel.fetchContentStory(
-        widget.storyTitle, widget.chap, widget.dataSource, widget.dataSource);
-
-    // await _contentStoryViewModel.fetchContentStory(
-    //     widget.storyTitle, widget.chap, widget.dataSource, widget.dataSource);
-    //
-    // if (_contentStoryViewModel.contentStory == null) {
-    //   isLoadingSuccess =
-    //       await _contentStoryViewModel.fetchChangeContentStoryToThisDataSource(
-    //           widget.storyTitle,
-    //           widget.chap,
-    //           _contentStoryViewModel
-    //               .sourceBooks[_contentStoryViewModel.indexSource++],
-    //           widget.dataSource);
-    // }
+        widget.storyTitle, widget.chap, widget.dataSource, widget.dataSource, true);
 
     if (!isLoadingSuccess) {
       showMyDialog(widget.dataSource);
@@ -154,7 +130,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
                                       .contentDisplay.fontFamily,
                                   color: intToColor(contentStoryViewModel
                                       .contentDisplay.textColor)),
-                            ), // dữ liệu giả
+                            ),
                           ),
                         )
                       : const Center(child: CircularProgressIndicator()),
@@ -253,7 +229,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
           widget.storyTitle,
           ++_contentStoryViewModel.currentChapNumber,
           _contentStoryViewModel.currentSource,
-          _contentStoryViewModel.currentSource);
+          _contentStoryViewModel.currentSource, true);
     });
   }
 
@@ -272,7 +248,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
           widget.storyTitle,
           --_contentStoryViewModel.currentChapNumber,
           _contentStoryViewModel.currentSource,
-          _contentStoryViewModel.currentSource);
+          _contentStoryViewModel.currentSource, true);
     });
   }
 
@@ -287,31 +263,17 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
           widget.storyTitle,
           _contentStoryViewModel.currentChapNumber,
           _contentStoryViewModel.currentSource,
-          _contentStoryViewModel.currentSource);
+          _contentStoryViewModel.currentSource, true);
     });
   }
 
   void onSourceChange(String newSource) async {
-    //TODO: need to change
-    //_fetchChangeDataSource(newSource);
-
-    // bool result = false;
-    //
-    // if (_contentStoryViewModel.contentStory != null &&
-    //     _contentStoryViewModel.contentStory?.title != null) {
-    //   result =
-    //       await _contentStoryViewModel.fetchChangeContentStoryToThisDataSource(
-    //           _contentStoryViewModel.contentStory!.title,
-    //           _contentStoryViewModel.currentChapNumber,
-    //           newSource,
-    //           newSource);
-    // }
-
+    _contentStoryViewModel.indexSource = 0;
     bool result = await _contentStoryViewModel.fetchContentStory(
         widget.storyTitle,
         _contentStoryViewModel.currentChapNumber,
         newSource,
-        newSource);
+        newSource,false);
 
     // if we cannot load content from newSource (result == false), show dialog
     if (!result) {
