@@ -31,6 +31,14 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
   bool isLoadingSuccess = true;
   final ScrollController _scrollController = ScrollController();
 
+
+  void _fetchChangeDataSource(String dataSource) {
+    //TODO: need to change
+    if (_contentStoryViewModel.contentStory != null && _contentStoryViewModel.contentStory?.name != null) {
+      _contentStoryViewModel.fetchChangeContentStoryToThisDataSource(_contentStoryViewModel.contentStory!.name,1, dataSource,"");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -268,6 +276,9 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
   }
 
   void onSourceChange(String newSource) async {
+    //TODO: need to change
+    _fetchChangeDataSource(newSource);
+
     bool result = await _contentStoryViewModel.fetchContentStory(
         widget.storyTitle,
         _contentStoryViewModel.currentChapNumber,

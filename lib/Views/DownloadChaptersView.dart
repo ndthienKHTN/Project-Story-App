@@ -39,8 +39,8 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   void initState() {
     super.initState();
     //TODO: FIX here
-    _detailStoryViewModel =Provider.of<DetailStoryViewModel>(context, listen: false);// DetailStoryViewModel(); /
-   // _downloadChaptersViewModel = Provider.of<DownloadChaptersViewModel>(context, listen: false);
+    _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);// DetailStoryViewModel(); /
+     //_downloadChaptersViewModel = Provider.of<DownloadChaptersViewModel>(context, listen: false);
     _downloadChaptersViewModel = DownloadChaptersViewModel();
     _downloadChaptersViewModel.fetchListFileExtension();
     _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, widget.datasource);
