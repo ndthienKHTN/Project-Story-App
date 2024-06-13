@@ -34,7 +34,7 @@ class ContentStory {
 
   @override
   String toString() {
-    return 'ContentStory{name: $name, chap: $chap, title: $title, chapterTitle: $chapterTitle, author: $author, cover: $cover, content: $content}';
+    return 'ContentStory{name: $name, chap: $chap, title: $title, chapterTitle: $chapterTitle, author: $author, cover: $cover}';
   }
 
   factory ContentStory.fromJson(Map<String, dynamic> json) {
