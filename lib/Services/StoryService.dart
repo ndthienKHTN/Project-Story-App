@@ -140,6 +140,25 @@ class StoryService {
       throw Exception('Failed to fetch list story by type');
     }
   }
+  Future<Story?> fetchChangeDetailStoryToThisDataSource(String title, String datasource) async {
+    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/changeDetailStoryDataSource/?datasource=$datasource&title=$title'));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+      String message = jsonData['message'];
+      if (message!=null && message=="found") {
+
+        Logger logger = Logger();
+        logger.i(Story.fromJson(jsonData['data']).toString());
+        return Story.fromJson(jsonData['data']);
+      }
+      return null;
+
+    } else {
+      throw Exception('Failed to fetch detail story');
+    }
+  }
 
 }
 
