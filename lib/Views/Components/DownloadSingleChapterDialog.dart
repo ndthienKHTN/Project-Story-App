@@ -61,6 +61,7 @@ class _DownloadSingleChapterDialogState extends State<DownloadSingleChapterDialo
 
             viewModel.downloadChaptersOfStory(
                 contentStoryViewModel.contentStory!.title,
+                contentStoryViewModel.contentStory!.cover,
                 chapNumberList,
                 selectedFormat!,
                 contentStoryViewModel.currentSource);

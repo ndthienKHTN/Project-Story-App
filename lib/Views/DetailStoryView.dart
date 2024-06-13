@@ -250,8 +250,6 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                     }
                                     selectedItem = newValue;
                                   });
-
-                                  _fetchChangeDataSource(selectedItem!);
                                 },
                                 hint: Text(
                                     style: TextStyle(

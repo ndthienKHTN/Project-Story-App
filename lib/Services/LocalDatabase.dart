@@ -9,15 +9,15 @@ class LocalDatabase {
     return openDatabase(
       join(await getDatabasesPath(), 'story_database.db'),
       onCreate: (db, version) {
-         db.execute(
+        db.execute(
           'CREATE TABLE READING_HISTORY(title TEXT PRIMARY KEY, '
-              'name TEXT, chap INTEGER, date INTEGER, author TEXT, '
-              'cover TEXT, pageNumber INTEGER, dataSource TEXT)',
+          'name TEXT, chap INTEGER, date INTEGER, author TEXT, '
+          'cover TEXT, pageNumber INTEGER, dataSource TEXT)',
         );
-         db.execute(
-           'CREATE TABLE DOWNLOAD_HISTORY(title TEXT PRIMARY KEY, '
-                'date INTEGER,cover TEXT, dataSource TEXT)',
-         );
+        db.execute(
+          'CREATE TABLE DOWNLOAD_HISTORY(title TEXT PRIMARY KEY, '
+          'date INTEGER,cover TEXT, dataSource TEXT, link TEXT)',
+        );
       },
       version: 1,
     );
@@ -31,12 +31,22 @@ class LocalDatabase {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
+
   Future<void> insertDataDownload(DownloadHistory data) async {
     final Database db = await openMyDatabase();
     await db.insert(
       'DOWNLOAD_HISTORY',
       data.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> deleteDataDownloadByLink(String link) async {
+    final db = await openMyDatabase();
+    await db.delete(
+      'DOWNLOAD_HISTORY',
+      where: 'link = ?',
+      whereArgs: [link],
     );
   }
 
@@ -55,6 +65,7 @@ class LocalDatabase {
           dataSource: maps[i]['dataSource']);
     });
   }
+
   Future<List<DownloadHistory>> getDownloadHistoryList() async {
     final Database db = await openMyDatabase();
     final List<Map<String, dynamic>> maps = await db.query('DOWNLOAD_HISTORY');
@@ -63,8 +74,8 @@ class LocalDatabase {
           title: maps[i]['title'],
           date: maps[i]['date'],
           cover: maps[i]['cover'],
-          dataSource: maps[i]['dataSource']);
+          dataSource: maps[i]['dataSource'],
+          link: maps[i]['link']);
     });
   }
-
 }

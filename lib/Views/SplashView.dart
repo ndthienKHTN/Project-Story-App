@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'package:project_login/ViewModels/DownloadChaptersViewModel.dart';
-=======
 import 'package:project_login/ViewModels/DownloadHistoryViewModel.dart';
 import 'package:project_login/Views/Components/DownloadListWidget.dart';
->>>>>>> origin/Thien_Developer
 import 'package:provider/provider.dart';
 
 import '../../ViewModels/DetailStoryViewModel.dart';

@@ -15,4 +15,9 @@ class DownloadHistoryViewModel extends ChangeNotifier {
     _downloadHistoryList.sort((a, b) => b.date.compareTo(a.date));
     notifyListeners();
   }
+
+  Future<void> deleteDownloadChapter(String link) async {
+    _localDatabase.deleteDataDownloadByLink(link);
+    notifyListeners();
+  }
 }

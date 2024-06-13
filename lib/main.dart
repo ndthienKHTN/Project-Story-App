@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
-<<<<<<< HEAD
 import 'Views/ReadOfflineFile.dart';
-=======
->>>>>>> origin/Thien_Developer
 import 'Views/SplashView.dart';
 
 void main() {

@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class ReadOfflineFile extends StatefulWidget{
-  const ReadOfflineFile({super.key});
+  final String link;
+  final Function(String) deleteDatabase;
+
+  const ReadOfflineFile({super.key, required this.link, required this.deleteDatabase});
 
   @override
   State<StatefulWidget> createState() {
@@ -13,7 +16,6 @@ class ReadOfflineFile extends StatefulWidget{
 
 class _ReadOfflineFileState extends State<ReadOfflineFile> {
   String fileContent = '';
-  String path = '/storage/emulated/0/Android/data/com.example.project_login/files/DownloadedFile/9891_1.txt';
 
   @override
   void initState() {
@@ -27,7 +29,10 @@ class _ReadOfflineFileState extends State<ReadOfflineFile> {
 
       if (await file.exists()) {
         await file.delete();
-        print('File đã được xóa: $filePath');
+        widget.deleteDatabase(filePath);
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
       } else {
         print('File không tồn tại: $filePath');
       }
@@ -38,7 +43,7 @@ class _ReadOfflineFileState extends State<ReadOfflineFile> {
 
   Future<void> _readFileContent() async {
     try {
-      final file = File(path);
+      final file = File(widget.link);
       String content = await file.readAsString();
       setState(() {
         fileContent = content;
@@ -65,7 +70,7 @@ class _ReadOfflineFileState extends State<ReadOfflineFile> {
           IconButton(
             icon: const Icon(Icons.delete, color: Colors.white,),
             onPressed: () async {
-              await deleteFile(path);
+              await deleteFile(widget.link);
               if (context.mounted) {
                 Navigator.of(context).pop();
               }
