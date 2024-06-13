@@ -30,9 +30,6 @@ class _ReadOfflineFileState extends State<ReadOfflineFile> {
       if (await file.exists()) {
         await file.delete();
         widget.deleteDatabase(filePath);
-        if (mounted) {
-          Navigator.of(context).pop();
-        }
       } else {
         print('File không tồn tại: $filePath');
       }
@@ -72,19 +69,11 @@ class _ReadOfflineFileState extends State<ReadOfflineFile> {
             onPressed: () async {
               await deleteFile(widget.link);
               if (context.mounted) {
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               }
             },
           ),
         ],
-        title: Text(
-          'Title',
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        centerTitle: true,
       ),
       body: Container(
           width: double.infinity,
