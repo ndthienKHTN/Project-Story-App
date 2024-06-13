@@ -178,7 +178,5 @@ class StoryService {
       throw Exception('Failed to fetch list story by type');
     }
   }
-
-
 }
 

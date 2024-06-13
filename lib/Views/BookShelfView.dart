@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'Components/HistoryListWidget.dart';
+import 'Components/DownloadListWidget.dart';
 
 class BookShelfPage extends StatelessWidget {
   const BookShelfPage({super.key});
@@ -22,7 +23,7 @@ class BodyWidget extends StatefulWidget {
 class _BodyWidgetState extends State<BodyWidget> {
   bool _isBtnHistoryPressed = true;
   bool _isBtnDownloadPressed = false;
-  Widget _currentData = const HistoryListWidget();
+  Widget _currentData =  HistoryListWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +33,7 @@ class _BodyWidgetState extends State<BodyWidget> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            const SizedBox(
-              height: 15,
-            ),
+            const SizedBox(height: 15,),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -85,20 +84,6 @@ class _BodyWidgetState extends State<BodyWidget> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class DownloadListWidget extends StatefulWidget {
-  @override
-  _DownloadListWidgetState createState() => _DownloadListWidgetState();
-}
-
-class _DownloadListWidgetState extends State<DownloadListWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text('This is the Download Widget'),
     );
   }
 }

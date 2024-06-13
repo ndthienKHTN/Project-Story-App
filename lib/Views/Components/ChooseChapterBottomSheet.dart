@@ -133,6 +133,8 @@ class _ChooseChapterBottomSheetState extends State<ChooseChapterBottomSheet> {
                   ),
                   InkWell(
                     onTap: () {
+                      print('object $currentPageNumber');
+                      print('object ${contentStoryViewModel.chapterPagination.maxPage}');
                       if (currentPageNumber < contentStoryViewModel.chapterPagination.maxPage) {
                         setState(() {
                           currentPageNumber++;

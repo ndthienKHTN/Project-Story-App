@@ -31,7 +31,7 @@ class DownloadService {
     HttpClient httpClient = HttpClient();
     HttpClientRequest request = await httpClient.getUrl(
         Uri.parse(
-          "http://localhost:3000/api/v1/download/downloadChapter/?datasource=$datasource&title=$storyTitle&chap=$chapter&type=$fileType"
+          "http://10.0.2.2:3000/api/v1/download/downloadChapter/?datasource=$datasource&title=$storyTitle&chap=$chapter&type=$fileType"
         ));
     HttpClientResponse response = await request.close();
     List<int> bytes = await consolidateHttpClientResponseBytes(response);
@@ -132,7 +132,7 @@ class DownloadService {
     return filePaths;
   }
   Future<List<String>> fetchListFileExtension() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/download/listFileExtension/'));
+    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/download/listFileExtension/'));
 
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);

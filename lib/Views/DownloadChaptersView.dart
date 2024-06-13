@@ -28,20 +28,20 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   int _currentPage = 1;
   late Map<int, bool> selectedButtons;
   bool _isCheckAll = false;
-
+  late String title;
+  late String coverImage;
   void _fetchChapters() {
     _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
   }
-  void _downloadChapters(String storyTitle,List<int> chapters,String fileType,String datasource){
-    _downloadChaptersViewModel.downloadChaptersOfStory(storyTitle, chapters, fileType, datasource);
+  void _downloadChapters(String storyTitle, String cover, List<int> chapters,String fileType,String datasource){
+    _downloadChaptersViewModel.downloadChaptersOfStory(storyTitle,cover, chapters, fileType, datasource);
   }
   @override
   void initState() {
     super.initState();
     //TODO: FIX here
-    _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);// DetailStoryViewModel(); /
-     //_downloadChaptersViewModel = Provider.of<DownloadChaptersViewModel>(context, listen: false);
-    _downloadChaptersViewModel = DownloadChaptersViewModel();
+    _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
+-    _downloadChaptersViewModel = DownloadChaptersViewModel();
     _downloadChaptersViewModel.fetchListFileExtension();
     _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, widget.datasource);
     _fetchChapters();
@@ -52,57 +52,48 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
     );
   }
   void _showDialogWithDropdown(BuildContext context) {
-    List<String> dropdownItems = ['TXT', 'HTML', 'epub'];
-    String? selectedValue = dropdownItems[0];
+    String? selectedValue = _downloadChaptersViewModel.listFileExtension[0];
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return Consumer<DetailStoryViewModel>(
-          builder: (context,storyViewModel,_){
-            if(storyViewModel.story == null){
-              return Center(child: CircularProgressIndicator());
-            }
-            final story = storyViewModel.story!;
-              return AlertDialog(
-                title: Text('Select an Option'),
-                content: StatefulBuilder(
-                  builder: (BuildContext context, StateSetter setState) {
-                    return DropdownButton<String>(
-                      value: selectedValue,
-                      hint: Text(selectedValue!),
-                      items: dropdownItems.map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedValue = newValue;
-                        });
-
-                      },
-                    );
-                  },
+        return AlertDialog(
+          title: Text('Select an Option'),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: _downloadChaptersViewModel.listFileExtension
+                      .map((String format) => RadioListTile<String>(
+                    title: Text(format),
+                    value: format,
+                    groupValue: selectedValue,
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedValue = value;
+                      });
+                    },
+                  ))
+                      .toList(),
                 ),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text('Cancel'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  TextButton(
-                    child: Text('OK'),
-                    onPressed: () {
-                      _downloadChapters(story.title, chapters, selectedValue!, widget.datasource);
-                      print('Selected value: $selectedValue');
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
               );
-          }
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                _downloadChapters(title,coverImage, chapters, selectedValue!, widget.datasource);
+                print('Selected value: $selectedValue');
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
         );
       },
     );
@@ -133,10 +124,13 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
       ),
       body: Consumer<DetailStoryViewModel>(
         builder: (context, storyDetailViewModel,_) {
-          if (storyDetailViewModel.chapterPagination == null) {
+          if (storyDetailViewModel.chapterPagination == null || storyDetailViewModel.story==null) {
             return Center(child: CircularProgressIndicator());
           }
           final chapter = storyDetailViewModel.chapterPagination!;
+          final story = storyDetailViewModel.story!;
+          title = story.title;
+          coverImage = story.cover;
           return Stack(
             children: [
               Container(

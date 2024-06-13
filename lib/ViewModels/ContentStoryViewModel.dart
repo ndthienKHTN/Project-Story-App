@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:project_login/Models/ChapterPagination.dart';
+import 'package:project_login/Models/DownloadHistory.dart';
 import 'package:project_login/Models/ReadingHistory.dart';
 import 'package:project_login/Services/DownloadService.dart';
 import 'package:project_login/Services/LocalDatabase.dart';
@@ -20,7 +21,6 @@ class ContentStoryViewModel extends ChangeNotifier {
   final LocalDatabase _localDatabase = LocalDatabase();
   final DownloadService _downloadService = DownloadService();
   late final SharedPreferences prefs;
-
   ContentStory? contentStory;
   ContentDisplay contentDisplay = ContentDisplay.defaults();
   List<String> fontNames =
@@ -142,6 +142,9 @@ class ContentStoryViewModel extends ChangeNotifier {
   Future<void> fetchChapterPagination(String storyTitle, int pageNumber,
       String datasource, bool changePageNumber) async {
     try {
+      print('storyTitle: $storyTitle');
+      print('pageNumber: $pageNumber');
+      print('datasource: $datasource');
       // Fetch story details from the API using the storyId
       _chapterPagination = await _storyService.fetchChapterPagination(
           storyTitle, pageNumber, datasource);
