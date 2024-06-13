@@ -1,11 +1,16 @@
 
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:project_login/Models/DownloadHistory.dart';
 import 'package:project_login/Services/DownloadService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+import 'package:path/path.dart';
 
 import '../Services/LocalDatabase.dart';
 import '../Services/StoryService.dart';
@@ -19,6 +24,7 @@ class DownloadChaptersViewModel extends ChangeNotifier {
 
   List<String> _listFileExtension = [];
   List<String> get listFileExtension => _listFileExtension;
+
 
   Future<void> downloadChaptersOfStory(String storyTitle,String cover, List<int> chapters, String fileType, String datasource) async {
     try {
@@ -42,7 +48,6 @@ class DownloadChaptersViewModel extends ChangeNotifier {
       print('Error download chapters of story: $e');
     }
   }
-
   Future<void> fetchListFileExtension() async{
     try {
       _listFileExtension = await downloadService.fetchListFileExtension();

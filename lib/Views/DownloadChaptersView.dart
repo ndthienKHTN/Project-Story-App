@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:logger/logger.dart';
 import 'package:project_login/ViewModels/DownloadChaptersViewModel.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +34,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   void _fetchChapters() {
     _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
   }
-  void _downloadChapters(String storyTitle, String cover, List<int> chapters,String fileType,String datasource){
+  void _downloadChapters(String storyTitle,String cover, List<int> chapters,String fileType,String datasource) {
     _downloadChaptersViewModel.downloadChaptersOfStory(storyTitle,cover, chapters, fileType, datasource);
   }
   @override

@@ -22,7 +22,6 @@ class DetailStoryScreen extends StatefulWidget {
 
 class _DetailStoryScreenState extends State<DetailStoryScreen> {
   late DetailStoryViewModel _detailStoryViewModel;
-  late HomeStoryViewModel _homeStoryViewModel;
   int _currentPage = 1;
   final int _perPage = 50; // Số lượng mục trên mỗi trang
   // Trang hiện tại
@@ -35,20 +34,23 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
   void _fetchChapters() {
     _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
   }
-  void _fetchDatasource() async{
+  void _fetchDatasource(String source) async{
     await Future.wait([_detailStoryViewModel.fetchSourceBooks()]);
     items = _detailStoryViewModel.sourceBooks;
+    int newIndex = items.indexOf(source);
+    items.insert(0, items.removeAt(newIndex));
   }
   @override
   void initState() {
     super.initState();
     _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
     _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, widget.datasource);
-
+    String changeSource = widget.datasource;
+    Logger logger = Logger();
+    logger.i("DatasourceChange: $changeSource");
     //Chưa sử dụng
-    _homeStoryViewModel = HomeStoryViewModel();
     _fetchChapters();
-    _fetchDatasource();
+    _fetchDatasource(changeSource);
   }
   void showMyDialog(String newSource){
     showDialog(
@@ -72,9 +74,11 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
   }
   void onSourceChange(String newSource) async {
     bool result = await _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, newSource);
-    _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, newSource);
-    // if we cannot load content from newSource (result == false), show dialog
-    if (!result) {
+
+    if(result){
+      _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, newSource);
+    }
+    else {
       showMyDialog(newSource);
     }
   }
@@ -239,11 +243,8 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     if (newValue != null) {
-                                      // Tìm index của mục mới được chọn
                                       int newIndex = items.indexOf(newValue);
-                                      // Di chuyển mục mới lên đầu danh sách
                                       items.insert(0, items.removeAt(newIndex));
-                                      // Cập nhật selectedItem và selectedIndex
                                       selectedItem = newValue;
                                       selectedIndex = 0;
                                       onSourceChange(newValue);
