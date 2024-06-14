@@ -1,14 +1,22 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:project_login/Models/DownloadHistory.dart';
+import 'package:project_login/ViewModels/DownloadChaptersViewModel.dart';
+import 'package:uuid/uuid.dart';
+import 'package:path/path.dart';
 
 import '../../Models/ReadingHistory.dart';
 
 class DownloadListItem extends StatelessWidget{
+  final DownloadChaptersViewModel _downloadChaptersViewModel = DownloadChaptersViewModel();
   final DownloadHistory downloadHistory;
   final Function(DownloadHistory) onClick;
 
-  const DownloadListItem(this.downloadHistory, this.onClick, {super.key});
+  DownloadListItem(this.downloadHistory, this.onClick, {super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +39,14 @@ class DownloadListItem extends StatelessWidget{
                 ),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Image.network(downloadHistory.cover),
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(downloadHistory.cover,errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                  return Image.asset(
+                    'assets/images/default_image.png',
+                    height: 101,
+                    width: 84,
+                  );
+                },),
               ),
             ),
             SizedBox(
@@ -49,6 +63,12 @@ class DownloadListItem extends StatelessWidget{
                 ),
                 SizedBox(
                   height: 6,
+                ),
+                Text(
+                  downloadHistory.dataSource,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ],
             )

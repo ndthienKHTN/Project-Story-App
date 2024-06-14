@@ -12,9 +12,9 @@ import 'ContentStoryView.dart';
 import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
 
 class DetailStoryScreen extends StatefulWidget {
-  final String storyTitle;
-  final String datasource;
-  const DetailStoryScreen({super.key, required this.storyTitle,required this.datasource});
+  String storyTitle;
+  String datasource;
+  DetailStoryScreen({super.key, required this.storyTitle,required this.datasource});
 
   @override
   _DetailStoryScreenState createState() => _DetailStoryScreenState();
@@ -22,9 +22,8 @@ class DetailStoryScreen extends StatefulWidget {
 
 class _DetailStoryScreenState extends State<DetailStoryScreen> {
   late DetailStoryViewModel _detailStoryViewModel;
-  late HomeStoryViewModel _homeStoryViewModel;
-  int _currentPage = 1;
-  final int _perPage = 50; // Số lượng mục trên mỗi trang
+  int  _currentPage = 1;
+  late int _perPage ; // Số lượng mục trên mỗi trang
   // Trang hiện tại
   bool _isBtnDescribePressed = false;
   bool _isBtnChapterPressed = false;
@@ -32,24 +31,39 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
   late int selectedIndex;
   Widget ?_currentData ;
   List<String> items =[];
-  void _fetchChapters() {
-    _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
+  void _fetchChapters() async{
+
+    await _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
+    if(_detailStoryViewModel.chapterPagination?.chapterPerPage != null ){
+      _perPage = _detailStoryViewModel.chapterPagination!.chapterPerPage;
+    }
   }
-  void _fetchDatasource() async{
+  void _fetchDatasource(String source) async{
     await Future.wait([_detailStoryViewModel.fetchSourceBooks()]);
     items = _detailStoryViewModel.sourceBooks;
+    int newIndex = items.indexOf(source);
+    items.insert(0, items.removeAt(newIndex));
   }
   @override
   void initState() {
     super.initState();
     _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
     _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, widget.datasource);
-
+    String? changeSource = widget.datasource;
     //Chưa sử dụng
-    _homeStoryViewModel = HomeStoryViewModel();
     _fetchChapters();
-    _fetchDatasource();
+    _fetchDatasource(changeSource);
+
+
   }
+  // void initDescription(String description){
+  //   _currentData = SingleChildScrollView(
+  //     child: Padding(
+  //       padding: EdgeInsets.all(5),
+  //       child: Text('${description}'),
+  //     ),
+  //   );
+  // }
   void showMyDialog(String newSource){
     showDialog(
       context: context,
@@ -70,13 +84,22 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
       },
     );
   }
-  void onSourceChange(String newSource) async {
-    bool result = await _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, newSource);
-    _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, newSource);
-    // if we cannot load content from newSource (result == false), show dialog
-    if (!result) {
+  Future<bool> onSourceChange(String name,String newSource) async {
+    await _detailStoryViewModel.fetchChangeDetailStoryToThisDataSource(name, newSource);
+    if(_detailStoryViewModel.changedStory != null){
+      widget.datasource = newSource;
+      widget.storyTitle = _detailStoryViewModel.changedStory!.title;
+
+      _currentPage = 1;
+      //await _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage , newSource);
+      _fetchChapters();
+      _fetchDatasource(newSource);
+      return true;
+    }
+    else {
       showMyDialog(newSource);
     }
+    return false;
   }
 
   @override
@@ -126,10 +149,11 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
       ),
       body: Consumer<DetailStoryViewModel>(
         builder: (context, storyDetailViewModel, _) {
-          if (storyDetailViewModel.story == null || storyDetailViewModel.chapterPagination == null) {
+          if (storyDetailViewModel.story == null || storyDetailViewModel.chapterPagination == null ) {
             return Center(child: CircularProgressIndicator());
           } else {
             final story = storyDetailViewModel.story!;
+            //initDescription(story.description);
             final chapter = storyDetailViewModel.chapterPagination!;
             return Scaffold(
               backgroundColor: Colors.black,
@@ -156,7 +180,13 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
-                                child: Image(image: NetworkImage(story.cover)),
+                                child: Image.network(story.cover, errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                  return Image.asset(
+                                    'assets/images/default_image.png',
+                                    height: 140,
+                                    width: 84,
+                                  );
+                                },),
                               ),
                             ),
                             SizedBox(
@@ -237,18 +267,21 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                   );
                                 }).toList(),
                                 onChanged: (String? newValue) {
-                                  setState(() {
+                                  setState(() async {
                                     if (newValue != null) {
-                                      // Tìm index của mục mới được chọn
-                                      int newIndex = items.indexOf(newValue);
-                                      // Di chuyển mục mới lên đầu danh sách
-                                      items.insert(0, items.removeAt(newIndex));
-                                      // Cập nhật selectedItem và selectedIndex
-                                      selectedItem = newValue;
-                                      selectedIndex = 0;
-                                      onSourceChange(newValue);
+                                      bool fetchResult = await onSourceChange(story.name,newValue);
+
+                                      if (fetchResult==true) {
+                                        int newIndex = items.indexOf(newValue);
+                                        items.insert(
+                                            0, items.removeAt(newIndex));
+                                        selectedItem = newValue;
+                                        selectedIndex = 0;
+                                        selectedItem = newValue;
+                                      }
+
                                     }
-                                    selectedItem = newValue;
+
                                   });
                                 },
                                 hint: Text(
@@ -316,7 +349,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                                 Expanded(
                                                   child: Consumer<DetailStoryViewModel>(
                                                       builder: (context, chapterListViewModel, _) {
-                                                      if (chapterListViewModel.chapterPagination == null) {
+                                                      if (chapterListViewModel.chapterPagination == null || chapterListViewModel.chapterPagination?.listChapter == null) {
                                                         return Center(child: CircularProgressIndicator());
                                                       } else {
                                                         return ListView.builder(
@@ -334,7 +367,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                                                         child:  ContentStoryScreen(
                                                                           storyTitle: widget.storyTitle,
                                                                           name: storyDetailViewModel.story!.name,
-                                                                          chap: index + 1,
+                                                                          chap:  (_currentPage-1) * _perPage +(index +1),
                                                                           dataSource: widget.datasource,
                                                                           pageNumber: _currentPage,)
                                                                     ),
