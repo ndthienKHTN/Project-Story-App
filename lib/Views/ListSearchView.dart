@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project_login/ViewModels/ListSearchViewModel.dart';
 import 'package:provider/provider.dart';
 
-import '../ViewModels/ChoiseCategoryViewModel.dart';
+import '../ViewModels/ChooseCategoryViewModel.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
 import 'ChoiseCategoryView.dart';
 import 'DetailStoryView.dart';

@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:project_login/ViewModels/ChoiseCategoryViewModel.dart';
 import 'package:project_login/ViewModels/ListTypeViewModel.dart';
 import 'package:project_login/ViewModels/ListStoryByTypeViewModel.dart';
-import 'package:project_login/Views/ChoiseCategoryView.dart';
 import 'package:project_login/Views/ListStoryByTypeView.dart';
-import 'package:project_login/Views/ChoiseCategoryView.dart';
 import 'package:project_login/Views/ListTypeView.dart';
 import 'package:provider/provider.dart';
 
-import '../ViewModels/DetailStoryViewModel.dart';
-import '../ViewModels/HomeStoryViewModel.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
 import '../ViewModels/HomeStoryViewModel.dart';
 import '../ViewModels/SearchViewModel.dart';

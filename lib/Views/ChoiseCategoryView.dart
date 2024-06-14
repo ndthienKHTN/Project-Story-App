@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project_login/Models/Category.dart';
 import 'package:provider/provider.dart';
 
-import '../ViewModels/ChoiseCategoryViewModel.dart';
+import '../ViewModels/ChooseCategoryViewModel.dart';
 
 class ChoiseCategoryScreen extends StatefulWidget {
   final String category;
