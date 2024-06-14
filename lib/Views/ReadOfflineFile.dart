@@ -23,6 +23,7 @@ class _ReadOfflineFileState extends State<ReadOfflineFile> {
     _readFileContent();
   }
 
+  // delete a .txt file
   Future<void> deleteFile(String filePath) async {
     try {
       final file = File(filePath);
@@ -38,6 +39,7 @@ class _ReadOfflineFileState extends State<ReadOfflineFile> {
     }
   }
 
+  // read content of .txt file
   Future<void> _readFileContent() async {
     try {
       final file = File(widget.link);

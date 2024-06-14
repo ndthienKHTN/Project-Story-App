@@ -38,10 +38,11 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
         Provider.of<ContentStoryViewModel>(context, listen: false);
     _contentStoryViewModel.name = widget.name;
     _fetchData();
-    // scroll to top when change chapter
+    // listen controller
     _contentStoryViewModel.addListener(_scrollToTop);
   }
 
+  // scroll to top when change chapter
   void _scrollToTop() {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
@@ -52,6 +53,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     }
   }
 
+  // fetch data
   void _fetchData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     _contentStoryViewModel.setPreferences(sharedPreferences);
@@ -189,6 +191,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     _contentStoryViewModel.saveDouble(LINE_SPACING_KEY, newSize);
   }
 
+  // change font family
   void onFontFamilyChanged(String fontFamily) {
     setState(() {
       _contentStoryViewModel.contentDisplay.fontFamily = fontFamily;
@@ -196,6 +199,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     _contentStoryViewModel.saveString(FONT_FAMILY_KEY, fontFamily);
   }
 
+  // change text color
   void onTextColorChanged(int textColor) {
     setState(() {
       _contentStoryViewModel.contentDisplay.textColor = textColor;
@@ -203,6 +207,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     _contentStoryViewModel.saveInt(TEXT_COLOR_KEY, textColor);
   }
 
+  // change background color
   void onBackgroundChanged(int backgroundColor) {
     setState(() {
       _contentStoryViewModel.contentDisplay.backgroundColor = backgroundColor;
@@ -210,21 +215,25 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     _contentStoryViewModel.saveInt(BACKGROUND_COLOR_KEY, backgroundColor);
   }
 
+  // convert int to Color
   Color intToColor(int colorValue) {
     return Color(colorValue);
   }
 
+  // navigate to next chapter
   void navigateToNextChap() {
     setState(() {
+      // fetch next chapter pagination if current chapter is the last item of current chapter pagination
       if (_contentStoryViewModel.currentChapNumber %
-              _contentStoryViewModel.chapterPagination.chapterPerPage ==
-          0) {
+              _contentStoryViewModel.chapterPagination.chapterPerPage == 0) {
         _contentStoryViewModel.fetchChapterPagination(
             widget.storyTitle,
             ++_contentStoryViewModel.currentPageNumber,
             _contentStoryViewModel.currentSource,
             true);
       }
+
+      // fetch new content
       _contentStoryViewModel.fetchContentStory(
           widget.storyTitle,
           ++_contentStoryViewModel.currentChapNumber,
@@ -233,17 +242,20 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     });
   }
 
+  // navigate to previous chapter
   void navigateToPrevChap() {
     setState(() {
+      // fetch previous chapter pagination if current chapter is the first item of current chapter pagination
       if (_contentStoryViewModel.currentChapNumber %
-              _contentStoryViewModel.chapterPagination.chapterPerPage ==
-          1) {
+              _contentStoryViewModel.chapterPagination.chapterPerPage == 1) {
         _contentStoryViewModel.fetchChapterPagination(
             widget.storyTitle,
             --_contentStoryViewModel.currentPageNumber,
             _contentStoryViewModel.currentSource,
             true);
       }
+
+      // fetch new content
       _contentStoryViewModel.fetchContentStory(
           widget.storyTitle,
           --_contentStoryViewModel.currentChapNumber,
@@ -252,12 +264,14 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     });
   }
 
+  // navigate to a certain chapter
   void navigateToNewChap(int index, int pageNumber) {
+    // calculate page and chapter number
     _contentStoryViewModel.currentPageNumber = pageNumber;
     _contentStoryViewModel.currentChapNumber = (pageNumber - 1) *
-            _contentStoryViewModel.chapterPagination.chapterPerPage +
-        index +
-        1;
+            _contentStoryViewModel.chapterPagination.chapterPerPage + index + 1;
+
+    // fetch new content
     setState(() {
       _contentStoryViewModel.fetchContentStory(
           widget.storyTitle,
@@ -267,6 +281,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     });
   }
 
+  // change source
   void onSourceChange(String newSource) async {
     _contentStoryViewModel.indexSource = 0;
     bool result = await _contentStoryViewModel.fetchContentStory(
@@ -281,6 +296,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     }
   }
 
+  // show dialog to notify user that cannot load content from chose source
   void showMyDialog(String chosenSource) {
     showDialog(
       context: context,

@@ -31,6 +31,7 @@ class _ContentStoryTopAppBarState extends State<ContentStoryTopAppBar> {
         },
       ),
       actions: [
+        // download button
         if (contentStoryViewModel.contentStory != null)
           IconButton(
             icon: Image.asset('assets/images/download_icon.png'),

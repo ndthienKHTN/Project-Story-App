@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../Models/ReadingHistory.dart';
@@ -15,7 +14,7 @@ class ReadingHistoryItem extends StatelessWidget{
       onTap: () {
         onClick(readingHistory);
       },
-      child: Container(
+      child: SizedBox(
         height: 100,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -34,7 +33,7 @@ class ReadingHistoryItem extends StatelessWidget{
                 child: Image.network(readingHistory.cover),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Column(
@@ -42,25 +41,25 @@ class ReadingHistoryItem extends StatelessWidget{
               children: [
                 Text(
                   readingHistory.name,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 6,
                 ),
                 Text(
                   "By: ${readingHistory.author}",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 6,
                 ),
                 Text(
                   "Đã đọc đến chương: ${readingHistory.chap}",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                   ),
                 ),
