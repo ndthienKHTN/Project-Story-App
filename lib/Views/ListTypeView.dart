@@ -162,7 +162,7 @@ class ListViewBook extends StatefulWidget {
 class _ListViewBookState extends State<ListViewBook> {
   final ScrollController controller = ScrollController();
   late ListTypeViewModel _listTypeViewModel;
-  bool isLoadindMore=false;
+  bool isLoadindMore = false;
 
   @override
   void dispose() {
@@ -173,13 +173,13 @@ class _ListViewBookState extends State<ListViewBook> {
   @override
   void initState() {
     super.initState();
-    _listTypeViewModel=Provider.of<ListTypeViewModel>(context,listen: false);
+    _listTypeViewModel = Provider.of<ListTypeViewModel>(context, listen: false);
     controller.addListener(() {
-      if(controller.position.pixels==controller.position.maxScrollExtent){
+      if (controller.position.pixels == controller.position.maxScrollExtent) {
         _listTypeViewModel.insertpage();
-        _listTypeViewModel.fetchTypeStories(_listTypeViewModel.sourceBook,_listTypeViewModel.type);
+        _listTypeViewModel.fetchTypeStories(_listTypeViewModel.sourceBook, _listTypeViewModel.type);
         setState(() {
-          isLoadindMore=true;
+          isLoadindMore = true;
         });
       }
     });
@@ -212,9 +212,9 @@ class _ListViewBookState extends State<ListViewBook> {
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const ClampingScrollPhysics(),
-                      itemCount: isLoadindMore ? liststorys.length +1 :liststorys.length,
+                      itemCount: isLoadindMore ? liststorys.length + 1 : liststorys.length,
                       itemBuilder: (context, index) {
-                        if(index<liststorys.length){
+                        if (index < liststorys.length) {
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -242,21 +242,16 @@ class _ListViewBookState extends State<ListViewBook> {
                                   child: Row(
                                     children: [
                                       Container(
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 5),
+                                        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                         decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Colors.yellow, width: 1),
+                                          border: Border.all(color: Colors.yellow, width: 1),
                                           borderRadius: BorderRadius.circular(10),
                                         ),
                                         child: Image(
-                                          image: NetworkImage(
-                                              liststorys[index].cover),
+                                          image: NetworkImage(liststorys[index].cover),
                                           height: 101,
                                           width: 84,
-                                          errorBuilder: (BuildContext context,
-                                              Object exception,
-                                              StackTrace? stackTrace) {
+                                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                                             return Image.asset(
                                               'assets/images/default_image.png',
                                               height: 101,
@@ -265,13 +260,11 @@ class _ListViewBookState extends State<ListViewBook> {
                                           },
                                         ),
                                       ),
-                                      Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: 241,
-                                            child: Text(
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
                                               liststorys[index].name,
                                               maxLines: 1,
                                               style: const TextStyle(
@@ -280,12 +273,8 @@ class _ListViewBookState extends State<ListViewBook> {
                                                 color: Colors.white,
                                               ),
                                             ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                            const EdgeInsets.only(top: 5.0),
-                                            child: SizedBox(
-                                              width: 241,
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 5.0),
                                               child: Text(
                                                 'By: ${liststorys[index].author}',
                                                 maxLines: 1,
@@ -296,56 +285,36 @@ class _ListViewBookState extends State<ListViewBook> {
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                            const EdgeInsets.only(top: 5.0),
-                                            child: Row(
-                                              children: [
-                                                for (int j = 0;
-                                                j <
-                                                    (liststorys[index]
-                                                        .categories!
-                                                        .length <
-                                                        3
-                                                        ? liststorys[index]
-                                                        .categories!
-                                                        .length
-                                                        : 3);
-                                                j++)
-                                                  Container(
-                                                    margin: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 3),
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        vertical: 5,
-                                                        horizontal: 10),
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.black,
-                                                      borderRadius:
-                                                      BorderRadius.circular(
-                                                          20),
-                                                      border: Border.all(
-                                                          color: Colors.white,
-                                                          width: 1),
-                                                    ),
-                                                    child: Text(
-                                                      liststorys[index]
-                                                          .categories![j]
-                                                          .content,
-                                                      style: const TextStyle(
-                                                        fontSize: 7,
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        color: Colors.white,
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 5.0),
+                                              child: SingleChildScrollView(
+                                                scrollDirection: Axis.horizontal,
+                                                child: Row(
+                                                  children: [
+                                                    for (int j = 0; j < (liststorys[index].categories!.length < 3 ? liststorys[index].categories!.length : 3); j++)
+                                                      Container(
+                                                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                                                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.black,
+                                                          borderRadius: BorderRadius.circular(20),
+                                                          border: Border.all(color: Colors.white, width: 1),
+                                                        ),
+                                                        child: Text(
+                                                          liststorys[index].categories![j].content,
+                                                          style: const TextStyle(
+                                                            fontSize: 7,
+                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ),
-                                              ],
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -353,11 +322,8 @@ class _ListViewBookState extends State<ListViewBook> {
                               ],
                             ),
                           );
-                        }
-                        else{
-                          return const Center(
-                              child:CircularProgressIndicator()
-                          );
+                        } else {
+                          return const Center(child: CircularProgressIndicator());
                         }
                       },
                     ),
@@ -371,7 +337,6 @@ class _ListViewBookState extends State<ListViewBook> {
     );
   }
 }
-
 
 
 class GridViewBook extends StatefulWidget {

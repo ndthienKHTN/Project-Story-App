@@ -209,10 +209,11 @@ class ListorGrid extends StatefulWidget {
 }
 
 class _ListorGridState extends State<ListorGrid> {
-
   @override
   Widget build(BuildContext context) {
-    return Provider.of<HomeStoryViewModel>(context).listOn ? const ListViewBook(): const GridViewBook();
+    return Provider.of<HomeStoryViewModel>(context).listOn
+        ? const ListViewBook()
+        : const GridViewBook();
   }
 }
 
@@ -222,98 +223,103 @@ class ListViewBook extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeStoryViewModel>(
-      builder: (context,storyNotifier,_){
+      builder: (context, storyNotifier, _) {
         if (storyNotifier.stories.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         } else {
           return ListView.builder(
-              itemCount: storyNotifier.stories.length,
-              itemBuilder: (context,index){
-                final liststoryname = storyNotifier.stories.keys.elementAt(index);
-                final liststorys = storyNotifier.stories[liststoryname]!;
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: liststoryname.toUpperCase(),
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontStyle: FontStyle.italic,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25
-                              ),
+            itemCount: storyNotifier.stories.length,
+            itemBuilder: (context, index) {
+              final liststoryname = storyNotifier.stories.keys.elementAt(index);
+              final liststorys = storyNotifier.stories[liststoryname]!;
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: liststoryname.toUpperCase(),
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25,
                             ),
-                            const TextSpan(
-                              text: ' List Story',
-                              style: TextStyle(
-                                color: Colors.white, // Adjust color if needed
-                                fontSize: 20,
-                              ),
+                          ),
+                          const TextSpan(
+                            text: ' List Story',
+                            style: TextStyle(
+                              color: Colors.white, // Adjust color if needed
+                              fontSize: 20,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const ClampingScrollPhysics(),
-                      itemCount: liststorys.length,
-                      itemBuilder: (context,index){
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChangeNotifierProvider(
-                                      create: (context) => DetailStoryViewModel(),
-                                      child: DetailStoryScreen(storyTitle: liststorys[index].title, datasource: storyNotifier.sourceBook,),
-                                    )
-                                )
-                            );
-                          },
-                          child: Column(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 0.5,
-                                  ),
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: liststorys.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChangeNotifierProvider(
+                                create: (context) => DetailStoryViewModel(),
+                                child: DetailStoryScreen(
+                                  storyTitle: liststorys[index].title,
+                                  datasource: storyNotifier.sourceBook,
                                 ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.yellow, width: 1),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Image(image: NetworkImage(liststorys[index].cover), height: 101, width: 84,
-                                        errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                          return Image.asset(
-                                            'assets/images/default_image.png',
-                                            height: 101,
-                                            width: 84,
-                                          );
-                                        },),
+                              ),
+                            ),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 0.5,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.yellow, width: 1),
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
-                                    Column(
+                                    child: Image(
+                                      image: NetworkImage(liststorys[index].cover),
+                                      height: 101,
+                                      width: 84,
+                                      errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                        return Image.asset(
+                                          'assets/images/default_image.png',
+                                          height: 101,
+                                          width: 84,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        SizedBox(
-                                          width: 241,
-                                          child: Text(
-                                            liststorys[index].name,
-                                            maxLines: 1,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              overflow: TextOverflow.ellipsis,
-                                              color: Colors.white,
-                                            ),
+                                        Text(
+                                          liststorys[index].name,
+                                          maxLines: 1,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            overflow: TextOverflow.ellipsis,
+                                            color: Colors.white,
                                           ),
                                         ),
                                         Padding(
@@ -330,65 +336,74 @@ class ListViewBook extends StatelessWidget {
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(top: 5.0),
-                                          child: Row(
-                                            children: [
-                                              for (int j = 0; j < (liststorys[index].categories!.length < 3 ? liststorys[index].categories!.length : 3); j++)
-                                                Container(
-                                                  margin: const EdgeInsets.symmetric(horizontal: 3),
-                                                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.black,
-                                                    borderRadius: BorderRadius.circular(20),
-                                                    border: Border.all(color: Colors.white, width: 1),
-                                                  ),
-                                                  child: Text(
-                                                    liststorys[index].categories![j].content,
-                                                    style: const TextStyle(
-                                                      fontSize: 7,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Colors.white,
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.horizontal,
+                                            child: Row(
+                                              children: [
+                                                for (int j = 0; j < (liststorys[index].categories!.length < 3 ? liststorys[index].categories!.length : 3); j++)
+                                                  Container(
+                                                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                                                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.black,
+                                                      borderRadius: BorderRadius.circular(20),
+                                                      border: Border.all(color: Colors.white, width: 1),
+                                                    ),
+                                                    child: Text(
+                                                      liststorys[index].categories![j].content,
+                                                      style: const TextStyle(
+                                                        fontSize: 7,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.white,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 40),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChangeNotifierProvider(
+                              create: (context) => ListTypeViewModel(),
+                              child: ListTypeScreen(
+                                type: liststoryname,
+                                source: storyNotifier.sourceBook,
+                              ),
+                            ),
                           ),
                         );
                       },
+                      label: const Text('More'),
+                      icon: const Icon(Icons.playlist_add_sharp),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 40),
-                      child: ElevatedButton.icon(onPressed: (){
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChangeNotifierProvider(
-                                  create: (context) => ListTypeViewModel(),
-                                  child: ListTypeScreen(type: liststoryname, source: storyNotifier.sourceBook),
-                                )
-                            )
-                        );
-                      },
-                          label: const Text('More'),
-                          icon:const Icon(Icons.playlist_add_sharp)
-                      ),
-                    ),
-                  ],
-                );
-              }
+                  ),
+                ],
+              );
+            },
           );
         }
       },
     );
   }
 }
+
 
 
 
