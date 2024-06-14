@@ -12,9 +12,9 @@ import 'ContentStoryView.dart';
 import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
 
 class DetailStoryScreen extends StatefulWidget {
-  final String storyTitle;
-  final String datasource;
-  const DetailStoryScreen({super.key, required this.storyTitle,required this.datasource});
+  String storyTitle;
+  String datasource;
+  DetailStoryScreen({super.key, required this.storyTitle,required this.datasource});
 
   @override
   _DetailStoryScreenState createState() => _DetailStoryScreenState();
@@ -22,8 +22,8 @@ class DetailStoryScreen extends StatefulWidget {
 
 class _DetailStoryScreenState extends State<DetailStoryScreen> {
   late DetailStoryViewModel _detailStoryViewModel;
-  int _currentPage = 1;
-  final int _perPage = 50; // Số lượng mục trên mỗi trang
+  int  _currentPage = 1;
+  late int _perPage ; // Số lượng mục trên mỗi trang
   // Trang hiện tại
   bool _isBtnDescribePressed = false;
   bool _isBtnChapterPressed = false;
@@ -31,8 +31,12 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
   late int selectedIndex;
   Widget ?_currentData ;
   List<String> items =[];
-  void _fetchChapters() {
-    _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
+  void _fetchChapters() async{
+
+    await _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
+    if(_detailStoryViewModel.chapterPagination?.chapterPerPage != null ){
+      _perPage = _detailStoryViewModel.chapterPagination!.chapterPerPage;
+    }
   }
   void _fetchDatasource(String source) async{
     await Future.wait([_detailStoryViewModel.fetchSourceBooks()]);
@@ -45,13 +49,21 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
     super.initState();
     _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
     _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, widget.datasource);
-    String changeSource = widget.datasource;
-    Logger logger = Logger();
-    logger.i("DatasourceChange: $changeSource");
+    String ?changeSource = widget.datasource;
     //Chưa sử dụng
     _fetchChapters();
     _fetchDatasource(changeSource);
+
+
   }
+  // void initDescription(String description){
+  //   _currentData = SingleChildScrollView(
+  //     child: Padding(
+  //       padding: EdgeInsets.all(5),
+  //       child: Text('${description}'),
+  //     ),
+  //   );
+  // }
   void showMyDialog(String newSource){
     showDialog(
       context: context,
@@ -72,11 +84,12 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
       },
     );
   }
-  void onSourceChange(String newSource) async {
-    bool result = await _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, newSource);
-
-    if(result){
-      _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, newSource);
+  void onSourceChange(String name,String newSource) async {
+    await _detailStoryViewModel.fetchChangeDetailStoryToThisDataSource(name, newSource);
+    if(_detailStoryViewModel.changedStory != null){
+      widget.datasource = newSource;
+      _currentPage = 1;
+      await _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage , newSource);
     }
     else {
       showMyDialog(newSource);
@@ -130,10 +143,11 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
       ),
       body: Consumer<DetailStoryViewModel>(
         builder: (context, storyDetailViewModel, _) {
-          if (storyDetailViewModel.story == null || storyDetailViewModel.chapterPagination == null) {
+          if (storyDetailViewModel.story == null || storyDetailViewModel.chapterPagination == null ) {
             return Center(child: CircularProgressIndicator());
           } else {
             final story = storyDetailViewModel.story!;
+            //initDescription(story.description);
             final chapter = storyDetailViewModel.chapterPagination!;
             return Scaffold(
               backgroundColor: Colors.black,
@@ -160,7 +174,13 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
-                                child: Image(image: NetworkImage(story.cover)),
+                                child: Image.network(story.cover, errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                  return Image.asset(
+                                    'assets/images/default_image.png',
+                                    height: 140,
+                                    width: 84,
+                                  );
+                                },),
                               ),
                             ),
                             SizedBox(
@@ -247,7 +267,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                       items.insert(0, items.removeAt(newIndex));
                                       selectedItem = newValue;
                                       selectedIndex = 0;
-                                      onSourceChange(newValue);
+                                      onSourceChange(story.name,newValue);
                                     }
                                     selectedItem = newValue;
                                   });
@@ -317,7 +337,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                                 Expanded(
                                                   child: Consumer<DetailStoryViewModel>(
                                                       builder: (context, chapterListViewModel, _) {
-                                                      if (chapterListViewModel.chapterPagination == null) {
+                                                      if (chapterListViewModel.chapterPagination == null || chapterListViewModel.chapterPagination?.listChapter == null) {
                                                         return Center(child: CircularProgressIndicator());
                                                       } else {
                                                         return ListView.builder(
