@@ -367,7 +367,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                                                         child:  ContentStoryScreen(
                                                                           storyTitle: widget.storyTitle,
                                                                           name: storyDetailViewModel.story!.name,
-                                                                          chap: index + 1,
+                                                                          chap:  (_currentPage-1) * _perPage +(index +1),
                                                                           dataSource: widget.datasource,
                                                                           pageNumber: _currentPage,)
                                                                     ),
