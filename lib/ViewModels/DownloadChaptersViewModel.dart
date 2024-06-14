@@ -29,19 +29,25 @@ class DownloadChaptersViewModel extends ChangeNotifier {
   Future<void> downloadChaptersOfStory(String storyTitle,String cover, List<int> chapters, String fileType, String datasource) async {
     try {
         _downloadedTxtFilePath.clear();
-        for (int chapter in chapters) {
-          String filePath = await downloadService.downloadAndUnzipFile(storyTitle, chapter, fileType, datasource);
+        for (int i = 0; i<chapters.length;i++) {
+          int chapter = chapters[i];
+          String filePath = await downloadService.downloadAndUnzipFile(
+              storyTitle, chapter, fileType, datasource);
           Logger logger = Logger();
-          logger.i("File path" + filePath);
+          logger.i("File path: $filePath");
           _downloadedTxtFilePath.add(filePath);
+
+          // insert reading history to local database
+          int currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
+          _localDatabase.insertDataDownload(
+            DownloadHistory(
+                title: storyTitle,
+                date: currentTimeMillis,
+                cover: cover,
+                dataSource: datasource,
+                link: _downloadedTxtFilePath[i]),
+          );
         }
-        // insert reading history to local database
-        int currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
-        _localDatabase.insertDataDownload(DownloadHistory(
-            title: storyTitle,
-            date: currentTimeMillis,
-            cover: cover,
-            dataSource: datasource));
         notifyListeners();
     } catch (e) {
       // Handle error
