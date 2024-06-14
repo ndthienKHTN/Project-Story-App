@@ -50,8 +50,8 @@ class StoryService {
 
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
-      Logger logger = Logger();
-      logger.i(Story.fromJson(jsonData).toString());
+      /*Logger logger = Logger();
+      logger.i(Story.fromJson(jsonData).toString());*/
       return Story.fromJson(jsonData);
     } else {
       throw Exception('Failed to fetch detail story');
@@ -138,7 +138,7 @@ class StoryService {
     }
   }
   Future<Story?> fetchChangeDetailStoryToThisDataSource(String title, String datasource) async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/changeDetailStoryDataSource/?datasource=$datasource&title=$title'));
+    final response = await http.get(Uri.parse('http://localhost:3000/api/v1/changeDetailStoryDataSource/?datasource=$datasource&title=$title'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData = jsonDecode(response.body);

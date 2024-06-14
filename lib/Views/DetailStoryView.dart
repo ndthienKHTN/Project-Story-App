@@ -49,7 +49,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
     super.initState();
     _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
     _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, widget.datasource);
-    String ?changeSource = widget.datasource;
+    String? changeSource = widget.datasource;
     //Chưa sử dụng
     _fetchChapters();
     _fetchDatasource(changeSource);
@@ -84,16 +84,22 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
       },
     );
   }
-  void onSourceChange(String name,String newSource) async {
+  Future<bool> onSourceChange(String name,String newSource) async {
     await _detailStoryViewModel.fetchChangeDetailStoryToThisDataSource(name, newSource);
     if(_detailStoryViewModel.changedStory != null){
       widget.datasource = newSource;
+      widget.storyTitle = _detailStoryViewModel.changedStory!.title;
+
       _currentPage = 1;
-      await _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage , newSource);
+      //await _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage , newSource);
+      _fetchChapters();
+      _fetchDatasource(newSource);
+      return true;
     }
     else {
       showMyDialog(newSource);
     }
+    return false;
   }
 
   @override
@@ -261,15 +267,21 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                   );
                                 }).toList(),
                                 onChanged: (String? newValue) {
-                                  setState(() {
+                                  setState(() async {
                                     if (newValue != null) {
-                                      int newIndex = items.indexOf(newValue);
-                                      items.insert(0, items.removeAt(newIndex));
-                                      selectedItem = newValue;
-                                      selectedIndex = 0;
-                                      onSourceChange(story.name,newValue);
+                                      bool fetchResult = await onSourceChange(story.name,newValue);
+
+                                      if (fetchResult==true) {
+                                        int newIndex = items.indexOf(newValue);
+                                        items.insert(
+                                            0, items.removeAt(newIndex));
+                                        selectedItem = newValue;
+                                        selectedIndex = 0;
+                                        selectedItem = newValue;
+                                      }
+
                                     }
-                                    selectedItem = newValue;
+
                                   });
                                 },
                                 hint: Text(

@@ -59,8 +59,13 @@ class DetailStoryViewModel extends ChangeNotifier {
     try {
       // Fetch story details from the API using the storyId
       _changedStory = await _storyService.fetchChangeDetailStoryToThisDataSource(title,datasource);
-      Logger logger = Logger();
-      logger.i(_changedStory.toString());
+
+      if (_changedStory!=null) {
+        _story = _changedStory;
+        currentSource = datasource;
+        Logger logger = Logger();
+        logger.i(_changedStory.toString());
+      }
       notifyListeners();
     } catch (e) {
       // Handle error
