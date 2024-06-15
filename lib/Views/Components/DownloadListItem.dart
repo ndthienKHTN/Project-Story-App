@@ -56,8 +56,10 @@ class DownloadListItem extends StatelessWidget{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  downloadHistory.title,
+                  downloadHistory.name,
+                  maxLines: 1,
                   style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
                     color: Colors.white,
                   ),
                 ),
@@ -65,8 +67,18 @@ class DownloadListItem extends StatelessWidget{
                   height: 6,
                 ),
                 Text(
-                  downloadHistory.dataSource,
+                  "Tập: " + downloadHistory.chap.toString(),
+                  maxLines: 1,
                   style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  downloadHistory.dataSource,
+                  maxLines: 1,
+                  style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
                     color: Colors.white,
                   ),
                 ),

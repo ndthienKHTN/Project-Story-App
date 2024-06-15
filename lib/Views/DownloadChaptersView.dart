@@ -31,11 +31,12 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   bool _isCheckAll = false;
   late String title;
   late String coverImage;
+  late String nameStory;
   void _fetchChapters() {
     _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
   }
-  Future<bool> _downloadChapters (String storyTitle,String cover, List<int> chapters,String fileType,String datasource) {
-      return _downloadChaptersViewModel.downloadChaptersOfStory(storyTitle,cover, chapters, fileType, datasource);
+  Future<bool> _downloadChapters (String storyTitle,String cover,String name, List<int> chapters,String fileType,String datasource) {
+      return _downloadChaptersViewModel.downloadChaptersOfStory(storyTitle,cover,name, chapters, fileType, datasource);
   }
   @override
   void initState() {
@@ -89,7 +90,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
               child: Text('OK'),
               onPressed: ()  async {
                 Navigator.of(context).pop();
-                if(await _downloadChapters(title,coverImage, chapters, selectedValue!, widget.datasource)){
+                if(await _downloadChapters(title,coverImage,nameStory, chapters, selectedValue!, widget.datasource)){
                   showMyDialog();
                 }
                 print('Selected value: $selectedValue');
@@ -152,6 +153,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
           final story = storyDetailViewModel.story!;
           title = story.title;
           coverImage = story.cover;
+          nameStory = story.name;
           return Stack(
             children: [
               Container(
