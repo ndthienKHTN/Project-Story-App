@@ -13,7 +13,9 @@ import '../Models/Category.dart' as categoryModel;
 
 
 class StoryService {
-  final String ipAddress = "10.0.2.2";
+  // AVD: 10.0.2.2
+  // Physical Android Device: localhost
+  final String ipAddress = "localhost";
   final int port=3000;
   Future<List<String>> fetchListNameDataSource() async {
     final response = await http.get(Uri.parse('http://$ipAddress:$port/api/v1/listDataSource/'));
