@@ -283,6 +283,9 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
 
   // change source
   void onSourceChange(String newSource) async {
+    setState(() {
+      _contentStoryViewModel.contentStory = null;
+    });
     _contentStoryViewModel.indexSource = 0;
     bool result = await _contentStoryViewModel.fetchContentStory(
         widget.storyTitle,
