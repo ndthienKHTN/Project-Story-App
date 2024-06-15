@@ -19,10 +19,22 @@ class ContentStory {
                 required this.author,
                 required this.cover});
 
+  ContentStory clone() {
+    return ContentStory(
+      name: this.name,
+      title: this.title,
+      chap: this.chap,
+      content: this.content,
+      chapterTitle: this.chapterTitle,
+      author: this.author,
+      cover: this.cover,
+    );
+  }
+
 
   @override
   String toString() {
-    return 'ContentStory{name: $name, chap: $chap, title: $title, chapterTitle: $chapterTitle, author: $author, cover: $cover, content: $content}';
+    return 'ContentStory{name: $name, chap: $chap, title: $title, chapterTitle: $chapterTitle, author: $author, cover: $cover}';
   }
 
   factory ContentStory.fromJson(Map<String, dynamic> json) {

@@ -500,3 +500,4 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
     );
   }
 }
+

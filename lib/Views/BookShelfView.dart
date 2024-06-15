@@ -33,8 +33,7 @@ class _BodyWidgetState extends State<BodyWidget> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            const SizedBox(
-              height: 15,),
+            const SizedBox(height: 15,),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -88,20 +87,6 @@ class _BodyWidgetState extends State<BodyWidget> {
     );
   }
 }
-
-// class DownloadListWidget extends StatefulWidget {
-//   @override
-//   _DownloadListWidgetState createState() => _DownloadListWidgetState();
-// }
-//
-// class _DownloadListWidgetState extends State<DownloadListWidget> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: Text('This is the Download Widget'),
-//     );
-//   }
-// }
 
 class MyCustomWidget extends StatelessWidget {
   @override

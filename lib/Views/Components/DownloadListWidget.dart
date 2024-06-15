@@ -4,6 +4,7 @@ import 'package:project_login/ViewModels/DownloadHistoryViewModel.dart';
 import 'package:project_login/ViewModels/ReadingHistoryViewModel.dart';
 import 'package:project_login/Views/Components/DownloadListItem.dart';
 import 'package:project_login/Views/Components/ReadingHistoryItem.dart';
+import 'package:project_login/Views/ReadOfflineFile.dart';
 import 'package:provider/provider.dart';
 
 import '../../Models/ReadingHistory.dart';
@@ -33,20 +34,20 @@ class _HistoryListWidgetState extends State<DownloadListWidget> {
 
     return Consumer<DownloadHistoryViewModel>(
         builder: (context, downloadHistoryViewModel, _) {
-          return Expanded(
-            child: ListView.builder(
-              itemCount: downloadHistoryViewModel.downloadHistoryList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 15),
-                  child: DownloadListItem(
-                      downloadHistoryViewModel.downloadHistoryList[index],
-                      onClickItem),
-                );
-              },
-            ),
-          );
-        });
+      return Expanded(
+        child: ListView.builder(
+          itemCount: downloadHistoryViewModel.downloadHistoryList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 15),
+              child: DownloadListItem(
+                  downloadHistoryViewModel.downloadHistoryList[index],
+                  onClickItem),
+            );
+          },
+        ),
+      );
+    });
   }
 
   void onClickItem(DownloadHistory downloadHistory) {
@@ -55,12 +56,11 @@ class _HistoryListWidgetState extends State<DownloadListWidget> {
       MaterialPageRoute(
         builder: (context) => ChangeNotifierProvider(
             create: (context) => ContentStoryViewModel(),
-            child: ContentStoryScreen(
-              storyTitle: downloadHistory.title,
-              chap: 1,
-              dataSource: downloadHistory.dataSource,
-              pageNumber: 1,
-              name: "Nguyen Duc Thien",
+            child: ReadOfflineFile(
+              link: downloadHistory.link,
+              deleteDatabase: (link) {
+                _downloadHistoryViewModel.deleteDownloadChapter(link);
+              },
             )),
       ),
     );

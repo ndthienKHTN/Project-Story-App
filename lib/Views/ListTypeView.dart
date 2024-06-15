@@ -1,30 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:project_login/ViewModels/ListSearchViewModel.dart';
 import 'package:provider/provider.dart';
 
-import '../ViewModels/ChooseCategoryViewModel.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
-import 'ChoiseCategoryView.dart';
+import '../ViewModels/ListTypeViewModel.dart';
 import 'DetailStoryView.dart';
 
-class ListSearchScreen extends StatefulWidget {
-  final String searchString;
-  const ListSearchScreen({super.key,required this.searchString});
+class ListTypeScreen extends StatefulWidget {
+  final String source;
+  final String type;
+  const ListTypeScreen({super.key, required this.type, required this.source});
+
   @override
-  State<ListSearchScreen> createState() => _ListSearchScreenState();
+  State<ListTypeScreen> createState() => _ListTypeViewState();
 }
 
-class _ListSearchScreenState extends State<ListSearchScreen> {
-  late ListSearchViewModel _listSearchViewModel;
+class _ListTypeViewState extends State<ListTypeScreen> {
+  late ListTypeViewModel _listTypeViewModel;
 
   @override
   void initState() {
     super.initState();
-    _listSearchViewModel=Provider.of<ListSearchViewModel>(context,listen: false);
-    _listSearchViewModel.fetchSearchSourceBooks(widget.searchString);
+    _listTypeViewModel=Provider.of<ListTypeViewModel>(context,listen: false);
+    _listTypeViewModel.fetchTypeStories(widget.source,widget.type);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -39,176 +38,55 @@ class _ListSearchScreenState extends State<ListSearchScreen> {
           ),
         ),
         SafeArea(
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(onPressed: (){
-
-                      },
-                        icon: Image.asset('assets/images/Logo.png',height:60,),
-                      ),),
-                    const Spacer(),
-                    Container(
-                      margin: const EdgeInsets.only(right: 3),
-                      child: IconButton(onPressed: () async{
-                        Navigator.pop(context);
-                      },
-                          icon: const Icon(Icons.search,color: Colors.white,)
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              body: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                   child: Image.asset('assets/images/Logo.png',height:60,)),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                          top: 10
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(right: 3),
-                      child: IconButton(onPressed: () async{
-                        final choisecategory=await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChangeNotifierProvider(
-                                  create: (context) => ChoiseCategoryViewModel(),
-                                  child: ChoiseCategoryScreen(datasource: _listSearchViewModel.sourceBook, category: _listSearchViewModel.category,),
-                                )
-                            )
-                        );
-                        _listSearchViewModel.changeCategory(choisecategory);
-                        _listSearchViewModel.changepage(1);
-                        _listSearchViewModel.fetchSearchStories(_listSearchViewModel.sourceBook);
-                      },
-                          icon: const Icon(Icons.category,color: Colors.white,)
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                      border: Border(bottom: BorderSide(
-                          color: Colors.white,
-                          width: 2.0
-                      )
-                      )
-                  ),
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 10
-                  ),
-                  alignment: Alignment.centerLeft,
-                  child: const ListSourceBook(),
-                ),
-                Container(
-                  color: Colors.black,
-                  child: Row(
-                    children: [
-                      if (Provider.of<ListSearchViewModel>(context).sourceBooks.isEmpty)
-                        const CircularProgressIndicator()
-                      else
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10.0),
-                          child: Text(
-                            "${Provider.of<ListSearchViewModel>(context).sourceBook} "
-                                "- ${_listSearchViewModel.category}",
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                      color: Colors.black,
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: Text(
+                              "${widget.source} "
+                                  "- ${widget.type.toUpperCase()} Books",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                        ),
-                      const Spacer(),
-                      const ListOrGridbuttom(),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Text.rich(
-                    TextSpan(
-                      children: [
-                        const TextSpan(
-                          text: ' Search: ',
-                          style: TextStyle(
-                            color: Colors.white, // Adjust color if needed
-                            fontSize: 20,
-                          ),
-                        ),
-                        TextSpan(
-                          text: "\"${widget.searchString}\"",
-                          style: const TextStyle(
-                              color: Colors.red,
-                              fontStyle: FontStyle.italic,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25
-                          ),
-                        ),
-                      ],
+                          const Spacer(),
+                          const ListOrGridbuttom(),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Container(
-                    color: Colors.black,
-                    child: const Padding(
-                        padding: EdgeInsets.only(top: 5.0),
-                        child: ListorGrid()
+                  Expanded(
+                    child: Container(
+                      color: Colors.black,
+                      child: const Padding(
+                          padding: EdgeInsets.only(top: 5.0),
+                          child: ListorGrid()
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
+                ],
+              ),
+            )
         )
       ],
     );
-  }
-}
-
-class ListSourceBook extends StatelessWidget {
-  const ListSourceBook({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<ListSearchViewModel>(builder: (context,storyListViewModel,_){
-      if (storyListViewModel.sourceBooks.isEmpty) {
-        return const Center(child: CircularProgressIndicator());
-      } else {
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              for (int i = 0; i < storyListViewModel.sourceBooks.length; i++)
-                GestureDetector(
-                  onTap: () {
-                    storyListViewModel.changeCategory("All");
-                    storyListViewModel.changepage(1);
-                    Provider.of<ListSearchViewModel>(context,listen: false).changeIndex(i);
-                    storyListViewModel.changeSourceBook(storyListViewModel.sourceBooks[i]);
-                    storyListViewModel.fetchSearchStories(storyListViewModel.sourceBooks[i]);
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Provider.of<ListSearchViewModel>(context).indexSourceBook==i ? Colors.red : Colors.yellow, width: 2),
-                    ),
-                    child: Text(
-                      storyListViewModel.sourceBooks[i],
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                )
-            ],
-          ),
-        );
-      }
-    });
   }
 }
 
@@ -231,7 +109,7 @@ class _ListOrGridbuttomState extends State<ListOrGridbuttom> {
             onTap: () {
               setState(() {
                 isListButtonPressed = true; // Đặt trạng thái nút danh sách được nhấn
-                Provider.of<ListSearchViewModel>(context,listen: false).changeListOrGrid(true);
+                Provider.of<ListTypeViewModel>(context,listen: false).changeListOrGrid(true);
               });
             },
             child: Icon(
@@ -246,7 +124,7 @@ class _ListOrGridbuttomState extends State<ListOrGridbuttom> {
             onTap: () {
               setState(() {
                 isListButtonPressed = false;
-                Provider.of<ListSearchViewModel>(context,listen: false).changeListOrGrid(false);// Đặt trạng thái nút danh sách không được nhấn
+                Provider.of<ListTypeViewModel>(context,listen: false).changeListOrGrid(false);// Đặt trạng thái nút danh sách không được nhấn
               });
             },
             child: Icon(
@@ -272,7 +150,7 @@ class _ListorGridState extends State<ListorGrid> {
 
   @override
   Widget build(BuildContext context) {
-    return Provider.of<ListSearchViewModel>(context).listOn ?  ListViewBook(): const GridViewBook();
+    return Provider.of<ListTypeViewModel>(context).listOn ?  ListViewBook(): const GridViewBook();
   }
 }
 
@@ -283,7 +161,7 @@ class ListViewBook extends StatefulWidget {
 
 class _ListViewBookState extends State<ListViewBook> {
   final ScrollController controller = ScrollController();
-  late ListSearchViewModel _listSearchViewModel;
+  late ListTypeViewModel _listTypeViewModel;
   bool isLoadindMore = false;
 
   @override
@@ -295,11 +173,11 @@ class _ListViewBookState extends State<ListViewBook> {
   @override
   void initState() {
     super.initState();
-    _listSearchViewModel = Provider.of<ListSearchViewModel>(context, listen: false);
+    _listTypeViewModel = Provider.of<ListTypeViewModel>(context, listen: false);
     controller.addListener(() {
       if (controller.position.pixels == controller.position.maxScrollExtent) {
-        _listSearchViewModel.insertpage();
-        _listSearchViewModel.fetchSearchStories(_listSearchViewModel.sourceBook);
+        _listTypeViewModel.insertpage();
+        _listTypeViewModel.fetchTypeStories(_listTypeViewModel.sourceBook, _listTypeViewModel.type);
         setState(() {
           isLoadindMore = true;
         });
@@ -309,7 +187,7 @@ class _ListViewBookState extends State<ListViewBook> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ListSearchViewModel>(
+    return Consumer<ListTypeViewModel>(
       builder: (context, storyNotifier, _) {
         if (storyNotifier.stories.isEmpty) {
           return const Center(child: CircularProgressIndicator());
@@ -386,13 +264,22 @@ class _ListViewBookState extends State<ListViewBook> {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            SizedBox(
-                                              width: double.infinity,
+                                            Text(
+                                              liststorys[index].name,
+                                              maxLines: 1,
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                overflow: TextOverflow.ellipsis,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 5.0),
                                               child: Text(
-                                                liststorys[index].name,
+                                                'By: ${liststorys[index].author}',
                                                 maxLines: 1,
                                                 style: const TextStyle(
-                                                  fontSize: 16,
+                                                  fontSize: 14,
                                                   overflow: TextOverflow.ellipsis,
                                                   color: Colors.white,
                                                 ),
@@ -400,46 +287,32 @@ class _ListViewBookState extends State<ListViewBook> {
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.only(top: 5.0),
-                                              child: SizedBox(
-                                                width: double.infinity,
-                                                child: Text(
-                                                  'By: ${liststorys[index].author}',
-                                                  maxLines: 1,
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    color: Colors.white,
-                                                  ),
+                                              child: SingleChildScrollView(
+                                                scrollDirection: Axis.horizontal,
+                                                child: Row(
+                                                  children: [
+                                                    for (int j = 0; j < (liststorys[index].categories!.length < 3 ? liststorys[index].categories!.length : 3); j++)
+                                                      Container(
+                                                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                                                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.black,
+                                                          borderRadius: BorderRadius.circular(20),
+                                                          border: Border.all(color: Colors.white, width: 1),
+                                                        ),
+                                                        child: Text(
+                                                          liststorys[index].categories![j].content,
+                                                          style: const TextStyle(
+                                                            fontSize: 7,
+                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  ],
                                                 ),
                                               ),
                                             ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(top: 5.0),
-                                              child: Wrap(
-                                                spacing: 6.0, // khoảng cách ngang giữa các phần tử
-                                                runSpacing: 4.0, // khoảng cách dọc giữa các dòng
-                                                children: [
-                                                  for (int j = 0; j < (liststorys[index].categories!.length < 3 ? liststorys[index].categories!.length : 3); j++)
-                                                    Container(
-                                                      margin: const EdgeInsets.symmetric(horizontal: 3),
-                                                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.black,
-                                                        borderRadius: BorderRadius.circular(20),
-                                                        border: Border.all(color: Colors.white, width: 1),
-                                                      ),
-                                                      child: Text(
-                                                        liststorys[index].categories![j].content,
-                                                        style: const TextStyle(
-                                                          fontSize: 7,
-                                                          fontWeight: FontWeight.bold,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                ],
-                                              ),
-                                            )
                                           ],
                                         ),
                                       ),
@@ -450,9 +323,7 @@ class _ListViewBookState extends State<ListViewBook> {
                             ),
                           );
                         } else {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
+                          return const Center(child: CircularProgressIndicator());
                         }
                       },
                     ),
@@ -477,14 +348,14 @@ class GridViewBook extends StatefulWidget {
 
 class _GridViewBookState extends State<GridViewBook> {
   final ScrollController gridController = ScrollController();
-  late ListSearchViewModel _listSearchViewModel;
+  late ListTypeViewModel _listTypeViewModel;
   bool isLoadingMore = false;
 
   @override
   void initState() {
     super.initState();
     gridController.addListener(_onScroll);
-    _listSearchViewModel=Provider.of<ListSearchViewModel>(context,listen: false);
+    _listTypeViewModel=Provider.of<ListTypeViewModel>(context,listen: false);
   }
 
   @override
@@ -495,8 +366,8 @@ class _GridViewBookState extends State<GridViewBook> {
 
   void _onScroll() {
     if (gridController.position.pixels == gridController.position.maxScrollExtent) {
-      _listSearchViewModel.insertpage();
-      _listSearchViewModel.fetchSearchStories(_listSearchViewModel.sourceBook);
+      _listTypeViewModel.insertpage();
+      _listTypeViewModel.fetchTypeStories(_listTypeViewModel.sourceBook,_listTypeViewModel.type);
       setState(() {
         isLoadingMore=true;
       });
@@ -505,7 +376,7 @@ class _GridViewBookState extends State<GridViewBook> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ListSearchViewModel>(
+    return Consumer<ListTypeViewModel>(
       builder: (context, storyNotifier, _) {
         if (storyNotifier.stories.isEmpty) {
           return const Center(child: CircularProgressIndicator());

@@ -31,16 +31,17 @@ class _ContentStoryTopAppBarState extends State<ContentStoryTopAppBar> {
         },
       ),
       actions: [
-        IconButton(
-          icon: Image.asset('assets/images/download_icon.png'),
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return DownloadSingleChapterDialog(contentStoryViewModel);
-                });
-          },
-        ),
+        if (contentStoryViewModel.contentStory != null)
+          IconButton(
+            icon: Image.asset('assets/images/download_icon.png'),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DownloadSingleChapterDialog(contentStoryViewModel);
+                  });
+            },
+          ),
       ],
       title: Text(
         contentStoryViewModel.contentStory?.chapterTitle ?? 'chapterTitle',

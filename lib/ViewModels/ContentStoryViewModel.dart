@@ -21,13 +21,13 @@ class ContentStoryViewModel extends ChangeNotifier {
   final LocalDatabase _localDatabase = LocalDatabase();
   final DownloadService _downloadService = DownloadService();
   late final SharedPreferences prefs;
-  ContentStory? _contentStory;
+  ContentStory? contentStory;
   ContentDisplay contentDisplay = ContentDisplay.defaults();
-  List<String> _fontNames =
+  List<String> fontNames =
       []; // list of fonts user can choose to change display of content story
   int currentChapNumber = 1;
   List<String> sourceBooks = []; // list of data source app can get story from
-  int _indexSource =
+  int indexSource =
       0; // to get the index of current source in sourceBooks (only using when automatically change source)
   String currentSource = '';
   List<String> formatList = []; // list of format user can choose when download
@@ -38,29 +38,31 @@ class ContentStoryViewModel extends ChangeNotifier {
   // chapterPagination change when user see chapter in ChooseChapterBottomSheet
   // so we need this variable to track page number of current chapter
   int currentPageNumber = 1;
+  String name = ''; // name of story, use to pass to fetchChangeContentStoryToThisDataSource at initState
 
-  ContentStory? get contentStory => _contentStory;
-
-  List<String> get fontNames => _fontNames;
+  ContentStory? _changedStory;
+  ContentStory? get changedStory => _changedStory;
 
   void setPreferences(SharedPreferences sharedPreferences) {
     prefs = sharedPreferences;
   }
 
   Future<bool> fetchContentStory(String storyTitle, int chapNumber,
-      String dataSource, String chosenDataSource) async {
+      String dataSource, String chosenDataSource, bool first) async {
     try {
-      print('storyTitle: $storyTitle');
-      print('chapNumber: $chapNumber');
-      print('chapNumber: $chapNumber');
-      print('datasource: $dataSource');
-      _contentStory = await _storyService.fetchContentStory(
-          storyTitle, chapNumber, dataSource);
-      // Logger logger = Logger();
-      // logger.i(_contentStory.toString());
-      _indexSource = 0;
-      print(currentPageNumber.toString());
-      print(chapNumber);
+      if (first){
+        _changedStory = await _storyService.fetchContentStory(
+            storyTitle, chapNumber, dataSource);
+      } else {
+        _changedStory = await _storyService.fetchChangeContentStoryToThisDataSource(
+            name, dataSource, chapNumber);
+      }
+      if (_changedStory == null || _changedStory!.content.isEmpty){
+        throw Exception();
+      } else {
+        contentStory = _changedStory?.clone();
+      }
+      indexSource = 0;
       currentChapNumber = chapNumber;
 
       // save current data source
@@ -77,18 +79,22 @@ class ContentStoryViewModel extends ChangeNotifier {
       int currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
       _localDatabase.insertData(ReadingHistory(
           pageNumber: currentPageNumber,
-          title: _contentStory!.title,
-          name: _contentStory!.name,
+          title: contentStory!.title,
+          name: contentStory!.name,
           chap: chapNumber,
           date: currentTimeMillis,
-          author: _contentStory!.author,
-          cover: _contentStory!.cover,
+          author: contentStory!.author,
+          cover: contentStory!.cover,
           dataSource: currentSource));
       return (dataSource == chosenDataSource);
     } catch (e) {
       print('Error fetching story content source $dataSource: $e');
-      return fetchContentStory(storyTitle, chapNumber,
-          sourceBooks[_indexSource++], chosenDataSource);
+      if (indexSource <= sourceBooks.length - 1) {
+        return fetchContentStory(storyTitle, chapNumber,
+            sourceBooks[indexSource++], chosenDataSource, false);
+      } else {
+        return false;
+      }
     }
   }
 
@@ -111,12 +117,12 @@ class ContentStoryViewModel extends ChangeNotifier {
       int? isTesting = await getInt(IS_TESTING_KEY);
 
       if (isTesting != 1){
-        _fontNames = fonts.map<String>((font) => font().fontFamily!).toList();
+        fontNames = fonts.map<String>((font) => font().fontFamily!).toList();
       }
 
-      if (!_fontNames.contains(fontFamily)) {
-        if (_fontNames.isNotEmpty) {
-          fontFamily = _fontNames[0];
+      if (!fontNames.contains(fontFamily)) {
+        if (fontNames.isNotEmpty) {
+          fontFamily = fontNames[0];
         }
       }
 

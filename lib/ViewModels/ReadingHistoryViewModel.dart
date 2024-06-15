@@ -4,14 +4,13 @@ import 'package:project_login/Models/ReadingHistory.dart';
 import '../Services/LocalDatabase.dart';
 
 class ReadingHistoryViewModel extends ChangeNotifier {
-  final LocalDatabase _localDatabase = LocalDatabase();
+  LocalDatabase localDatabase = LocalDatabase();
 
-  List<ReadingHistory> _readingHistoryList = [];
-  List<ReadingHistory> get readingHistoryList => _readingHistoryList;
+  List<ReadingHistory>? readingHistoryList = [];
 
   Future<void> fetchReadingHistoryList() async{
-    _readingHistoryList = await _localDatabase.getReadingHistoryList();
-    _readingHistoryList.sort((a, b) => b.date.compareTo(a.date));
+    readingHistoryList = await localDatabase.getReadingHistoryList();
+    readingHistoryList?.sort((a, b) => b.date.compareTo(a.date));
     notifyListeners();
   }
 }

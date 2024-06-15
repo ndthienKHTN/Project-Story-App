@@ -36,6 +36,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     super.initState();
     _contentStoryViewModel =
         Provider.of<ContentStoryViewModel>(context, listen: false);
+    _contentStoryViewModel.name = widget.name;
     _fetchData();
     // scroll to top when change chapter
     _contentStoryViewModel.addListener(_scrollToTop);
@@ -62,10 +63,10 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     ]);
 
     isLoadingSuccess = await _contentStoryViewModel.fetchContentStory(
-        widget.storyTitle, widget.chap, widget.dataSource, widget.dataSource);
+        widget.storyTitle, widget.chap, widget.dataSource, widget.dataSource, true);
 
-    if (!isLoadingSuccess){
-      showMyDialog(_contentStoryViewModel.currentSource);
+    if (!isLoadingSuccess) {
+      showMyDialog(widget.dataSource);
     }
 
     await Future.wait([
@@ -114,7 +115,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
                   ),
                   child: contentStoryViewModel.contentStory != null
                       ? SingleChildScrollView(
-                    controller: _scrollController,
+                          controller: _scrollController,
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Text(
@@ -129,7 +130,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
                                       .contentDisplay.fontFamily,
                                   color: intToColor(contentStoryViewModel
                                       .contentDisplay.textColor)),
-                            ), // dữ liệu giả
+                            ),
                           ),
                         )
                       : const Center(child: CircularProgressIndicator()),
@@ -228,7 +229,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
           widget.storyTitle,
           ++_contentStoryViewModel.currentChapNumber,
           _contentStoryViewModel.currentSource,
-          _contentStoryViewModel.currentSource);
+          _contentStoryViewModel.currentSource, true);
     });
   }
 
@@ -247,7 +248,7 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
           widget.storyTitle,
           --_contentStoryViewModel.currentChapNumber,
           _contentStoryViewModel.currentSource,
-          _contentStoryViewModel.currentSource);
+          _contentStoryViewModel.currentSource, true);
     });
   }
 
@@ -257,22 +258,22 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
             _contentStoryViewModel.chapterPagination.chapterPerPage +
         index +
         1;
-    print(_contentStoryViewModel.currentChapNumber.toString());
     setState(() {
       _contentStoryViewModel.fetchContentStory(
           widget.storyTitle,
           _contentStoryViewModel.currentChapNumber,
           _contentStoryViewModel.currentSource,
-          _contentStoryViewModel.currentSource);
+          _contentStoryViewModel.currentSource, true);
     });
   }
 
   void onSourceChange(String newSource) async {
+    _contentStoryViewModel.indexSource = 0;
     bool result = await _contentStoryViewModel.fetchContentStory(
         widget.storyTitle,
         _contentStoryViewModel.currentChapNumber,
         newSource,
-        newSource);
+        newSource,false);
 
     // if we cannot load content from newSource (result == false), show dialog
     if (!result) {
@@ -280,14 +281,14 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
     }
   }
 
-  void showMyDialog(String newSource){
+  void showMyDialog(String chosenSource) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Tải thất bại'),
           content: Text(
-              'Không thể tải truyện từ $newSource. Tải truyện từ ${_contentStoryViewModel.currentSource} để thay thế'),
+              'Không thể tải truyện từ $chosenSource. Tải truyện từ ${_contentStoryViewModel.currentSource} để thay thế'),
           actions: <Widget>[
             TextButton(
               child: Text('OK'),

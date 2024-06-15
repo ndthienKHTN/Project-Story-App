@@ -6,11 +6,14 @@ import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 
 
 
 class DownloadService {
 
+  final String ipAddress = "localhost";
+  final int port=3000;
   Future<String> findTxtFilePath(Archive archive) async {
     for (ArchiveFile file in archive) {
       if (!file.isFile) continue;
@@ -23,11 +26,14 @@ class DownloadService {
   }
 
   Future<String> downloadAndUnzipFile(String storyTitle, int chapter, String fileType, String datasource) async {
+    // Request storage permissions
+    PermissionStatus permission = await Permission.storage.request();
+
     String folderName = "DownloadedFile";
     HttpClient httpClient = HttpClient();
     HttpClientRequest request = await httpClient.getUrl(
         Uri.parse(
-          "http://10.0.2.2:3000/api/v1/download/downloadChapter/?datasource=$datasource&title=$storyTitle&chap=$chapter&type=$fileType"
+          "http://$ipAddress:$port/api/v1/download/downloadChapter/?datasource=$datasource&title=$storyTitle&chap=$chapter&type=$fileType"
         ));
     HttpClientResponse response = await request.close();
     List<int> bytes = await consolidateHttpClientResponseBytes(response);
@@ -128,7 +134,7 @@ class DownloadService {
     return filePaths;
   }
   Future<List<String>> fetchListFileExtension() async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:3000/api/v1/download/listFileExtension/'));
+    final response = await http.get(Uri.parse('http://$ipAddress:$port/api/v1/download/listFileExtension/'));
 
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
