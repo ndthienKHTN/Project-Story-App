@@ -16,8 +16,8 @@ class LocalDatabase {
           'cover TEXT, pageNumber INTEGER, dataSource TEXT)',
         );
         db.execute(
-          'CREATE TABLE DOWNLOAD_HISTORY(title TEXT PRIMARY KEY, '
-          'date INTEGER,cover TEXT, dataSource TEXT, link TEXT)',
+          'CREATE TABLE DOWNLOAD_HISTORY(title TEXT , '
+          'date INTEGER,cover TEXT, dataSource TEXT, link TEXT PRIMARY KEY)',
         );
       },
       version: 1,
