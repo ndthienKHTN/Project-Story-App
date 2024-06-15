@@ -26,7 +26,7 @@ class DownloadChaptersViewModel extends ChangeNotifier {
   List<String> get listFileExtension => _listFileExtension;
 
 
-  Future<void> downloadChaptersOfStory(String storyTitle,String cover, List<int> chapters, String fileType, String datasource) async {
+  Future<bool> downloadChaptersOfStory(String storyTitle,String cover, List<int> chapters, String fileType, String datasource) async {
     try {
         _downloadedTxtFilePath.clear();
         for (int i = 0; i<chapters.length;i++) {
@@ -52,7 +52,9 @@ class DownloadChaptersViewModel extends ChangeNotifier {
     } catch (e) {
       // Handle error
       print('Error download chapters of story: $e');
+      return false;
     }
+    return true;
   }
   Future<void> fetchListFileExtension() async{
     try {

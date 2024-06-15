@@ -34,13 +34,12 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   void _fetchChapters() {
     _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
   }
-  void _downloadChapters(String storyTitle,String cover, List<int> chapters,String fileType,String datasource) {
-    _downloadChaptersViewModel.downloadChaptersOfStory(storyTitle,cover, chapters, fileType, datasource);
+  Future<bool> _downloadChapters (String storyTitle,String cover, List<int> chapters,String fileType,String datasource) {
+      return _downloadChaptersViewModel.downloadChaptersOfStory(storyTitle,cover, chapters, fileType, datasource);
   }
   @override
   void initState() {
     super.initState();
-    //TODO: FIX here
     _detailStoryViewModel = Provider.of<DetailStoryViewModel>(context, listen: false);
     _downloadChaptersViewModel = DownloadChaptersViewModel();
     _downloadChaptersViewModel.fetchListFileExtension();
@@ -88,9 +87,31 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
             ),
             TextButton(
               child: Text('OK'),
-              onPressed: () {
-                _downloadChapters(title,coverImage, chapters, selectedValue!, widget.datasource);
+              onPressed: ()  async {
+                Navigator.of(context).pop();
+                if(await _downloadChapters(title,coverImage, chapters, selectedValue!, widget.datasource)){
+                  showMyDialog();
+                }
                 print('Selected value: $selectedValue');
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void showMyDialog(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Thông báo'),
+          content: Text(
+              'Tải truyện thành công'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
@@ -99,7 +120,6 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
       },
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
