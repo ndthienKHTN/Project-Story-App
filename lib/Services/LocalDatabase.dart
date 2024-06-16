@@ -15,8 +15,9 @@ class LocalDatabase {
           'cover TEXT, pageNumber INTEGER, dataSource TEXT)',
         );
         db.execute(
-          'CREATE TABLE DOWNLOAD_HISTORY(title TEXT , '
-          'date INTEGER,cover TEXT, dataSource TEXT, link TEXT PRIMARY KEY)',
+          'CREATE TABLE DOWNLOAD_HISTORY(title TEXT, name TEXT, '
+          'date INTEGER,chap INTEGER, cover TEXT, dataSource TEXT, '
+              ' link TEXT PRIMARY KEY)',
         );
       },
       version: 1,
@@ -72,7 +73,9 @@ class LocalDatabase {
     return List.generate(maps.length, (i) {
       return DownloadHistory(
           title: maps[i]['title'],
+          name:maps[i]['name'],
           date: maps[i]['date'],
+          chap: maps[i]['chap'],
           cover: maps[i]['cover'],
           dataSource: maps[i]['dataSource'],
           link: maps[i]['link']);

@@ -26,7 +26,7 @@ class DownloadChaptersViewModel extends ChangeNotifier {
   List<String> get listFileExtension => _listFileExtension;
 
 
-  Future<bool> downloadChaptersOfStory(String storyTitle,String cover, List<int> chapters, String fileType, String datasource) async {
+  Future<bool> downloadChaptersOfStory(String storyTitle,String cover,String nameStory, List<int> chapters, String fileType, String datasource) async {
     try {
         _downloadedTxtFilePath.clear();
         for (int i = 0; i<chapters.length;i++) {
@@ -42,7 +42,9 @@ class DownloadChaptersViewModel extends ChangeNotifier {
           _localDatabase.insertDataDownload(
             DownloadHistory(
                 title: storyTitle,
+                name: nameStory,
                 date: currentTimeMillis,
+                chap: chapter,
                 cover: cover,
                 dataSource: datasource,
                 link: _downloadedTxtFilePath[i]),
