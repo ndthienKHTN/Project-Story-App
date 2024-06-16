@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'login_view.dart';
-import 'register_view.dart';
+
+import 'Views/ReadOfflineFile.dart';
+import 'Views/SplashView.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -8,16 +10,13 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: LoginPage(),
+      debugShowCheckedModeBanner: false,
+      title: 'Story App',
+      home: SplashScreen(),
+      //home: ReadOfflineFile()
     );
   }
 }
-
