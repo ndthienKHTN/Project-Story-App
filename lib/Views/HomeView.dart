@@ -410,146 +410,154 @@ class ListViewBook extends StatelessWidget {
 class GridViewBook extends StatelessWidget {
   const GridViewBook({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeStoryViewModel>(
-      builder: (context,storyNotifier,_){
+      builder: (context, storyNotifier, _) {
         if (storyNotifier.stories.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         } else {
-          return Consumer<HomeStoryViewModel>(
-            builder: (context,storyNotifier,_){
-              if (storyNotifier.stories.isEmpty) {
-                return const Center(child: CircularProgressIndicator());
-              } else {
-                return ListView.builder(
-                    itemCount: storyNotifier.stories.length,
-                    itemBuilder: (context,index){
-                      final liststoryname = storyNotifier.stories.keys.elementAt(index);
-                      final liststorys = storyNotifier.stories[liststoryname]!;
-                      return
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChangeNotifierProvider(
-                                      create: (context) => DetailStoryViewModel(),
-                                      child: DetailStoryScreen(storyTitle: liststorys[index].title, datasource: storyNotifier.sourceBook,),
-                                    )
-                                )
-                            );
-                          },
-                          child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20),
-                              child: Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: liststoryname.toUpperCase(),
-                                      style: const TextStyle(
-                                          color: Colors.red,
-                                          fontStyle: FontStyle.italic,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25
-                                      ),
-                                    ),
-                                    const TextSpan(
-                                      text: ' List Story',
-                                      style: TextStyle(
-                                        color: Colors.white, // Adjust color if needed
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ],
+          return ListView.builder(
+            itemCount: storyNotifier.stories.length,
+            itemBuilder: (context, index) {
+              final listStoryName = storyNotifier.stories.keys.elementAt(index);
+              final listStories = storyNotifier.stories[listStoryName]!;
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: listStoryName.toUpperCase(),
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25,
+                            ),
+                          ),
+                          const TextSpan(
+                            text: ' List Story',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: listStories.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3, // Số lượng cột trong grid view
+                      mainAxisSpacing: 10, // Khoảng cách giữa các hàng
+                      childAspectRatio: 110 / 150, // Tỷ lệ giữa chiều rộng và chiều cao của mỗi item
+                    ),
+                    itemBuilder: (context, gridIndex) {
+                      final story = listStories[gridIndex];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChangeNotifierProvider(
+                                create: (context) => DetailStoryViewModel(),
+                                child: DetailStoryScreen(
+                                  storyTitle: story.title,
+                                  datasource: storyNotifier.sourceBook,
                                 ),
                               ),
                             ),
-                            GridView.builder(
-                              shrinkWrap: true,
-                              physics: const ClampingScrollPhysics(),
-                              itemCount: liststorys.length,
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3, // Số lượng cột trong grid view
-                                mainAxisSpacing: 10, // Khoảng cách giữa các hàng
-                                childAspectRatio: 110/150, // Tỷ lệ giữa chiều rộng và chiều cao của mỗi item
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.white, width: 0.5),
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: Colors.yellow, width: 2),
+                                ),
+                                child: Image(
+                                  image: NetworkImage(story.cover),
+                                  height: 120,
+                                  width: 110,
+                                  errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                    return Image.asset(
+                                      'assets/images/default_image.png',
+                                      height: 120,
+                                      width: 110,
+                                    );
+                                  },
+                                ),
                               ),
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(color: Colors.white, width: 0.5),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10),
-                                          border: Border.all(color: Colors.yellow, width: 2),
-                                        ),
-                                        child: Image(
-                                          image: NetworkImage(liststorys[index].cover),
-                                          height: 120,
-                                          width: 110,
-                                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                                            return Image.asset(
-                                              'assets/images/default_image.png',
-                                              height: 120,
-                                              width: 110,
-                                            );
-                                          },
-                                        ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 99,
+                                    child: Text(
+                                      story.name,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        overflow: TextOverflow.ellipsis,
+                                        color: Colors.white,
                                       ),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: 99,
-                                            child: Text(
-                                              liststorys[index].name,
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                overflow: TextOverflow.ellipsis,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 3.0),
-                                            child: Text(
-                                              'By: ${liststorys[index].author}',
-                                              maxLines: 1,
-                                              style: const TextStyle(
-                                                fontSize: 8,
-                                                overflow: TextOverflow.ellipsis,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    ],
+                                    ),
                                   ),
-                                );
-                              },
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 40),
-                              child: ElevatedButton.icon(onPressed: (){},
-                                label: const Text('Xem thêm'),
-                                icon:const Icon(Icons.playlist_add_sharp)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 3.0),
+                                    child: Text(
+                                      'By: ${story.author}',
+                                      maxLines: 1,
+                                      style: const TextStyle(
+                                        fontSize: 8,
+                                        overflow: TextOverflow.ellipsis,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 40),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChangeNotifierProvider(
+                              create: (context) => ListTypeViewModel(),
+                              child: ListTypeScreen(
+                                type: listStoryName,
+                                source: storyNotifier.sourceBook,
                               ),
                             ),
-                          ],
-                                                ),
+                          ),
                         );
-                    }
-                );
-              }
+                      },
+                      label: const Text('More'),
+                      icon: const Icon(Icons.playlist_add_sharp),
+                    ),
+                  ),
+                ],
+              );
             },
           );
         }
