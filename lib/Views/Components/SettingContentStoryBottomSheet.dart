@@ -64,16 +64,16 @@ class _SettingContentStoryBottomSheetState extends State<SettingContentStoryBott
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Row(
                   children: [
-                    Text(
+                    const Text(
                       "Nguồn truyện",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.only(left: 20),
+                        padding: const EdgeInsets.only(left: 20),
                         child: Container(
                           alignment: Alignment.center,
                           decoration: const BoxDecoration(color: Colors.white),
@@ -81,6 +81,7 @@ class _SettingContentStoryBottomSheetState extends State<SettingContentStoryBott
                             value: dropdownValueSource,
                             onChanged: (String? newValue) {
                               setState(() {
+                                // change source
                                 dropdownValueSource = newValue!;
                                 widget.onSourceChange(dropdownValueSource);
                                 Navigator.pop(context);
@@ -133,14 +134,10 @@ class _SettingContentStoryBottomSheetState extends State<SettingContentStoryBott
                   child: InkWell(
                     onTap: () {
                       setState(() {
-                        if (widget.contentStoryViewModel.contentDisplay.textSize -
-                                textSizeChange >=
-                            MIN_TEXT_SIZE) {
-                          double newTextSize =
-                              widget.contentStoryViewModel.contentDisplay.textSize -
-                                  textSizeChange;
-                          widget.contentStoryViewModel.contentDisplay.textSize =
-                              newTextSize;
+                        // decrease text size
+                        if (widget.contentStoryViewModel.contentDisplay.textSize - textSizeChange >= MIN_TEXT_SIZE) {
+                          double newTextSize = widget.contentStoryViewModel.contentDisplay.textSize - textSizeChange;
+                          widget.contentStoryViewModel.contentDisplay.textSize = newTextSize;
                           widget.onTextSizeChanged(newTextSize);
                         }
                       });
@@ -172,14 +169,10 @@ class _SettingContentStoryBottomSheetState extends State<SettingContentStoryBott
                   child: InkWell(
                     onTap: () {
                       setState(() {
-                        if (widget.contentStoryViewModel.contentDisplay.textSize +
-                                textSizeChange <=
-                            MAX_TEXT_SIZE) {
-                          double newTextSize =
-                              widget.contentStoryViewModel.contentDisplay.textSize +
-                                  textSizeChange;
-                          widget.contentStoryViewModel.contentDisplay.textSize =
-                              newTextSize;
+                        // increase text size
+                        if (widget.contentStoryViewModel.contentDisplay.textSize + textSizeChange <= MAX_TEXT_SIZE) {
+                          double newTextSize = widget.contentStoryViewModel.contentDisplay.textSize + textSizeChange;
+                          widget.contentStoryViewModel.contentDisplay.textSize = newTextSize;
                           widget.onTextSizeChanged(newTextSize);
                         }
                       });
@@ -209,14 +202,10 @@ class _SettingContentStoryBottomSheetState extends State<SettingContentStoryBott
                   child: InkWell(
                     onTap: () {
                       setState(() {
-                        if (widget.contentStoryViewModel.contentDisplay.lineSpacing -
-                                lineSpacingChange >=
-                            MIN_LINE_SPACING) {
-                          double newlineSpacing =
-                              widget.contentStoryViewModel.contentDisplay.lineSpacing -
-                                  lineSpacingChange;
-                          widget.contentStoryViewModel.contentDisplay.lineSpacing =
-                              newlineSpacing;
+                        // decrease line space
+                        if (widget.contentStoryViewModel.contentDisplay.lineSpacing - lineSpacingChange >= MIN_LINE_SPACING) {
+                          double newlineSpacing = widget.contentStoryViewModel.contentDisplay.lineSpacing - lineSpacingChange;
+                          widget.contentStoryViewModel.contentDisplay.lineSpacing = newlineSpacing;
                           widget.onLineSpacingChanged(newlineSpacing);
                         }
                       });
@@ -248,14 +237,10 @@ class _SettingContentStoryBottomSheetState extends State<SettingContentStoryBott
                   child: InkWell(
                     onTap: () {
                       setState(() {
-                        if (widget.contentStoryViewModel.contentDisplay.lineSpacing +
-                                lineSpacingChange <=
-                            MAX_LINE_SPACING) {
-                          double newlineSpacing =
-                              widget.contentStoryViewModel.contentDisplay.lineSpacing +
-                                  lineSpacingChange;
-                          widget.contentStoryViewModel.contentDisplay.lineSpacing =
-                              newlineSpacing;
+                        // increase line space
+                        if (widget.contentStoryViewModel.contentDisplay.lineSpacing + lineSpacingChange <= MAX_LINE_SPACING) {
+                          double newlineSpacing = widget.contentStoryViewModel.contentDisplay.lineSpacing + lineSpacingChange;
+                          widget.contentStoryViewModel.contentDisplay.lineSpacing = newlineSpacing;
                           widget.onLineSpacingChanged(newlineSpacing);
                         }
                       });
@@ -288,6 +273,7 @@ class _SettingContentStoryBottomSheetState extends State<SettingContentStoryBott
                 value: dropdownValueFont,
                 onChanged: (String? newValue) {
                   setState(() {
+                    // change font family
                     dropdownValueFont = newValue!;
                     widget.onFontFamilyChanged(dropdownValueFont);
                   });
@@ -311,24 +297,24 @@ class _SettingContentStoryBottomSheetState extends State<SettingContentStoryBott
               alignment: Alignment.centerLeft,
               child: Padding(
                   padding:
-                      EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
+                      const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         "Màu chữ",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 20),
+                        padding: const EdgeInsets.only(left: 20),
                         child: ElevatedButton(
                           onPressed: () {
                             _showColorPickerDialog(widget.onTextColorChanged);
                           },
-                          child: Text('Chọn'),
                           style: ElevatedButton.styleFrom(
                             elevation: 4,
                             backgroundColor: Colors.white,
                           ),
+                          child: const Text('Chọn'),
                         ),
                       )
                     ],
@@ -337,24 +323,24 @@ class _SettingContentStoryBottomSheetState extends State<SettingContentStoryBott
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Row(
                     children: [
-                      Text(
+                      const Text(
                         "Màu nền",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 20),
+                        padding: const EdgeInsets.only(left: 20),
                         child: ElevatedButton(
                           onPressed: () {
                             _showColorPickerDialog(widget.onBackgroundChanged);
                           },
-                          child: Text('Chọn'),
                           style: ElevatedButton.styleFrom(
                             elevation: 4,
                             backgroundColor: Colors.white,
                           ),
+                          child: const Text('Chọn'),
                         ),
                       )
                     ],
@@ -366,12 +352,13 @@ class _SettingContentStoryBottomSheetState extends State<SettingContentStoryBott
     );
   }
 
+  // open color picker dialog to choose color
   void _showColorPickerDialog(Function(int) onConfirmClicked) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Chọn màu'),
+          title: const Text('Chọn màu'),
           content: SingleChildScrollView(
             child: MaterialColorPicker(
               onColorChange: (Color color) {
@@ -382,7 +369,7 @@ class _SettingContentStoryBottomSheetState extends State<SettingContentStoryBott
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

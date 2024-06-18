@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:project_login/Models/ContentDisplay.dart';
 import 'package:project_login/ViewModels/ContentStoryViewModel.dart';
-import 'package:project_login/Views/Components/ChangeDisplayBottomSheet.dart';
+import 'package:project_login/Views/Components/SettingContentStoryBottomSheet.dart';
 
 // Create a mock for the ContentStoryViewModel
 class MockContentStoryViewModel extends Mock implements ContentStoryViewModel {}
@@ -17,6 +17,7 @@ void main() {
     late Function(String) mockOnFontFamilyChanged;
     late Function(int) mockOnTextColorChanged;
     late Function(int) mockOnBackgroundChanged;
+    late Function(String) mockOnSourceChange;
 
     setUp(() {
       mockContentStoryViewModel = ContentStoryViewModel();
@@ -25,6 +26,7 @@ void main() {
       mockOnFontFamilyChanged = (value) => print('Font family changed: $value');
       mockOnTextColorChanged = (value) => print('Text color changed: $value');
       mockOnBackgroundChanged = (value) => print('Background color changed: $value');
+      mockOnSourceChange = (value) => print('On source change changed: $value');
 
       // Set up initial values for the mock
       mockContentStoryViewModel.contentDisplay = ContentDisplay(
@@ -39,13 +41,14 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ChangeDisplayBottomSheet(
-              mockContentStoryViewModel,
-              mockOnTextSizeChanged,
-              mockOnLineSpacingChanged,
-              mockOnFontFamilyChanged,
-              mockOnTextColorChanged,
-              mockOnBackgroundChanged,
+            body: SettingContentStoryBottomSheet(
+              contentStoryViewModel: mockContentStoryViewModel,
+              onTextSizeChanged: mockOnTextSizeChanged,
+              onLineSpacingChanged: mockOnLineSpacingChanged,
+              onFontFamilyChanged: mockOnFontFamilyChanged,
+              onTextColorChanged: mockOnTextColorChanged,
+              onBackgroundChanged: mockOnBackgroundChanged,
+              onSourceChange: mockOnSourceChange,
             ),
           ),
         ),
@@ -72,13 +75,14 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ChangeDisplayBottomSheet(
-              mockContentStoryViewModel,
-              mockOnTextSizeChanged,
-              mockOnLineSpacingChanged,
-              mockOnFontFamilyChanged,
-              mockOnTextColorChanged,
-              mockOnBackgroundChanged,
+            body: SettingContentStoryBottomSheet(
+              contentStoryViewModel: mockContentStoryViewModel,
+              onTextSizeChanged: mockOnTextSizeChanged,
+              onLineSpacingChanged: mockOnLineSpacingChanged,
+              onFontFamilyChanged: mockOnFontFamilyChanged,
+              onTextColorChanged: mockOnTextColorChanged,
+              onBackgroundChanged: mockOnBackgroundChanged,
+              onSourceChange: mockOnSourceChange,
             ),
           ),
         ),

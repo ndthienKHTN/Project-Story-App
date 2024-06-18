@@ -26,6 +26,7 @@ class _HistoryListWidgetState extends State<HistoryListWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // fetch data
     _readingHistoryViewModel.fetchReadingHistoryList();
 
     return Consumer<ReadingHistoryViewModel>(
@@ -46,6 +47,7 @@ class _HistoryListWidgetState extends State<HistoryListWidget> {
     });
   }
 
+  // navigate to content story screen
   void onClickItem(ReadingHistory readingHistory) {
     Navigator.push(
       context,

@@ -40,6 +40,7 @@ class _BodyWidgetState extends State<BodyWidget> {
                 TextButton(
                     onPressed: (){
                       setState(() {
+                        // show history list
                         _isBtnHistoryPressed = true;
                         _isBtnDownloadPressed = false;
                         _currentData = HistoryListWidget(); // do not add const

@@ -31,7 +31,7 @@ class _DownloadSingleChapterDialogState extends State<DownloadSingleChapterDialo
   Widget build(BuildContext context) {
     DownloadChaptersViewModel viewModel = DownloadChaptersViewModel();
     return AlertDialog(
-      title: Center(child: Text('Định dạng')),
+      title: const Center(child: Text('Định dạng')),
       content: SingleChildScrollView(
         child: Column(
           children: contentStoryViewModel.formatList
@@ -41,6 +41,7 @@ class _DownloadSingleChapterDialogState extends State<DownloadSingleChapterDialo
             groupValue: selectedFormat,
             onChanged: (String? value) {
               setState(() {
+                // choose format
                 selectedFormat = value;
               });
             },
@@ -53,12 +54,13 @@ class _DownloadSingleChapterDialogState extends State<DownloadSingleChapterDialo
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text('Cancel'),
+          child: const Text('Cancel'),
         ),
         TextButton(
           onPressed: () {
             List<int> chapNumberList = [contentStoryViewModel.currentChapNumber];
 
+            // download
             viewModel.downloadChaptersOfStory(
                 contentStoryViewModel.contentStory!.title,
                 contentStoryViewModel.contentStory!.cover,
@@ -68,7 +70,7 @@ class _DownloadSingleChapterDialogState extends State<DownloadSingleChapterDialo
                 contentStoryViewModel.currentSource);
             Navigator.of(context).pop();
           },
-          child: Text('Ok'),
+          child: const Text('Ok'),
         ),
       ],
     );
