@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../ViewModels/ChooseCategoryViewModel.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
-import 'ChoiseCategoryView.dart';
+import 'ChooseCategoryView.dart';
 import 'DetailStoryView.dart';
 
 class ListSearchScreen extends StatefulWidget {
