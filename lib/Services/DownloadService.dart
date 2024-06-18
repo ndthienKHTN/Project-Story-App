@@ -13,7 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 class DownloadService {
   // AVD: 10.0.2.2
   // Physical Android Device: localhost
-  final String ipAddress = "10.0.2.2";
+  final String ipAddress = "localhost";
   final int port=3000;
   Future<String> findTxtFilePath(Archive archive) async {
     for (ArchiveFile file in archive) {

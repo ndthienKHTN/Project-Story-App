@@ -10,7 +10,6 @@ import '../ViewModels/HomeStoryViewModel.dart';
 import '../ViewModels/SearchViewModel.dart';
 import 'DetailStoryView.dart';
 import 'SearchScreen.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -26,7 +25,9 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _homeStoryViewModel = Provider.of<HomeStoryViewModel>(context, listen: false);
     _homeStoryViewModel.fetchHomeSourceBooks();
+
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -567,3 +568,23 @@ class GridViewBook extends StatelessWidget {
     );
   }
 }
+/* void load() async
+  {
+    String result = await readFilePdfFunction(jsRuntime, path);
+    print("js result: $result");
+  }
+  late JavascriptRuntime jsRuntime = getJavascriptRuntime();
+  bool isLoaded = false;
+  dynamic path = rootBundle.loadString("assets/scripts/file.js");//PDFReaderPlugin
+  Future<String> readFilePdfFunction(JavascriptRuntime runtime, filePath) async {
+    final jsFile = await path;
+
+    JsEvalResult jsEvalResult = jsRuntime.evaluate("""${jsFile}readFile($filePath)""");
+
+    return jsEvalResult.stringResult;
+  }
+  @override
+  void dispose() {
+    jsRuntime.dispose();
+    super.dispose();
+  }*/
