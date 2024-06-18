@@ -10,6 +10,7 @@ class ReadingHistoryViewModel extends ChangeNotifier {
 
   // get all reading history in database
   Future<void> fetchReadingHistoryList() async{
+    readingHistoryList?.clear();
     readingHistoryList = await localDatabase.getReadingHistoryList();
     readingHistoryList?.sort((a, b) => b.date.compareTo(a.date));
     notifyListeners();

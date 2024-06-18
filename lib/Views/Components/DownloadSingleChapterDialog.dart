@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_login/toast_util.dart';
 import 'package:provider/provider.dart';
 
 import '../../ViewModels/ContentStoryViewModel.dart';
@@ -16,8 +17,10 @@ class DownloadSingleChapterDialog extends StatefulWidget {
   }
 }
 
-class _DownloadSingleChapterDialogState extends State<DownloadSingleChapterDialog> {
-  ContentStoryViewModel get contentStoryViewModel => widget._contentStoryViewModel;
+class _DownloadSingleChapterDialogState
+    extends State<DownloadSingleChapterDialog> {
+  ContentStoryViewModel get contentStoryViewModel =>
+      widget._contentStoryViewModel;
 
   String? selectedFormat;
 
@@ -36,16 +39,16 @@ class _DownloadSingleChapterDialogState extends State<DownloadSingleChapterDialo
         child: Column(
           children: contentStoryViewModel.formatList
               .map((String format) => RadioListTile<String>(
-            title: Text(format),
-            value: format,
-            groupValue: selectedFormat,
-            onChanged: (String? value) {
-              setState(() {
-                // choose format
-                selectedFormat = value;
-              });
-            },
-          ))
+                    title: Text(format),
+                    value: format,
+                    groupValue: selectedFormat,
+                    onChanged: (String? value) {
+                      setState(() {
+                        // choose format
+                        selectedFormat = value;
+                      });
+                    },
+                  ))
               .toList(),
         ),
       ),
@@ -58,17 +61,26 @@ class _DownloadSingleChapterDialogState extends State<DownloadSingleChapterDialo
         ),
         TextButton(
           onPressed: () {
-            List<int> chapNumberList = [contentStoryViewModel.currentChapNumber];
-
-            // download
-            viewModel.downloadChaptersOfStory(
-                contentStoryViewModel.contentStory!.title,
-                contentStoryViewModel.contentStory!.cover,
-                contentStoryViewModel.contentStory!.name,
-                chapNumberList,
-                selectedFormat!,
-                contentStoryViewModel.currentSource);
+            List<int> chapNumberList = [
+              contentStoryViewModel.currentChapNumber
+            ];
             Navigator.of(context).pop();
+            // download
+            viewModel
+                .downloadChaptersOfStory(
+                    contentStoryViewModel.contentStory!.title,
+                    contentStoryViewModel.contentStory!.cover,
+                    contentStoryViewModel.contentStory!.name,
+                    chapNumberList,
+                    selectedFormat!,
+                    contentStoryViewModel.currentSource)
+                .then((isSuccess) {
+              if (isSuccess){
+                ToastUtil.showToast('Download thành công');
+              } else {
+                ToastUtil.showToast('Download thất bại');
+              }
+            });
           },
           child: const Text('Ok'),
         ),
