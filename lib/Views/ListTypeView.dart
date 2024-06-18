@@ -355,7 +355,7 @@ class _GridViewBookState extends State<GridViewBook> {
   void initState() {
     super.initState();
     gridController.addListener(_onScroll);
-    _listTypeViewModel=Provider.of<ListTypeViewModel>(context,listen: false);
+    _listTypeViewModel = Provider.of<ListTypeViewModel>(context, listen: false);
   }
 
   @override
@@ -367,9 +367,9 @@ class _GridViewBookState extends State<GridViewBook> {
   void _onScroll() {
     if (gridController.position.pixels == gridController.position.maxScrollExtent) {
       _listTypeViewModel.insertpage();
-      _listTypeViewModel.fetchTypeStories(_listTypeViewModel.sourceBook,_listTypeViewModel.type);
+      _listTypeViewModel.fetchTypeStories(_listTypeViewModel.sourceBook, _listTypeViewModel.type);
       setState(() {
-        isLoadingMore=true;
+        isLoadingMore = true;
       });
     }
   }
@@ -384,10 +384,10 @@ class _GridViewBookState extends State<GridViewBook> {
           return ListView.builder(
             controller: gridController,
             itemCount: storyNotifier.stories.length,
-            itemBuilder: (context, index) {
-              final liststoryname = storyNotifier.stories.keys.elementAt(index);
-              final liststorys = storyNotifier.stories[liststoryname]!;
-              if (liststorys.isEmpty) {
+            itemBuilder: (context, listIndex) {
+              final listStoryName = storyNotifier.stories.keys.elementAt(listIndex);
+              final listStories = storyNotifier.stories[listStoryName]!;
+              if (listStories.isEmpty) {
                 return Center(
                   child: Image.asset(
                     'assets/images/empty-box.png',
@@ -396,35 +396,36 @@ class _GridViewBookState extends State<GridViewBook> {
                   ),
                 );
               } else {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChangeNotifierProvider(
-                          create: (context) => DetailStoryViewModel(),
-                          child: DetailStoryScreen(
-                            storyTitle: liststorys[index].title,
-                            datasource: storyNotifier.sourceBook,
-                          ),
-                        ),
+                return Column(
+                  children: [
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const ClampingScrollPhysics(),
+                      itemCount: isLoadingMore ? listStories.length + 1 : listStories.length,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3, // Number of columns in grid view
+                        mainAxisSpacing: 10, // Spacing between rows
+                        childAspectRatio: 110 / 150, // Aspect ratio of each item
                       ),
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const ClampingScrollPhysics(),
-                        itemCount: isLoadingMore ? liststorys.length + 1 : liststorys.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3, // Number of columns in grid view
-                          mainAxisSpacing: 10, // Spacing between rows
-                          childAspectRatio: 110 / 150, // Aspect ratio of each item
-                        ),
-                        itemBuilder: (context, index) {
-                          if (index < liststorys.length) {
-                            return Container(
+                      itemBuilder: (context, gridIndex) {
+                        if (gridIndex < listStories.length) {
+                          final story = listStories[gridIndex];
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChangeNotifierProvider(
+                                    create: (context) => DetailStoryViewModel(),
+                                    child: DetailStoryScreen(
+                                      storyTitle: story.title,
+                                      datasource: storyNotifier.sourceBook,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
                               margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
@@ -438,7 +439,7 @@ class _GridViewBookState extends State<GridViewBook> {
                                       border: Border.all(color: Colors.yellow, width: 2),
                                     ),
                                     child: Image(
-                                      image: NetworkImage(liststorys[index].cover),
+                                      image: NetworkImage(story.cover),
                                       height: 120,
                                       width: 110,
                                       errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
@@ -456,7 +457,7 @@ class _GridViewBookState extends State<GridViewBook> {
                                       SizedBox(
                                         width: 99,
                                         child: Text(
-                                          liststorys[index].name,
+                                          story.name,
                                           style: const TextStyle(
                                             fontSize: 12,
                                             overflow: TextOverflow.ellipsis,
@@ -467,7 +468,7 @@ class _GridViewBookState extends State<GridViewBook> {
                                       Padding(
                                         padding: const EdgeInsets.only(top: 3.0),
                                         child: Text(
-                                          'By: ${liststorys[index].author}',
+                                          'By: ${story.author}',
                                           maxLines: 1,
                                           style: const TextStyle(
                                             fontSize: 8,
@@ -480,14 +481,14 @@ class _GridViewBookState extends State<GridViewBook> {
                                   ),
                                 ],
                               ),
-                            );
-                          } else {
-                            return const Center(child: CircularProgressIndicator());
-                          }
-                        },
-                      ),
-                    ],
-                  ),
+                            ),
+                          );
+                        } else {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                      },
+                    ),
+                  ],
                 );
               }
             },
