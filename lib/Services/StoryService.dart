@@ -1,11 +1,10 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'dart:convert';
 import '../Models/ChapterPagination.dart';
 
 
-import '../Models/ChapterPagination.dart';
 import '../Models/ContentStory.dart';
 import '../Models/Story.dart';
 import '../Models/Category.dart' as categoryModel;
@@ -13,7 +12,9 @@ import '../Models/Category.dart' as categoryModel;
 
 
 class StoryService {
-  final String ipAddress = "10.0.2.2";
+  //avd: 10.0.2.2
+  //physical device: localhost
+  final String ipAddress = "localhost";
   final int port=3000;
   Future<List<String>> fetchListNameDataSource() async {
     final response = await http.get(Uri.parse('http://$ipAddress:$port/api/v1/listDataSource/'));
