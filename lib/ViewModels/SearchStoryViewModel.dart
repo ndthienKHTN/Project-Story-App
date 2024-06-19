@@ -12,7 +12,7 @@ class SearchStoryViewModel extends ChangeNotifier {
 
   Future<void> fetchSearchStories(String query, String datasource) async {
     try {
-      _stories = await _storyService.fetchSearchStory(query,datasource);
+      _stories = (await _storyService.fetchSearchStory(query,datasource))!;
       Logger logger = Logger();
       logger.i(stories[0].toString());
       notifyListeners();

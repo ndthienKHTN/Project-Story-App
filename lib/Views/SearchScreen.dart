@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_login/Services/StoryService.dart';
 import 'package:project_login/ViewModels/ListSearchViewModel.dart';
 import 'package:project_login/Views/ListSearchView.dart';
 import 'package:provider/provider.dart';
@@ -53,7 +54,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       Navigator.push(
                           context,MaterialPageRoute(
                           builder: (context)=>ChangeNotifierProvider(
-                            create: (context)=>ListSearchViewModel(),
+                            create: (context)=>ListSearchViewModel(storyService: StoryService()),
                             child: ListSearchScreen(searchString:searchTerm),
                           )
                       )
@@ -108,7 +109,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             Navigator.push(
                               context,MaterialPageRoute(
                                 builder: (context)=>ChangeNotifierProvider(
-                                  create: (context)=>ListSearchViewModel(),
+                                  create: (context)=>ListSearchViewModel(storyService: StoryService()),
                                   child: ListSearchScreen(searchString: _searchViewModel.historylist[index]),
                                 )
                             )

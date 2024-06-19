@@ -6,7 +6,7 @@ import '../Services/StoryService.dart';
 
 
 class HomeStoryViewModel extends ChangeNotifier {
-  final StoryService _storyService = StoryService();
+  StoryService _storyService;
 
   Map<String, List<Story>> _stories = <String, List<Story>>{};
 
@@ -26,10 +26,12 @@ class HomeStoryViewModel extends ChangeNotifier {
 
   bool isLoading=true;
 
+  HomeStoryViewModel({required StoryService storyService}) : this._storyService = storyService;
+
   Future<void> fetchHomeStories(String datasource) async {
     try {
       _stories.clear();
-      _stories = await _storyService.fetchHomeStory(datasource);
+      _stories = (await _storyService.fetchHomeStory(datasource))!;
       if(stories.isNotEmpty){
         isLoading=false;
       }
@@ -45,16 +47,16 @@ class HomeStoryViewModel extends ChangeNotifier {
   Future<void> fetchHomeSourceBooks() async{
     try{
       sourceBooks.clear();
-      List<String> sourceBookstmp=await _storyService.fetchListNameDataSource();
+      List<String>? sourceBookstmp=await _storyService.fetchListNameDataSource();
       List<String>? sourceBookstmp2=[];
       sourceBookstmp2 = await getStringList("LIST_SOURCE");
       if(sourceBookstmp2 == null){
-        sourceBooks=sourceBookstmp;
+        sourceBooks=sourceBookstmp!;
       }
       else{
         List<String>tmp2=[];
         tmp2.addAll(sourceBookstmp2);
-        if(checkSimilarity(sourceBookstmp, tmp2)){
+        if(checkSimilarity(sourceBookstmp!, tmp2)){
           sourceBooks=sourceBookstmp2;
         }
         else{

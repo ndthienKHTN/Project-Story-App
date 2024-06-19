@@ -8,7 +8,7 @@ import '../Models/Story.dart';
 import '../Models/Category.dart' as categoryModel;
 
 class StoryService {
-  Future<List<String>> fetchListNameDataSource() async {
+  Future<List<String>>? fetchListNameDataSource() async {
     final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listDataSource/'));
 
     if (response.statusCode == 200) {
@@ -20,7 +20,7 @@ class StoryService {
     }
   }
 
-  Future<List<Story>> fetchSearchStory(String query, String datasource) async {
+  Future<List<Story>>? fetchSearchStory(String query, String datasource) async {
     final response = await http.get(Uri.parse('http://localhost:3000/api/v1/search/?datasource=$datasource&search=$query'));
 
     if (response.statusCode == 200) {
@@ -31,7 +31,7 @@ class StoryService {
     }
   }
 
-  Future<List<Story>> fetchSearchStoryByCategory(String query, String datasource, int page, String category) async {
+  Future<List<Story>>? fetchSearchStoryByCategory(String query, String datasource, int page, String category) async {
     final response = await http.get(
         Uri.parse(
             'http://localhost:3000/api/v1/search/?datasource=$datasource&search=$query&page=$page&category=$category'
@@ -68,7 +68,7 @@ class StoryService {
     }
   }
 
-  Future<Map<String, List<Story>>> fetchHomeStory(String datasource) async {
+  Future<Map<String, List<Story>>>? fetchHomeStory(String datasource) async {
     final response = await http.get(Uri.parse('http://localhost:3000/api/v1/home/?datasource=$datasource'));
     if (response.statusCode == 200) {
       final dynamic jsonData = jsonDecode(response.body);
@@ -89,7 +89,7 @@ class StoryService {
     return jsonList.map((json) => Story.fromJson(json)).toList();
   }
 
-  Future<List<categoryModel.Category>> fetchListCategory(String datasource) async {
+  Future<List<categoryModel.Category>>? fetchListCategory(String datasource) async {
     try {
       final response = await http.get(Uri.parse('http://localhost:3000/api/v1/listCategory/?datasource=$datasource'));
       if (response.statusCode == 200) {
@@ -125,7 +125,7 @@ class StoryService {
     }
   }
 
-  Future<List<Story>> fetchListStoryByType(String typeOfList, int pageNumber, String datasource) async {
+  Future<List<Story>>? fetchListStoryByType(String typeOfList, int pageNumber, String datasource) async {
     final response = await http.get(
         Uri.parse(
             'http://localhost:3000/api/v1/listStory/?datasource=$datasource&type=$typeOfList&page=$pageNumber'

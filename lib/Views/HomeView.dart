@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_login/Services/StoryService.dart';
 import 'package:project_login/ViewModels/ChoiseCategoryViewModel.dart';
 import 'package:project_login/ViewModels/ListTypeViewModel.dart';
 import 'package:project_login/Views/ChoiseCategoryView.dart';
@@ -381,7 +382,7 @@ class ListViewBook extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ChangeNotifierProvider(
-                              create: (context) => ListTypeViewModel(),
+                              create: (context) => ListTypeViewModel(storyService: StoryService()),
                               child: ListTypeScreen(
                                 type: liststoryname,
                                 source: storyNotifier.sourceBook,
@@ -543,7 +544,7 @@ class GridViewBook extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ChangeNotifierProvider(
-                              create: (context) => ListTypeViewModel(),
+                              create: (context) => ListTypeViewModel(storyService: StoryService()),
                               child: ListTypeScreen(
                                 type: listStoryName,
                                 source: storyNotifier.sourceBook,
