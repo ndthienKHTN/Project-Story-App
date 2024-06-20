@@ -32,7 +32,6 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
   Widget ?_currentData ;
   List<String> items =[];
   void _fetchChapters() async{
-
     await _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
     if(_detailStoryViewModel.chapterPagination?.chapterPerPage != null ){
       _perPage = _detailStoryViewModel.chapterPagination!.chapterPerPage;
@@ -53,8 +52,6 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
     //Chưa sử dụng
     _fetchChapters();
     _fetchDatasource(changeSource);
-
-
   }
   // void initDescription(String description){
   //   _currentData = SingleChildScrollView(
