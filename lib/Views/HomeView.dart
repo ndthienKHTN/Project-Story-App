@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_login/ViewModels/ChooseCategoryViewModel.dart';
 import 'package:project_login/ViewModels/ListTypeViewModel.dart';
-import 'package:project_login/Views/ChooseCategoryView.dart';
 import 'package:project_login/Views/ListTypeView.dart';
 import 'package:provider/provider.dart';
 
