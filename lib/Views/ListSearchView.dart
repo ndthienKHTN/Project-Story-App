@@ -179,12 +179,14 @@ class ListSourceBook extends StatelessWidget {
             children: [
               for (int i = 0; i < storyListViewModel.sourceBooks.length; i++)
                 GestureDetector(
-                  onTap: () {
+                  onTap: storyListViewModel.isLoading?null:() {
                     storyListViewModel.changeCategory("All");
                     storyListViewModel.changepage(1);
                     Provider.of<ListSearchViewModel>(context,listen: false).changeIndex(i);
                     storyListViewModel.changeSourceBook(storyListViewModel.sourceBooks[i]);
                     storyListViewModel.fetchSearchStories(storyListViewModel.sourceBooks[i]);
+                    storyListViewModel.changeIsLoading(true);
+                    storyListViewModel.stories.clear();
                   },
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -499,7 +501,7 @@ class _GridViewBookState extends State<GridViewBook> {
         isLoadingMore = true;
       });
       _listSearchViewModel.insertpage();
-      _listSearchViewModel.fetchSearchStories(_listSearchViewModel.sourceBook).then((_) {
+      _listSearchViewModel.fetchSearchStories(_listSearchViewModel.sourceBook)!.then((_) {
         setState(() {
           isLoadingMore = false;
         });

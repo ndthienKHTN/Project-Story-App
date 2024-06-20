@@ -9,7 +9,7 @@ import '../Services/StoryService.dart';
 
 class ListSearchViewModel extends ChangeNotifier{
 
-  final StoryService _storyService = StoryService();
+  final StoryService _storyService;
 
   Map<String, List<Story>> _stories = <String, List<Story>>{};
 
@@ -29,31 +29,32 @@ class ListSearchViewModel extends ChangeNotifier{
 
   int page=1;
 
+  bool isLoading=true;
+
+  ListSearchViewModel({required StoryService storyService}): _storyService = storyService;
+
   Future<void> fetchSearchStories(String datasource) async {
     try {
-      print("fetch ");
-      print(page);
+      List<Story>? tmp;
+      if (category != 'All') {
+        tmp = await _storyService.fetchSearchStoryByCategory(searchString, datasource, page, category);
+      } else {
+        tmp = await _storyService.fetchSearchStoryByCategory(searchString, datasource, page, '');
+      }
 
-      List<Story> tmp;
-      if(category!='All'){
-        tmp = await _storyService.fetchSearchStoryByCategory(searchString,datasource,page,category);
-      }
-      else{
-        tmp = await _storyService.fetchSearchStoryByCategory(searchString,datasource,page,"");
-      }
-      if(page==1){
-        _stories.clear();
-        _stories[searchString]=tmp;
-      }
-      else{
-        if(tmp!=null){
-          _stories[searchString]?.addAll(tmp);
+      if (page == 1) {
+        _stories!.clear();
+        _stories[searchString] = tmp!;
+      } else {
+        if (tmp != null) {
+          _stories[searchString] = _stories[searchString] ?? [];
+          _stories[searchString]!.addAll(tmp);
         }
       }
-      print(_stories[searchString]!.length);
+
+      isLoading = _stories.isEmpty;
       notifyListeners();
     } catch (e) {
-      // Handle error
       if (kDebugMode) {
         print('Error fetching stories: $e');
       }
@@ -63,16 +64,16 @@ class ListSearchViewModel extends ChangeNotifier{
   Future<void> fetchSearchSourceBooks(String searchString) async{
     try{
       sourceBooks.clear();
-      List<String> sourceBookstmp=await _storyService.fetchListNameDataSource();
+      List<String>? sourceBookstmp=await _storyService.fetchListNameDataSource();
       List<String>? sourceBookstmp2=[];
       sourceBookstmp2 = await getStringList("LIST_SOURCE");
       if(sourceBookstmp2 == null){
-        sourceBooks=sourceBookstmp;
+        sourceBooks=sourceBookstmp!;
       }
       else{
         List<String>tmp2=[];
         tmp2.addAll(sourceBookstmp2);
-        if(checkSimilarity(sourceBookstmp, tmp2)){
+        if(checkSimilarity(sourceBookstmp!, tmp2)){
           sourceBooks=sourceBookstmp2;
         }
         else{
@@ -182,6 +183,11 @@ class ListSearchViewModel extends ChangeNotifier{
 
   void insertpage(){
     ++page;
+    notifyListeners();
+  }
+
+  void changeIsLoading(bool check){
+    isLoading=check;
     notifyListeners();
   }
 }

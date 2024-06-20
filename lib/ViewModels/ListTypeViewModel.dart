@@ -7,7 +7,7 @@ import '../Models/Story.dart';
 import '../Services/StoryService.dart';
 
 class ListTypeViewModel extends ChangeNotifier{
-  final StoryService _storyService = StoryService();
+  final StoryService _storyService;
 
   Map<String, List<Story>> _stories = <String, List<Story>>{};
 
@@ -21,6 +21,8 @@ class ListTypeViewModel extends ChangeNotifier{
 
   String type='';
 
+  ListTypeViewModel({required StoryService storyService}):_storyService=storyService;
+
   Future<void> fetchTypeStories(String sourceBook,String type) async {
     try {
       print("fetch ");
@@ -28,7 +30,7 @@ class ListTypeViewModel extends ChangeNotifier{
       List<Story> tmp;
       this.sourceBook=sourceBook;
       this.type=type;
-      tmp = await _storyService.fetchListStoryByType(type,page,sourceBook);
+      tmp = (await _storyService.fetchListStoryByType(type,page,sourceBook))!;
       if(page==1){
         _stories.clear();
         _stories[type]=tmp;

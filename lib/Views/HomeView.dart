@@ -381,7 +381,7 @@ class ListViewBook extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ChangeNotifierProvider(
-                              create: (context) => ListTypeViewModel(),
+                              create: (context) => ListTypeViewModel(storyService: StoryService()),
                               child: ListTypeScreen(
                                 type: liststoryname,
                                 source: storyNotifier.sourceBook,
@@ -543,7 +543,7 @@ class GridViewBook extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ChangeNotifierProvider(
-                              create: (context) => ListTypeViewModel(),
+                              create: (context) => ListTypeViewModel(storyService: StoryService()),
                               child: ListTypeScreen(
                                 type: listStoryName,
                                 source: storyNotifier.sourceBook,
