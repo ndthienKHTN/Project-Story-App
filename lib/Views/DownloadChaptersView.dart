@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -24,18 +26,27 @@ late List<int> chapters =[];
 class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   late DetailStoryViewModel _detailStoryViewModel;
   late DownloadChaptersViewModel _downloadChaptersViewModel;
+  //Define cho hiển thị mặc định của trang download
   final int buttonsPerRow = 3;
   int _perPage = 27;
   int _currentPage = 1;
   late Map<int, bool> selectedButtons;
   bool _isCheckAll = false;
+  //Các thông tin cần lưu vào cơ sở dữ liệu
   late String title;
   late String coverImage;
   late String nameStory;
+  //Trạng thái trong lúc đang tải truyện
+  bool _isLoading = false;
+  //Load phân trang
   void _fetchChapters() {
     _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
   }
+  //Tải các chương cần tải vào thiết bị
   Future<bool> _downloadChapters (String storyTitle,String cover,String name, List<int> chapters,String fileType,String datasource) {
+       setState(() {
+         _isLoading = true;
+       });
       return _downloadChaptersViewModel.downloadChaptersOfStory(storyTitle,cover,name, chapters, fileType, datasource);
   }
   @override
@@ -46,12 +57,14 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
     _downloadChaptersViewModel.fetchListFileExtension();
     _detailStoryViewModel.fetchDetailsStory(widget.storyTitle, widget.datasource);
     _fetchChapters();
+    //Tạo danh sách các button là các chap truyện
     selectedButtons = Map.fromIterable(
       List.generate(_perPage, (index) => index + 1),
       key: (item) => item,
       value: (item) => false,
     );
   }
+  //Dialog show các tệp mở rộng muốn tải
   void _showDialogWithDropdown(BuildContext context) {
     String? selectedValue = _downloadChaptersViewModel.listFileExtension[0];
     showDialog(
@@ -90,8 +103,19 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
               child: Text('OK'),
               onPressed: ()  async {
                 Navigator.of(context).pop();
-                if(await _downloadChapters(title,coverImage,nameStory, chapters, selectedValue!, widget.datasource)){
+                bool result = await _downloadChapters(title,coverImage,nameStory, chapters, selectedValue!, widget.datasource);
+                if(result){
+                  setState(() {
+                    _isLoading = false;
+                  });
                   showMyDialog();
+                  resetState(false);
+                }
+                else{
+                  setState(() {
+                    _isLoading = false;
+                  });
+                  showErrorDialog();
                 }
                 print('Selected value: $selectedValue');
               },
@@ -101,6 +125,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
       },
     );
   }
+  //Dialog show tải truyện thành công
   void showMyDialog(){
     showDialog(
       context: context,
@@ -121,6 +146,37 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
       },
     );
   }
+  //Dialog show tải truyện lỗi
+  void showErrorDialog(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Thông báo'),
+          content: Text(
+              'Tải truyện Thất bại'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  //Cập nhật trạng thái các truyện khi tải xong (bỏ chọn các truyện)
+  void resetState(bool state)
+  {
+    selectedButtons = Map.fromIterable(
+      List.generate(_perPage, (index) => index + 1),
+      key: (item) => item,
+      value: (item) => state,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,7 +202,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
       ),
       body: Consumer<DetailStoryViewModel>(
         builder: (context, storyDetailViewModel,_) {
-          if (storyDetailViewModel.chapterPagination == null || storyDetailViewModel.story==null) {
+          if (storyDetailViewModel.chapterPagination == null || storyDetailViewModel.story==null || _isLoading == true) {
             return Center(child: CircularProgressIndicator());
           }
           final chapter = storyDetailViewModel.chapterPagination!;
@@ -278,18 +334,10 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
                               setState(() {
                                 _isCheckAll = value!;
                                 if(_isCheckAll){
-                                  selectedButtons = Map.fromIterable(
-                                    List.generate(_perPage, (index) => index + 1),
-                                    key: (item) => item,
-                                    value: (item) => true,
-                                  );
+                                  resetState(true);
                                 }
                                 else{
-                                  selectedButtons = Map.fromIterable(
-                                    List.generate(_perPage, (index) => index + 1),
-                                    key: (item) => item,
-                                    value: (item) => false,
-                                  );
+                                   resetState(false);
                                 }
                               });
                             }

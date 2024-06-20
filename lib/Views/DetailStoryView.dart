@@ -84,6 +84,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
       },
     );
   }
+
   Future<bool> onSourceChange(String name,String newSource) async {
     await _detailStoryViewModel.fetchChangeDetailStoryToThisDataSource(name, newSource);
     if(_detailStoryViewModel.changedStory != null){

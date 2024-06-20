@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:project_login/Models/DownloadHistory.dart';
 import 'package:project_login/ViewModels/DownloadChaptersViewModel.dart';
@@ -52,38 +53,41 @@ class DownloadListItem extends StatelessWidget{
             SizedBox(
               width: 10,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  downloadHistory.name,
-                  maxLines: 1,
-                  style: TextStyle(
-                    overflow: TextOverflow.ellipsis,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(
-                  height: 6,
-                ),
-                Text(
-                  "Tập: " + downloadHistory.chap.toString(),
-                  maxLines: 1,
-                  style: TextStyle(
-                    overflow: TextOverflow.ellipsis,
-                    color: Colors.white,
-                  ),
-                ),
-                Text(
-                  downloadHistory.dataSource,
-                  maxLines: 1,
-                  style: TextStyle(
-                    overflow: TextOverflow.ellipsis,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
+            Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      downloadHistory.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Text(
+                      "Tập: " + downloadHistory.chap.toString(),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      downloadHistory.dataSource,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                )
             )
+
           ],
         ),
       ),
