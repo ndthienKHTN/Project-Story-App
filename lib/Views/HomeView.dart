@@ -63,6 +63,15 @@ class _HomePageState extends State<HomePage> {
                 },icon: const Icon(
                   Icons.search,color: Colors.white,),
                 ),
+                IconButton(onPressed: () {
+                  _homeStoryViewModel.fetchHomeSourceBooks();
+                  _homeStoryViewModel.changeIndex(0);
+                  _homeStoryViewModel.changeCategory("All");
+                  _homeStoryViewModel.changeIsLoading(true);
+                  print('reload');
+                },icon: const Icon(
+                  Icons.refresh_outlined,color: Colors.white,),
+                ),
               ],
             ),
             Container(
