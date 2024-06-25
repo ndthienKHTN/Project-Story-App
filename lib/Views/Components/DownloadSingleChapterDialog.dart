@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_login/toast_util.dart';
 import 'package:provider/provider.dart';
 
 import '../../ViewModels/ContentStoryViewModel.dart';
@@ -16,8 +17,10 @@ class DownloadSingleChapterDialog extends StatefulWidget {
   }
 }
 
-class _DownloadSingleChapterDialogState extends State<DownloadSingleChapterDialog> {
-  ContentStoryViewModel get contentStoryViewModel => widget._contentStoryViewModel;
+class _DownloadSingleChapterDialogState
+    extends State<DownloadSingleChapterDialog> {
+  ContentStoryViewModel get contentStoryViewModel =>
+      widget._contentStoryViewModel;
 
   String? selectedFormat;
 
@@ -31,20 +34,21 @@ class _DownloadSingleChapterDialogState extends State<DownloadSingleChapterDialo
   Widget build(BuildContext context) {
     DownloadChaptersViewModel viewModel = DownloadChaptersViewModel();
     return AlertDialog(
-      title: Center(child: Text('Định dạng')),
+      title: const Center(child: Text('Định dạng')),
       content: SingleChildScrollView(
         child: Column(
           children: contentStoryViewModel.formatList
               .map((String format) => RadioListTile<String>(
-            title: Text(format),
-            value: format,
-            groupValue: selectedFormat,
-            onChanged: (String? value) {
-              setState(() {
-                selectedFormat = value;
-              });
-            },
-          ))
+                    title: Text(format),
+                    value: format,
+                    groupValue: selectedFormat,
+                    onChanged: (String? value) {
+                      setState(() {
+                        // choose format
+                        selectedFormat = value;
+                      });
+                    },
+                  ))
               .toList(),
         ),
       ),
@@ -53,22 +57,32 @@ class _DownloadSingleChapterDialogState extends State<DownloadSingleChapterDialo
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text('Cancel'),
+          child: const Text('Cancel'),
         ),
         TextButton(
           onPressed: () {
-            List<int> chapNumberList = [contentStoryViewModel.currentChapNumber];
-
-            viewModel.downloadChaptersOfStory(
-                contentStoryViewModel.contentStory!.title,
-                contentStoryViewModel.contentStory!.cover,
-                contentStoryViewModel.contentStory!.name,
-                chapNumberList,
-                selectedFormat!,
-                contentStoryViewModel.currentSource);
+            List<int> chapNumberList = [
+              contentStoryViewModel.currentChapNumber
+            ];
             Navigator.of(context).pop();
+            // download
+            viewModel
+                .downloadChaptersOfStory(
+                    contentStoryViewModel.contentStory!.title,
+                    contentStoryViewModel.contentStory!.cover,
+                    contentStoryViewModel.contentStory!.name,
+                    chapNumberList,
+                    selectedFormat!,
+                    contentStoryViewModel.currentSource)
+                .then((isSuccess) {
+              if (isSuccess){
+                ToastUtil.showToast('Download thành công');
+              } else {
+                ToastUtil.showToast('Download thất bại');
+              }
+            });
           },
-          child: Text('Ok'),
+          child: const Text('Ok'),
         ),
       ],
     );

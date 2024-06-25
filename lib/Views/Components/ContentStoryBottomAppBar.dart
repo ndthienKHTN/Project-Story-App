@@ -33,14 +33,17 @@ class ContentStoryBottomAppBar extends StatelessWidget {
     bool canNavigateToNextChap = true;
     bool canNavigateToPrevChap = true;
 
+    // disable or enable previous button base on current chapter
     if (contentStoryViewModel.currentChapNumber == 1) {
       canNavigateToPrevChap = false;
     }
 
+    // disable or enable next button base on current chapter
     if (contentStoryViewModel.currentChapNumber == contentStoryViewModel.chapterPagination.maxChapter) {
       canNavigateToNextChap = false;
     }
 
+    // choose color base on state (disable, enable) of button
     Color nextChapIconColor =
         canNavigateToNextChap ? Colors.black : Colors.grey;
     Color prevChapIconColor =
@@ -84,17 +87,20 @@ class ContentStoryBottomAppBar extends StatelessWidget {
                 label: '')
           ],
           onTap: (int index) {
+            // navigate to previous chapter
             if (index == 0) {
               if (canNavigateToPrevChap) {
                 navigateToPrevChap();
               }
             } else if (index == 1) {
+              // show choose chapter bottom sheet
               showModalBottomSheet(
                 context: context,
                 builder: (BuildContext context) => ChooseChapterBottomSheet(
                     contentStoryViewModel, onChooseChapter),
               );
             } else if (index == 2) {
+              // show setting bottom sheet
               showModalBottomSheet(
                 context: context,
                 builder: (BuildContext context) =>
@@ -109,6 +115,7 @@ class ContentStoryBottomAppBar extends StatelessWidget {
                 ),
               );
             } else if (index == 3) {
+              // navigate to previous chapter
               if (canNavigateToNextChap) {
                 navigateToNextChap();
               }

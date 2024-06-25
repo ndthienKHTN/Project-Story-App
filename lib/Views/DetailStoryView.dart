@@ -31,6 +31,8 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
   late int selectedIndex;
   Widget ?_currentData ;
   List<String> items =[];
+  //Thay đổi nguồn truyện
+  bool isChangeSource = false;
   void _fetchChapters() async{
     await _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage, widget.datasource);
     if(_detailStoryViewModel.chapterPagination?.chapterPerPage != null ){
@@ -53,14 +55,6 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
     _fetchChapters();
     _fetchDatasource(changeSource);
   }
-  // void initDescription(String description){
-  //   _currentData = SingleChildScrollView(
-  //     child: Padding(
-  //       padding: EdgeInsets.all(5),
-  //       child: Text('${description}'),
-  //     ),
-  //   );
-  // }
   void showMyDialog(String newSource){
     showDialog(
       context: context,
@@ -83,13 +77,15 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
   }
 
   Future<bool> onSourceChange(String name,String newSource) async {
+    setState(() {
+      isChangeSource = true;
+    });
     await _detailStoryViewModel.fetchChangeDetailStoryToThisDataSource(name, newSource);
     if(_detailStoryViewModel.changedStory != null){
       widget.datasource = newSource;
       widget.storyTitle = _detailStoryViewModel.changedStory!.title;
 
       _currentPage = 1;
-      //await _detailStoryViewModel.fetchChapterPagination(widget.storyTitle, _currentPage , newSource);
       _fetchChapters();
       _fetchDatasource(newSource);
       return true;
@@ -147,11 +143,10 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
       ),
       body: Consumer<DetailStoryViewModel>(
         builder: (context, storyDetailViewModel, _) {
-          if (storyDetailViewModel.story == null || storyDetailViewModel.chapterPagination == null ) {
+          if (storyDetailViewModel.story == null || storyDetailViewModel.chapterPagination == null || isChangeSource == true) {
             return Center(child: CircularProgressIndicator());
           } else {
             final story = storyDetailViewModel.story!;
-            //initDescription(story.description);
             final chapter = storyDetailViewModel.chapterPagination!;
             return Scaffold(
               backgroundColor: Colors.black,
@@ -269,7 +264,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                     if (newValue != null) {
                                       bool fetchResult = await onSourceChange(story.name,newValue);
 
-                                      if (fetchResult==true) {
+                                      if (fetchResult == true) {
                                         int newIndex = items.indexOf(newValue);
                                         items.insert(
                                             0, items.removeAt(newIndex));
@@ -277,6 +272,9 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                         selectedIndex = 0;
                                         selectedItem = newValue;
                                       }
+                                      setState(() {
+                                        isChangeSource = false;
+                                      });
 
                                     }
 

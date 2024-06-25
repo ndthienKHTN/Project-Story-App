@@ -5,6 +5,7 @@ import 'package:path/path.dart';
 import '../Models/ReadingHistory.dart';
 
 class LocalDatabase {
+  // open or create database if it doesn't exist
   Future<Database> openMyDatabase() async {
     return openDatabase(
       join(await getDatabasesPath(), 'story_database.db'),
@@ -24,7 +25,8 @@ class LocalDatabase {
     );
   }
 
-  Future<void> insertData(ReadingHistory data) async {
+  // insert ReadingHistory
+  Future<void> insertHistoryData(ReadingHistory data) async {
     final Database db = await openMyDatabase();
     await db.insert(
       'READING_HISTORY',
@@ -42,6 +44,7 @@ class LocalDatabase {
     );
   }
 
+  // delete a file .txt in device
   Future<void> deleteDataDownloadByLink(String link) async {
     final db = await openMyDatabase();
     await db.delete(
@@ -51,6 +54,7 @@ class LocalDatabase {
     );
   }
 
+  // get all ReadingHistory in database
   Future<List<ReadingHistory>>? getReadingHistoryList() async {
     final Database db = await openMyDatabase();
     final List<Map<String, dynamic>> maps = await db.query('READING_HISTORY');

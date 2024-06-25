@@ -22,30 +22,36 @@ class _HistoryListWidgetState extends State<HistoryListWidget> {
     super.initState();
     _readingHistoryViewModel =
         Provider.of<ReadingHistoryViewModel>(context, listen: false);
+    _readingHistoryViewModel.fetchReadingHistoryList();
   }
 
   @override
   Widget build(BuildContext context) {
-    _readingHistoryViewModel.fetchReadingHistoryList();
-
     return Consumer<ReadingHistoryViewModel>(
-        builder: (context, readingHistoryViewModel, _) {
-      return Expanded(
-        child: ListView.builder(
-          itemCount: readingHistoryViewModel.readingHistoryList?.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 15),
-              child: ReadingHistoryItem(
-                  readingHistoryViewModel.readingHistoryList![index],
-                  onClickItem),
-            );
-          },
-        ),
-      );
-    });
+      builder: (context, readingHistoryViewModel, _) {
+        return Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async{
+                await _readingHistoryViewModel.fetchReadingHistoryList();
+                setState(() {});
+              },
+              child: ListView.builder(
+              itemCount: readingHistoryViewModel.readingHistoryList?.length ?? 0,
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: ReadingHistoryItem(
+                    readingHistoryViewModel.readingHistoryList![index],
+                    onClickItem,
+                  ),
+                );
+              },
+            ),));
+      },
+    );
   }
 
+  // navigate to content story screen
   void onClickItem(ReadingHistory readingHistory) {
     Navigator.push(
       context,

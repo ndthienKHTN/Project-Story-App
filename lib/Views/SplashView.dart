@@ -7,6 +7,7 @@ import '../../ViewModels/DetailStoryViewModel.dart';
 import '../../ViewModels/HomeStoryViewModel.dart';
 import '../../ViewModels/SearchStoryViewModel.dart';
 import '../ViewModels/ReadingHistoryViewModel.dart';
+import '../Services/StoryService.dart';
 import 'MainView.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -30,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
           providers: [
             ChangeNotifierProvider(create: (context) => SearchStoryViewModel()),
             ChangeNotifierProvider(create: (context) => DetailStoryViewModel()),
-            ChangeNotifierProvider(create: (context) => HomeStoryViewModel()),
+            ChangeNotifierProvider(create: (context) => HomeStoryViewModel(storyService:StoryService())),
             ChangeNotifierProvider(create: (context) => ReadingHistoryViewModel()),
             ChangeNotifierProvider(create: (context) => DownloadHistoryViewModel()),
           ],

@@ -47,6 +47,7 @@ class ContentStoryViewModel extends ChangeNotifier {
     prefs = sharedPreferences;
   }
 
+  // fetch content story
   Future<bool> fetchContentStory(String storyTitle, int chapNumber,
       String dataSource, String chosenDataSource, bool first) async {
     try {
@@ -57,6 +58,7 @@ class ContentStoryViewModel extends ChangeNotifier {
         _changedStory = await _storyService.fetchChangeContentStoryToThisDataSource(
             name, dataSource, chapNumber);
       }
+      // if fetch success, change UI
       if (_changedStory == null || _changedStory!.content.isEmpty){
         throw Exception();
       } else {
@@ -77,7 +79,7 @@ class ContentStoryViewModel extends ChangeNotifier {
 
       // insert reading history to local database
       int currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
-      _localDatabase.insertData(ReadingHistory(
+      _localDatabase.insertHistoryData(ReadingHistory(
           pageNumber: currentPageNumber,
           title: contentStory!.title,
           name: contentStory!.name,
@@ -88,6 +90,7 @@ class ContentStoryViewModel extends ChangeNotifier {
           dataSource: currentSource));
       return (dataSource == chosenDataSource);
     } catch (e) {
+      // if fetch fail, fetch another source instead
       print('Error fetching story content source $dataSource: $e');
       if (indexSource <= sourceBooks.length - 1) {
         return fetchContentStory(storyTitle, chapNumber,
@@ -98,6 +101,7 @@ class ContentStoryViewModel extends ChangeNotifier {
     }
   }
 
+  // fetch display info: text size, line space, text color, background color and font family
   Future<void> fetchContentDisplay() async {
     try {
       double? textSize;
@@ -139,12 +143,10 @@ class ContentStoryViewModel extends ChangeNotifier {
     }
   }
 
+  // fetch chapter pagination
   Future<void> fetchChapterPagination(String storyTitle, int pageNumber,
       String datasource, bool changePageNumber) async {
     try {
-      print('storyTitle: $storyTitle');
-      print('pageNumber: $pageNumber');
-      print('datasource: $datasource');
       // Fetch story details from the API using the storyId
       _chapterPagination = await _storyService.fetchChapterPagination(
           storyTitle, pageNumber, datasource);
@@ -160,6 +162,7 @@ class ContentStoryViewModel extends ChangeNotifier {
     }
   }
 
+  // fetch all source where story can get content
   Future<void> fetchSourceBooks() async {
     try {
       List<String> sourceBooksApi =
@@ -194,6 +197,7 @@ class ContentStoryViewModel extends ChangeNotifier {
     }
   }
 
+  // fetch all format use can choose to download
   Future<void> fetchFormatList() async {
     try {
       formatList = await _downloadService.fetchListFileExtension();
@@ -203,6 +207,7 @@ class ContentStoryViewModel extends ChangeNotifier {
     }
   }
 
+  // save, get String, Int, Double and String List in SharePreferences
   Future<void> saveString(String key, String value) async {
     await prefs.setString(key, value);
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../Constants.dart';
+
 import '../../ViewModels/ContentStoryViewModel.dart';
 
 class ChooseChapterBottomSheet extends StatefulWidget {
@@ -26,7 +26,6 @@ class _ChooseChapterBottomSheetState extends State<ChooseChapterBottomSheet> {
   @override
   void initState() {
     super.initState();
-    print('contentStoryViewModel.chapterPagination.maxPage: ${contentStoryViewModel.chapterPagination.maxPage}');
     for (int i = 1; i <= contentStoryViewModel.chapterPagination.maxPage; i++) {
       chapterPaginationList.add(i.toString());
     }
@@ -66,12 +65,14 @@ class _ChooseChapterBottomSheetState extends State<ChooseChapterBottomSheet> {
                 children: [
                   InkWell(
                     onTap: () {
+                      // switch to previous page
                       if (currentPageNumber > 1) {
                         setState(() {
                           currentPageNumber--;
                           dropdownValue = currentPageNumber.toString();
                         });
 
+                        // fetch new chapter pagination
                         contentStoryViewModel.fetchChapterPagination(
                             widget._contentStoryViewModel.contentStory!.title,
                             currentPageNumber,
@@ -97,9 +98,11 @@ class _ChooseChapterBottomSheetState extends State<ChooseChapterBottomSheet> {
                           value: dropdownValue,
                           onChanged: (String? newValue) {
                             setState(() {
+                              // choose new page
                               dropdownValue = newValue!;
                               currentPageNumber = int.parse(newValue);
 
+                              // fetch new chapter pagination
                               contentStoryViewModel.fetchChapterPagination(
                                   widget._contentStoryViewModel.contentStory!.title,
                                   currentPageNumber,
@@ -133,14 +136,14 @@ class _ChooseChapterBottomSheetState extends State<ChooseChapterBottomSheet> {
                   ),
                   InkWell(
                     onTap: () {
-                      print('object $currentPageNumber');
-                      print('object ${contentStoryViewModel.chapterPagination.maxPage}');
+                      // switch to next page
                       if (currentPageNumber < contentStoryViewModel.chapterPagination.maxPage) {
                         setState(() {
                           currentPageNumber++;
                           dropdownValue = currentPageNumber.toString();
                         });
 
+                        // fetch new chapter pagination
                         contentStoryViewModel.fetchChapterPagination(
                             widget._contentStoryViewModel.contentStory!.title,
                             currentPageNumber,
@@ -159,6 +162,7 @@ class _ChooseChapterBottomSheetState extends State<ChooseChapterBottomSheet> {
               ),
             ),
           ),
+          // list chapters
           Expanded(
               child: ListView.builder(
                 controller: scrollController,

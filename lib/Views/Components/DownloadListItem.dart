@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:project_login/Models/DownloadHistory.dart';
 import 'package:project_login/ViewModels/DownloadChaptersViewModel.dart';
-import 'package:uuid/uuid.dart';
 import 'package:path/path.dart';
 
 import '../../Models/ReadingHistory.dart';
