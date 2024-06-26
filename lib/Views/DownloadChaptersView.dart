@@ -1,4 +1,4 @@
-import 'dart:math';
+
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +9,7 @@ import 'package:logger/logger.dart';
 import 'package:project_login/ViewModels/DownloadChaptersViewModel.dart';
 import 'package:provider/provider.dart';
 
-import '../Services/DownloadService.dart';
-import 'package:provider/provider.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
-import '../ViewModels/DownloadChaptersViewModel.dart';
 class DownloadChaptersScreen extends StatefulWidget {
   final String storyTitle;
   final String datasource;
@@ -271,7 +268,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
                             left: widget1Left,
                             right: widget1Right,
                             bottom: widget1Bottom,
-                            child: GridView.builder(
+                            child:  GridView.builder(
                                 itemCount: _currentPage * _perPage >= chapter.maxChapter ? chapter.maxChapter - (_currentPage-1) * _perPage : _perPage,
                                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: buttonsPerRow,
