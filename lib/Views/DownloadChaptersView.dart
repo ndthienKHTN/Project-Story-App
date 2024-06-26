@@ -25,7 +25,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   late DownloadChaptersViewModel _downloadChaptersViewModel;
   //Define cho hiển thị mặc định của trang download
   final int buttonsPerRow = 3;
-  late int _perPage  = 27; // Cài đặt giá trị mặc định
+  late int _perPage  = 21; // Cài đặt giá trị mặc định
   int _currentPage = 1;
   late Map<int, bool> selectedButtons;
   bool _isCheckAll = false;
