@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-import 'package:logger/web.dart';
+import 'package:project_login/ViewModels/ContentStoryAudioViewModel.dart';
+import 'package:project_login/ViewModels/ContentStoryComicsViewModel.dart';
+import 'package:project_login/Views/ContentStoryAudioView.dart';
+import 'package:project_login/Views/ContentStoryComicsView.dart';
 import 'package:project_login/Views/DownloadChaptersView.dart';
 import 'package:provider/provider.dart';
-import '../Models/Chapter.dart';
-import '../Models/Story.dart';
 import '../ViewModels/ContentStoryViewModel.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
-import '../ViewModels/DownloadChaptersViewModel.dart';
 import 'ContentStoryView.dart';
-import 'package:project_login/ViewModels/HomeStoryViewModel.dart';
 
 class DetailStoryScreen extends StatefulWidget {
   String storyTitle;
@@ -236,7 +234,7 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Container(
-                            width: 130,
+                            width: 160,
                             height: 40,
                             decoration: BoxDecoration(
                               border: Border.all(
@@ -355,20 +353,92 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                                             return ListTile(
                                                               title: Text(chapter_page!.content),
                                                               onTap: () {
-                                                                Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder: (context) => ChangeNotifierProvider(
-                                                                        create: (context) => ContentStoryViewModel(),
-                                                                        child:  ContentStoryScreen(
-                                                                          storyTitle: widget.storyTitle,
-                                                                          name: storyDetailViewModel.story!.name,
-                                                                          chap:  (_currentPage-1) * _perPage +(index +1),
-                                                                          dataSource: widget.datasource,
-                                                                          pageNumber: _currentPage,)
+                                                                String? format = storyDetailViewModel.story?.format;
+                                                                if (format!=null && format=="image") {
+                                                                  Navigator
+                                                                      .push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder: (
+                                                                          context) =>
+                                                                          ChangeNotifierProvider(
+                                                                              create: (
+                                                                                  context) =>
+                                                                                  ContentStoryComicsViewModel(),
+                                                                              child: ContentStoryComicsScreen(
+                                                                                storyTitle: widget
+                                                                                    .storyTitle,
+                                                                                name: storyDetailViewModel
+                                                                                    .story!
+                                                                                    .name,
+                                                                                chap: (_currentPage -
+                                                                                    1) *
+                                                                                    _perPage +
+                                                                                    (index +
+                                                                                        1),
+                                                                                dataSource: widget
+                                                                                    .datasource,
+                                                                                pageNumber: _currentPage,)
+                                                                          ),
                                                                     ),
-                                                                  ),
-                                                                );
+                                                                  );
+                                                                } else if (format!=null && format == "audio") {
+                                                                  Navigator
+                                                                      .push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder: (
+                                                                          context) =>
+                                                                          ChangeNotifierProvider(
+                                                                              create: (
+                                                                                  context) =>
+                                                                                  ContentStoryAudioViewModel(),
+                                                                              child: ContentStoryAudioScreen(
+                                                                                storyTitle: widget
+                                                                                    .storyTitle,
+                                                                                name: storyDetailViewModel
+                                                                                    .story!
+                                                                                    .name,
+                                                                                chap: (_currentPage -
+                                                                                    1) *
+                                                                                    _perPage +
+                                                                                    (index +
+                                                                                        1),
+                                                                                dataSource: widget
+                                                                                    .datasource,
+                                                                                pageNumber: _currentPage,)
+                                                                          ),
+                                                                    ),
+                                                                  );
+                                                                } else {
+                                                                  Navigator
+                                                                      .push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder: (
+                                                                          context) =>
+                                                                          ChangeNotifierProvider(
+                                                                              create: (
+                                                                                  context) =>
+                                                                                  ContentStoryViewModel(),
+                                                                              child: ContentStoryScreen(
+                                                                                storyTitle: widget
+                                                                                    .storyTitle,
+                                                                                name: storyDetailViewModel
+                                                                                    .story!
+                                                                                    .name,
+                                                                                chap: (_currentPage -
+                                                                                    1) *
+                                                                                    _perPage +
+                                                                                    (index +
+                                                                                        1),
+                                                                                dataSource: widget
+                                                                                    .datasource,
+                                                                                pageNumber: _currentPage,)
+                                                                          ),
+                                                                    ),
+                                                                  );
+                                                                }
                                                               },
                                                             );
                                                           },
@@ -448,24 +518,83 @@ class _DetailStoryScreenState extends State<DetailStoryScreen> {
                                   width: 150,
                                   child: ElevatedButton(
                                     onPressed: (){
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ChangeNotifierProvider(
-                                            create: (_) => ContentStoryViewModel(),
-                                            child: ContentStoryScreen(
-                                              storyTitle: storyDetailViewModel.story?.title != null ?
-                                                          storyDetailViewModel.story!.title
-                                                              : "",
-                                              name:  storyDetailViewModel.story?.name != null ?
-                                                      storyDetailViewModel.story!.name
+                                      String? format = storyDetailViewModel.story?.format;
+                                      if (format!=null && format=="image") {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ChangeNotifierProvider(
+                                                  create: (_) =>
+                                                      ContentStoryComicsViewModel(),
+                                                  child: ContentStoryComicsScreen(
+                                                    storyTitle: storyDetailViewModel
+                                                        .story?.title != null ?
+                                                    storyDetailViewModel.story!
+                                                        .title
                                                         : "",
-                                              chap: 1,
-                                              dataSource: items[0],
-                                              pageNumber: 1,),
+                                                    name: storyDetailViewModel
+                                                        .story?.name != null ?
+                                                    storyDetailViewModel.story!
+                                                        .name
+                                                        : "",
+                                                    chap: 1,
+                                                    dataSource: items[0],
+                                                    pageNumber: 1,),
+                                                ),
                                           ),
-                                        ),
-                                      );
+                                        );
+                                      } else if (format!=null && format=="audio") {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ChangeNotifierProvider(
+                                                  create: (_) =>
+                                                      ContentStoryAudioViewModel(),
+                                                  child: ContentStoryAudioScreen(
+                                                    storyTitle: storyDetailViewModel
+                                                        .story?.title != null ?
+                                                    storyDetailViewModel.story!
+                                                        .title
+                                                        : "",
+                                                    name: storyDetailViewModel
+                                                        .story?.name != null ?
+                                                    storyDetailViewModel.story!
+                                                        .name
+                                                        : "",
+                                                    chap: 1,
+                                                    dataSource: items[0],
+                                                    pageNumber: 1,),
+                                                ),
+                                          ),
+                                        );
+                                      } else {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ChangeNotifierProvider(
+                                                  create: (_) =>
+                                                      ContentStoryViewModel(),
+                                                  child: ContentStoryScreen(
+                                                    storyTitle: storyDetailViewModel
+                                                        .story?.title != null ?
+                                                    storyDetailViewModel.story!
+                                                        .title
+                                                        : "",
+                                                    name: storyDetailViewModel
+                                                        .story?.name != null ?
+                                                    storyDetailViewModel.story!
+                                                        .name
+                                                        : "",
+                                                    chap: 1,
+                                                    dataSource: items[0],
+                                                    pageNumber: 1,),
+                                                ),
+                                          ),
+                                        );
+                                      }
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.red,

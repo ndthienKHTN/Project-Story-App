@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:project_login/Models/ChapterPagination.dart';
-import 'package:project_login/Models/DownloadHistory.dart';
 import 'package:project_login/Models/ReadingHistory.dart';
 import 'package:project_login/Services/DownloadService.dart';
 import 'package:project_login/Services/LocalDatabase.dart';
@@ -12,7 +11,6 @@ import 'package:project_login/Models/ContentDisplay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Constants.dart';
-import '../Models/ChapterPagination.dart';
 import '../Models/ContentStory.dart';
 import '../Services/StoryService.dart';
 
@@ -87,7 +85,9 @@ class ContentStoryViewModel extends ChangeNotifier {
           date: currentTimeMillis,
           author: contentStory!.author,
           cover: contentStory!.cover,
-          dataSource: currentSource));
+          dataSource: currentSource,
+          format: "word"
+      ));
       return (dataSource == chosenDataSource);
     } catch (e) {
       // if fetch fail, fetch another source instead

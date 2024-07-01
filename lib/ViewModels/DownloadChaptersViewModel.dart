@@ -1,17 +1,8 @@
-
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:project_login/Models/DownloadHistory.dart';
 import 'package:project_login/Services/DownloadService.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:path/path.dart';
-
 import '../Services/LocalDatabase.dart';
-import '../Services/StoryService.dart';
 
 class DownloadChaptersViewModel extends ChangeNotifier {
   final DownloadService downloadService = DownloadService();
@@ -58,7 +49,7 @@ class DownloadChaptersViewModel extends ChangeNotifier {
   }
   Future<void> fetchListFileExtension() async{
     try {
-      _listFileExtension = await downloadService.fetchListFileExtension();
+      _listFileExtension = await downloadService.fetchListFileExtensionComics();
       Logger logger = Logger();
       logger.i(_listFileExtension);
       notifyListeners();

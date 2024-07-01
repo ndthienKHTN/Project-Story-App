@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_login/ViewModels/ListSearchViewModel.dart';
+import 'package:project_login/Views/ChooseCategoryView.dart';
 import 'package:provider/provider.dart';
 
 import '../ViewModels/ChooseCategoryViewModel.dart';
 import '../ViewModels/DetailStoryViewModel.dart';
-import 'ChooseCategoryView.dart';
 import 'DetailStoryView.dart';
 
 class ListSearchScreen extends StatefulWidget {
@@ -69,7 +68,7 @@ class _ListSearchScreenState extends State<ListSearchScreen> {
                             MaterialPageRoute(
                                 builder: (context) => ChangeNotifierProvider(
                                   create: (context) => ChoiseCategoryViewModel(),
-                                  child: ChoiseCategoryScreen(datasource: _listSearchViewModel.sourceBook, category: _listSearchViewModel.category,),
+                                  child: ChooseCategoryScreen(datasource: _listSearchViewModel.sourceBook, category: _listSearchViewModel.category,),
                                 )
                             )
                         );

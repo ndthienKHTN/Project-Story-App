@@ -1,4 +1,5 @@
 import 'package:project_login/Models/DownloadHistory.dart';
+import 'package:project_login/Utilities/FileUtility.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -13,7 +14,7 @@ class LocalDatabase {
         db.execute(
           'CREATE TABLE READING_HISTORY(title TEXT PRIMARY KEY, '
           'name TEXT, chap INTEGER, date INTEGER, author TEXT, '
-          'cover TEXT, pageNumber INTEGER, dataSource TEXT)',
+          'cover TEXT, pageNumber INTEGER, dataSource TEXT, format TEXT)',
         );
         db.execute(
           'CREATE TABLE DOWNLOAD_HISTORY(title TEXT, name TEXT, '
@@ -54,6 +55,21 @@ class LocalDatabase {
     );
   }
 
+  Future<void> deleteDownloadFile(String link) async {
+    final db = await openMyDatabase();
+    /*final List<Map<String, dynamic>> maps = await db.query('READING_HISTORY', where: 'link= ?', whereArgs: [link]);
+    for (Map<String, dynamic> element in maps) {
+
+    }*/
+
+    FileUtility.deleteFile(link);
+
+    await db.delete(
+      'DOWNLOAD_HISTORY',
+      where: 'link = ?',
+      whereArgs: [link],
+    );
+  }
   // get all ReadingHistory in database
   Future<List<ReadingHistory>>? getReadingHistoryList() async {
     final Database db = await openMyDatabase();
@@ -67,7 +83,8 @@ class LocalDatabase {
           date: maps[i]['date'],
           author: maps[i]['author'],
           cover: maps[i]['cover'],
-          dataSource: maps[i]['dataSource']);
+          dataSource: maps[i]['dataSource'],
+          format: maps[i]['format']);
     });
   }
 

@@ -39,10 +39,16 @@ class ReadingHistoryItem extends StatelessWidget{
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  readingHistory.name,
-                  style: const TextStyle(
-                    color: Colors.white,
+                SizedBox(
+                  width: 250,
+                  child: Text(
+                    readingHistory.name,
+                    maxLines: 2,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      overflow: TextOverflow.ellipsis,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 const SizedBox(

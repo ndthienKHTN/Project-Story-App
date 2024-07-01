@@ -395,7 +395,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
                                       endIndent: 10,
                                     ),
                                     SizedBox(
-                                      width: 30,
+                                      width: 15,
                                     ),
                                     IconButton(
                                         onPressed: (){

@@ -46,7 +46,14 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   margin: const EdgeInsets.only(left: 20),
                   child: IconButton(onPressed: (){
-
+                   /* Navigator.push(
+                        context,MaterialPageRoute(
+                        builder: (context) => ChangeNotifierProvider(
+                          create: (context) => SearchViewModel(),
+                          child: AudioPlayerPage(),
+                        )
+                    )
+                    );*/
                   },
                       icon: Image.asset('assets/images/Logo.png',height:60,),
                 ),),
@@ -54,11 +61,11 @@ class _HomePageState extends State<HomePage> {
                 IconButton(onPressed: () {
                   Navigator.push(
                       context,MaterialPageRoute(
-                      builder: (context) => ChangeNotifierProvider(
-                        create: (context) => SearchViewModel(),
-                        child: const SearchScreen(),
-                      )
-                  )
+                        builder: (context) => ChangeNotifierProvider(
+                          create: (context) => SearchViewModel(),
+                          child: const SearchScreen(),
+                        )
+                    )
                   );
                 },icon: const Icon(
                   Icons.search,color: Colors.white,),
