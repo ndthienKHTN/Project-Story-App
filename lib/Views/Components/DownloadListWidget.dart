@@ -36,12 +36,12 @@ class _HistoryListWidgetState extends State<DownloadListWidget> {
         builder: (context, downloadHistoryViewModel, _) {
       return Expanded(
         child: ListView.builder(
-          itemCount: downloadHistoryViewModel.downloadHistoryList.length,
+          itemCount: downloadHistoryViewModel.downloadHistoryList?.length ?? 0,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 15),
               child: DownloadListItem(
-                  downloadHistoryViewModel.downloadHistoryList[index],
+                  downloadHistoryViewModel.downloadHistoryList![index],
                   onClickItem),
             );
           },

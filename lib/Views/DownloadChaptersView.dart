@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -18,6 +16,7 @@ class DownloadChaptersScreen extends StatefulWidget {
   @override
   _DownloadChaptersState createState() => _DownloadChaptersState();
 }
+//Danh sách các chương dự định tải xuống
 late List<int> chapters =[];
 
 class _DownloadChaptersState extends State<DownloadChaptersScreen>{
@@ -28,6 +27,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
   late int _perPage  = 21; // Cài đặt giá trị mặc định
   int _currentPage = 1;
   late Map<int, bool> selectedButtons;
+  //Chọn tất cả truyện để tải
   bool _isCheckAll = false;
   //Các thông tin cần lưu vào cơ sở dữ liệu
   late String title;
@@ -101,19 +101,23 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
               child: Text('OK'),
               onPressed: ()  async {
                 Navigator.of(context).pop();
-                bool result = await _downloadChapters(title,coverImage,nameStory, chapters, selectedValue!, widget.datasource);
-                if(result){
-                  setState(() {
-                    _isLoading = false;
-                  });
-                  showMyDialog();
-                  resetState(false);
+                if(chapters.isEmpty){
+                  showErrorDialogDownload();
                 }
                 else{
+                  Logger logger = Logger();
+                  logger.i("Chapters is: $chapters");
+                  bool result = await _downloadChapters(title,coverImage,nameStory, chapters, selectedValue!, widget.datasource);
+                  if(result){
+                    showMyDialog();
+                    resetState(false);
+                  }
+                  else{
+                    showErrorDialog();
+                  }
                   setState(() {
                     _isLoading = false;
                   });
-                  showErrorDialog();
                 }
                 print('Selected value: $selectedValue');
               },
@@ -145,7 +149,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
     );
   }
   //Dialog show tải truyện lỗi
-  void showErrorDialog(){
+  void showErrorDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -153,6 +157,27 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
           title: Text('Thông báo'),
           content: Text(
               'Tải truyện Thất bại'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  //Dialog show chưa chọn chương tải truyện
+  void showErrorDialogDownload() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Thông báo'),
+          content: Text(
+              'Chọn chương để tải truyện'),
           actions: <Widget>[
             TextButton(
               child: Text('OK'),
@@ -173,6 +198,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
       key: (item) => item,
       value: (item) => state,
     );
+    chapters.clear();
   }
 
   @override
@@ -224,10 +250,6 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
                   builder: (BuildContext context, BoxConstraints constraints){
                     double screenWidth = constraints.maxWidth;
                     double screenHeight = constraints.maxHeight;
-
-                    Logger logger = Logger();
-                    logger.i("Screen Width: $screenWidth");
-                    logger.i("Screen Height: $screenHeight");
 
                     // Tính toán vị trí của từng widget
                     double widget1Top = screenHeight * 0.06;
@@ -287,7 +309,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
                                         chapters.add(chapterNumber);
                                       }
                                       else{
-                                        chapters.removeAt(chapterNumber);
+                                        chapters.remove(chapterNumber);
                                       }
                                     },
                                     child: Text(
@@ -298,7 +320,7 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
                                     ),
                                     style: ElevatedButton.styleFrom(
                                       fixedSize: Size(200, 50),
-                                      backgroundColor: selectedButtons[index+1]! ? Colors.yellow : Colors.white,
+                                      backgroundColor: selectedButtons[index+1]! && chapters.contains(chapterNumber) ? Colors.yellow : Colors.white,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
@@ -310,10 +332,6 @@ class _DownloadChaptersState extends State<DownloadChaptersScreen>{
                             ),
                           ),
                           Positioned(
-                            // left: 13,
-                            // bottom: 10,
-                            // right: 20,
-                            // top: 540,
                             left: widget2Left,
                             bottom: widget2Bottom,
                             right: widget2Right,

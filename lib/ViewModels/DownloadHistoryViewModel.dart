@@ -5,19 +5,19 @@ import '../Models/ReadingHistory.dart';
 import '../Services/LocalDatabase.dart';
 
 class DownloadHistoryViewModel extends ChangeNotifier {
-  final LocalDatabase _localDatabase = LocalDatabase();
+  LocalDatabase localDatabase = LocalDatabase();
 
-  List<DownloadHistory> _downloadHistoryList = [];
-  List<DownloadHistory> get downloadHistoryList => _downloadHistoryList;
+  List<DownloadHistory>? downloadHistoryList = [];
 
   Future<void> fetchDownloadList() async{
-    _downloadHistoryList = await _localDatabase.getDownloadHistoryList();
-    _downloadHistoryList.sort((a, b) => b.date.compareTo(a.date));
+    downloadHistoryList?.clear();
+    downloadHistoryList = await localDatabase.getDownloadHistoryList();
+    downloadHistoryList?.sort((a, b) => b.date.compareTo(a.date));
     notifyListeners();
   }
 
   Future<void> deleteDownloadChapter(String link) async {
-    _localDatabase.deleteDataDownloadByLink(link);
+    localDatabase.deleteDataDownloadByLink(link);
     notifyListeners();
   }
 }

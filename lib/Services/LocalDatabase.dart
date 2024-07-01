@@ -71,7 +71,7 @@ class LocalDatabase {
     });
   }
 
-  Future<List<DownloadHistory>> getDownloadHistoryList() async {
+  Future<List<DownloadHistory>>? getDownloadHistoryList() async {
     final Database db = await openMyDatabase();
     final List<Map<String, dynamic>> maps = await db.query('DOWNLOAD_HISTORY');
     return List.generate(maps.length, (i) {
