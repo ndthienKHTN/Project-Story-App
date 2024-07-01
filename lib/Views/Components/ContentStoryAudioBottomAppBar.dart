@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_login/ViewModels/ContentStoryAudioViewModel.dart';
 import 'package:project_login/Views/Components/ChooseChapterAudioBottomSheet.dart';
@@ -72,7 +71,7 @@ class ContentStoryAudioBottomAppBar extends StatelessWidget {
                 ),
                 label: '')
           ],
-          onTap: (int index) {
+          onTap: (int index) async {
             // navigate to previous chapter
             if (index == 0) {
               if (canNavigateToPrevChap) {
@@ -80,7 +79,7 @@ class ContentStoryAudioBottomAppBar extends StatelessWidget {
               }
             } else if (index == 1) {
               // show choose chapter bottom sheet
-              showModalBottomSheet(
+              await showDialog<void>(
                 context: context,
                 builder: (BuildContext context) => ChooseChapterAudioBottomSheet(
                     contentStoryAudioViewModel, onChooseChapter),

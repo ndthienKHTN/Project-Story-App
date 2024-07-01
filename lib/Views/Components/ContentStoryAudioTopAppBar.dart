@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_login/ViewModels/ContentStoryAudioViewModel.dart';
+import 'package:project_login/Views/Components/DownloadSingleChapterAudioDialog.dart';
 
 class ContentStoryAudioTopAppBar extends StatefulWidget {
   final ContentStoryAudioViewModel  _contentStoryAudioViewModel;
@@ -28,6 +28,20 @@ class _ContentStoryAudioTopAppBarState extends State<ContentStoryAudioTopAppBar>
           Navigator.pop(context);
         },
       ),
+      actions: [
+      // download button
+      if (contentStoryAudioViewModel.contentStory != null)
+        IconButton(
+          icon: Image.asset('assets/images/download_icon.png'),
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return DownloadSingleChapterAudioDialog(contentStoryAudioViewModel);
+                });
+          },
+        ),
+    ],
       title: Text(
         contentStoryAudioViewModel.contentStory?.chapterTitle ?? 'chapterTitle',
         textAlign: TextAlign.center,

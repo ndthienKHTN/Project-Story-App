@@ -1,11 +1,9 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:project_login/Models/ChapterPagination.dart';
 import 'package:project_login/Services/DownloadService.dart';
 import 'package:project_login/Services/LocalDatabase.dart';
 import 'package:project_login/Services/StoryService.dart';
-
 import '../Models/ContentStory.dart';
 import '../Models/ReadingHistory.dart';
 
@@ -13,7 +11,7 @@ class ContentStoryAudioViewModel extends ChangeNotifier {
   final StoryService _storyService = StoryService();
   final DownloadService _downloadService = DownloadService();
   final LocalDatabase _localDatabase = LocalDatabase();
-
+  int _duration = 0;
   List<String> formatList = [];
   int currentChapNumber = 1;
   int currentPageNumber = 1;
@@ -25,6 +23,7 @@ class ContentStoryAudioViewModel extends ChangeNotifier {
   ChapterPagination _chapterPagination = ChapterPagination.defaults();
 
   ChapterPagination get chapterPagination => _chapterPagination;
+
 
   Future<void> fetchChapterPagination(String storyTitle, int pageNumber,
       String datasource, bool changePageNumber) async {
@@ -82,11 +81,18 @@ class ContentStoryAudioViewModel extends ChangeNotifier {
   }
   Future<void> fetchFormatList() async {
     try {
-      formatList = await _downloadService.fetchListFileExtension();
+      formatList = await _downloadService.fetchListFileExtensionAudio();
       notifyListeners();
     } catch (e) {
       print('Error fetching format list: $e');
     }
+  }
+
+  void setDuration(int value) {
+    this._duration = value;
+  }
+  int getDuration() {
+    return this._duration;
   }
 
 }

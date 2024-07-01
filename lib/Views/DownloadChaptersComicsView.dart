@@ -391,7 +391,7 @@ class _DownloadChaptersComicsScreenState extends State<DownloadChaptersComicsScr
                                           endIndent: 10,
                                         ),
                                         SizedBox(
-                                          width: 30,
+                                          width: 15,
                                         ),
                                         IconButton(
                                             onPressed: (){

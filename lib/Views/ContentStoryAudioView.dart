@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:logger/logger.dart';
 import 'package:project_login/ViewModels/ContentStoryAudioViewModel.dart';
 import 'package:project_login/Views/Components/ContentStoryAudioBottomAppBar.dart';
 import 'package:project_login/Views/Components/ContentStoryAudioTopAppBar.dart';
@@ -43,21 +44,26 @@ class _ContentStoryAudioScreenState extends State<ContentStoryAudioScreen> {
       setState(() {
         isPlaying = state == PlayerState.playing;
       });
+      if (state == PlayerState.paused ||
+          state == PlayerState.completed) {
+        setState(() {
+          isPlaying = false;
+        });
+      }
     });
 
     audioPlayer.onDurationChanged.listen((Duration duration) {
       setState(() {
         this.duration = duration.inMilliseconds.toDouble();
+        _contentStoryAudioViewModel.setDuration(duration.inSeconds.toInt());
+        Logger logger = Logger();
+        logger.i('duration: $duration');
+        //logger.i('duration 2: ${_contentStoryAudioViewModel.getDuration()}');
       });
     });
     audioPlayer.onPositionChanged.listen((Duration position) {
       setState(() {
         progress = position.inMilliseconds.toDouble();
-      });
-    });
-    audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
-      setState(() {
-        isPlaying = state == PlayerState.playing;
       });
     });
 
@@ -88,7 +94,6 @@ class _ContentStoryAudioScreenState extends State<ContentStoryAudioScreen> {
     await Future.wait([
       _contentStoryAudioViewModel.fetchFormatList(),
     ]);
-
 
   }
 
@@ -179,7 +184,32 @@ class _ContentStoryAudioScreenState extends State<ContentStoryAudioScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Image(
+                              image: NetworkImage(contentStoryAudioViewModel.contentStory!.cover),
+                              height: 101,
+                              width: 84,
+                              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                                return Image.asset(
+                                  'assets/images/default_image.png',
+                                  height: 101,
+                                  width: 84,
+                                );
+                              },
+                            ),
+                            SizedBox(
+                              width: 550,
 
+                              child: Text(
+                                contentStoryAudioViewModel.contentStory!.name,
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  overflow: TextOverflow.ellipsis,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
                             Slider(
                               value: progress,
                               min: 0.0,
@@ -309,7 +339,9 @@ class _ContentStoryAudioScreenState extends State<ContentStoryAudioScreen> {
 
   Color intToColor(int colorValue) {
     return Color(colorValue);
-  }  void navigateToNextChap() {
+  }
+
+  void navigateToNextChap() {
     setState(() {
       // fetch next chapter pagination if current chapter is the last item of current chapter pagination
       if (_contentStoryAudioViewModel.currentChapNumber %

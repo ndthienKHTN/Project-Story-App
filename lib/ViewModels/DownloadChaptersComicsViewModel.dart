@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:project_login/Services/DownloadService.dart';
+import '../Models/DownloadHistory.dart';
 import '../Services/LocalDatabase.dart';
 
 class DownloadChaptersComicsViewModel extends ChangeNotifier {
@@ -25,19 +26,23 @@ class DownloadChaptersComicsViewModel extends ChangeNotifier {
         logger.i("File path: $filePath");
         _downloadedHtmlFilePath.add(filePath);
 
-        //TODO: need to implement later
+
         // insert reading history to local database
-       /* int currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
-        _localDatabase.insertDataDownload(
-          DownloadHistory(
-              title: storyTitle,
-              name: nameStory,
-              date: currentTimeMillis,
-              chap: chapter,
-              cover: cover,
-              dataSource: datasource,
-              link: _downloadedHtmlFilePath[i]),
-        );*/
+        if (fileType.toLowerCase() == 'html') {
+          int currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
+          _localDatabase.insertDataDownload(
+            DownloadHistory(
+                title: storyTitle,
+                name: nameStory,
+                date: currentTimeMillis,
+                chap: chapter,
+                cover: cover,
+                dataSource: datasource,
+                link: _downloadedHtmlFilePath[i],
+                format: 'image'),
+          );
+        }
+
       }
       notifyListeners();
     } catch (e) {

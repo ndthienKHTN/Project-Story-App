@@ -19,7 +19,7 @@ class LocalDatabase {
         db.execute(
           'CREATE TABLE DOWNLOAD_HISTORY(title TEXT, name TEXT, '
           'date INTEGER,chap INTEGER, cover TEXT, dataSource TEXT, '
-              ' link TEXT PRIMARY KEY)',
+              ' link TEXT PRIMARY KEY, format TEXT)',
         );
       },
       version: 1,
@@ -99,7 +99,8 @@ class LocalDatabase {
           chap: maps[i]['chap'],
           cover: maps[i]['cover'],
           dataSource: maps[i]['dataSource'],
-          link: maps[i]['link']);
+          link: maps[i]['link'],
+          format: maps[i]['format']);
     });
   }
 }
