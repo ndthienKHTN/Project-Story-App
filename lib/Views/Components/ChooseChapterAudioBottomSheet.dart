@@ -25,6 +25,7 @@ class _ChooseChapterAudioBottomSheetState extends State<ChooseChapterAudioBottom
   @override
   void initState() {
     super.initState();
+
     for (int i = 1; i <= contentStoryAudioViewModel.chapterPagination.maxPage; i++) {
       chapterPaginationList.add(i.toString());
     }
