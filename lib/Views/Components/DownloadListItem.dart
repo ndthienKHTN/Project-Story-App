@@ -41,7 +41,7 @@ class DownloadListItem extends StatelessWidget{
                 },),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Flexible(
@@ -54,19 +54,19 @@ class DownloadListItem extends StatelessWidget{
                         downloadHistory.name,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 6,
                     ),
                     Text(
                       "Tập: " + downloadHistory.chap.toString(),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                       ),
                     ),
@@ -74,7 +74,7 @@ class DownloadListItem extends StatelessWidget{
                       downloadHistory.dataSource,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                       ),
                     ),
