@@ -48,12 +48,15 @@ class DownloadListItem extends StatelessWidget{
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      downloadHistory.name,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.white,
+                  SizedBox(
+                    width: 250,
+                      child: Text(
+                        downloadHistory.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                     SizedBox(
