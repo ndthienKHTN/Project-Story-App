@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:project_login/Models/FormatEnum.dart';
+import 'package:project_login/ViewModels/ContentStoryAudioViewModel.dart';
+import 'package:project_login/ViewModels/ContentStoryComicsViewModel.dart';
 import 'package:project_login/ViewModels/ReadingHistoryViewModel.dart';
 import 'package:project_login/Views/Components/ReadingHistoryItem.dart';
+import 'package:project_login/Views/ContentStoryAudioView.dart';
+import 'package:project_login/Views/ContentStoryComicsView.dart';
 import 'package:provider/provider.dart';
 
 import '../../Models/ReadingHistory.dart';
@@ -53,18 +58,77 @@ class _HistoryListWidgetState extends State<HistoryListWidget> {
 
   // navigate to content story screen
   void onClickItem(ReadingHistory readingHistory) {
+    String format = readingHistory.format;
+    if (format != null) {
+       switch (format) {
+         case FormatEnum.audio:
+           navigateToContentStoryAudioScreen(readingHistory);
+           break;
+         case FormatEnum.image:
+           navigateToContentStoryComicsScreen(readingHistory);
+           break;
+         case FormatEnum.word:
+           navigateToContentStoryScreen(readingHistory);
+           break;
+         default:
+           navigateToContentStoryScreen(readingHistory);
+           break;
+       }
+    } else {
+      navigateToContentStoryScreen(readingHistory);
+    }
+  }
+
+  void navigateToContentStoryScreen(ReadingHistory readingHistory) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ChangeNotifierProvider(
-            create: (context) => ContentStoryViewModel(),
-            child: ContentStoryScreen(
-              storyTitle: readingHistory.title,
-              chap: readingHistory.chap,
-              dataSource: readingHistory.dataSource,
-              pageNumber: readingHistory.pageNumber,
-              name: readingHistory.name,
-            )),
+        builder: (context) =>
+            ChangeNotifierProvider(
+                create: (context) => ContentStoryViewModel(),
+                child: ContentStoryScreen(
+                  storyTitle: readingHistory.title,
+                  chap: readingHistory.chap,
+                  dataSource: readingHistory.dataSource,
+                  pageNumber: readingHistory.pageNumber,
+                  name: readingHistory.name,
+                )),
+      ),
+    );
+  }
+
+  void navigateToContentStoryComicsScreen(ReadingHistory readingHistory) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            ChangeNotifierProvider(
+                create: (context) => ContentStoryComicsViewModel(),
+                child: ContentStoryComicsScreen(
+                  storyTitle: readingHistory.title,
+                  chap: readingHistory.chap,
+                  dataSource: readingHistory.dataSource,
+                  pageNumber: readingHistory.pageNumber,
+                  name: readingHistory.name,
+                )),
+      ),
+    );
+  }
+
+  void navigateToContentStoryAudioScreen(ReadingHistory readingHistory) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            ChangeNotifierProvider(
+                create: (context) => ContentStoryAudioViewModel(),
+                child: ContentStoryAudioScreen(
+                  storyTitle: readingHistory.title,
+                  chap: readingHistory.chap,
+                  dataSource: readingHistory.dataSource,
+                  pageNumber: readingHistory.pageNumber,
+                  name: readingHistory.name,
+                )),
       ),
     );
   }

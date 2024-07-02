@@ -23,9 +23,9 @@ void main() {
     test('fetchDownloadHistoryList fetches and sorts the list correctly', () async {
       // Arrange
       final mockDownloadHistoryList = [
-        DownloadHistory(date: DateTime(2021, 6, 1).millisecondsSinceEpoch, title: 'Title 1', name: 'Name 1', chap: 1, cover: 'Cover 1', dataSource: 'Source 1',link: "example1.com.vn"),
-        DownloadHistory(date: DateTime(2021, 6, 2).millisecondsSinceEpoch, title: 'Title 2', name: 'Name 2', chap: 2, cover: 'Cover 2', dataSource: 'Source 2',link: "example2.com.vn"),
-        DownloadHistory(date: DateTime(2021, 5, 1).millisecondsSinceEpoch, title: 'Title 3', name: 'Name 3', chap: 3, cover: 'Cover 3', dataSource: 'Source 3',link: "example3.com.vn"),
+        DownloadHistory(date: DateTime(2021, 6, 1).millisecondsSinceEpoch, title: 'Title 1', name: 'Name 1', chap: 1, cover: 'Cover 1', dataSource: 'Source 1',link: "example1.com.vn",format: "pdf"),
+        DownloadHistory(date: DateTime(2021, 6, 2).millisecondsSinceEpoch, title: 'Title 2', name: 'Name 2', chap: 2, cover: 'Cover 2', dataSource: 'Source 2',link: "example2.com.vn",format: "txt"),
+        DownloadHistory(date: DateTime(2021, 5, 1).millisecondsSinceEpoch, title: 'Title 3', name: 'Name 3', chap: 3, cover: 'Cover 3', dataSource: 'Source 3',link: "example3.com.vn",format: "html"),
       ];
 
       when(mockLocalDatabase.getDownloadHistoryList())

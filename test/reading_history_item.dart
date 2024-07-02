@@ -10,7 +10,7 @@ void main() {
       cover: 'https://example.com/cover.jpg',
       name: 'Sample Book',
       author: 'John Doe',
-      chap: 1, title: '', date: DateTime.april, pageNumber: 1, dataSource: '',
+      chap: 1, title: '', date: DateTime.april, pageNumber: 1, dataSource: '', format: '',
     );
 
     // Build a MaterialApp with the ReadingHistoryItem inside

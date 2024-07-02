@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:project_login/Models/DownloadHistory.dart';
+import 'package:project_login/ViewModels/ContentStoryAudioViewModel.dart';
+import 'package:project_login/ViewModels/ContentStoryComicsViewModel.dart';
 import 'package:project_login/ViewModels/DownloadHistoryViewModel.dart';
-import 'package:project_login/ViewModels/ReadingHistoryViewModel.dart';
 import 'package:project_login/Views/Components/DownloadListItem.dart';
-import 'package:project_login/Views/Components/ReadingHistoryItem.dart';
+import 'package:project_login/Views/ReadOfflineAudio.dart';
+import 'package:project_login/Views/ReadOfflineComics.dart';
 import 'package:project_login/Views/ReadOfflineFile.dart';
 import 'package:provider/provider.dart';
-
-import '../../Models/ReadingHistory.dart';
 import '../../ViewModels/ContentStoryViewModel.dart';
-import '../ContentStoryView.dart';
 
 class DownloadListWidget extends StatefulWidget {
   const DownloadListWidget({super.key});
@@ -51,16 +50,89 @@ class _HistoryListWidgetState extends State<DownloadListWidget> {
   }
 
   void onClickItem(DownloadHistory downloadHistory) {
+    String format = downloadHistory.format;
+
+    if (format!=null) {
+      switch (format) {
+        case "audio":
+          navigateToReadOfflineAudioScreen(
+              downloadHistory.link,
+                  (link) {
+                _downloadHistoryViewModel.deleteDownloadChapter(link);
+              }
+          );
+          break;
+        case "image":
+          navigateToReadOfflineComicsScreen(
+              downloadHistory.link,
+                  (link) {
+                _downloadHistoryViewModel.deleteDownloadChapter(link);
+              }
+          );
+          break;
+        case "word":
+          navigateToReadOfflineFileScreen(
+              downloadHistory.link,
+                  (link) {
+                _downloadHistoryViewModel.deleteDownloadChapter(link);
+              }
+          );
+          break;
+        default:
+          navigateToReadOfflineFileScreen(
+              downloadHistory.link,
+                  (link) {
+                _downloadHistoryViewModel.deleteDownloadChapter(link);
+              }
+          );
+          break;
+      }
+    } else {
+      navigateToReadOfflineFileScreen(
+          downloadHistory.link,
+              (link) {
+            _downloadHistoryViewModel.deleteDownloadChapter(link);
+          }
+      );
+    }
+
+  }
+
+  void navigateToReadOfflineFileScreen(String link, Function(String) deleteDatabase) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ChangeNotifierProvider(
             create: (context) => ContentStoryViewModel(),
             child: ReadOfflineFile(
-              link: downloadHistory.link,
-              deleteDatabase: (link) {
-                _downloadHistoryViewModel.deleteDownloadChapter(link);
-              },
+              link: link,
+              deleteDatabase: deleteDatabase,
+            )),
+      ),
+    );
+  }
+  void navigateToReadOfflineAudioScreen(String link, Function(String) deleteDatabase) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChangeNotifierProvider(
+            create: (context) => ContentStoryAudioViewModel(),
+            child: ReadOfflineAudio(
+              link: link,
+              deleteDatabase: deleteDatabase,
+            )),
+      ),
+    );
+  }
+  void navigateToReadOfflineComicsScreen(String link, Function(String) deleteDatabase) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChangeNotifierProvider(
+            create: (context) => ContentStoryComicsViewModel(),
+            child: ReadOfflineComics(
+              link: link,
+              deleteDatabase: deleteDatabase,
             )),
       ),
     );

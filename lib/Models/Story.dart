@@ -1,6 +1,5 @@
 import 'Category.dart';
 
-import 'package:flutter/cupertino.dart';
 
 
 //ip avd: 10.0.2.2
@@ -14,6 +13,7 @@ class Story {
   String authorLink;
   String? view;
   String? detail;
+  String? format;
   List<Category>? categories;
 
   Story({required this.name,
@@ -25,7 +25,8 @@ class Story {
     required this.authorLink,
     this.view,
     required this.categories,
-    this.detail});
+    this.detail,
+    this.format});
 
   factory Story.fromJson(Map<String, dynamic> json) {
 
@@ -44,13 +45,14 @@ class Story {
         description: json['description'],
         authorLink: json['authorLink'],
         categories: categoryList,
-        detail: json.containsKey('detail') ? json['detail'] : null);
+        detail: json.containsKey('detail') ? json['detail'] : null,
+        format: json.containsKey('format') ? json['format'] : null);
   }
 
   @override
   String toString() {
     String? str = categories?.join(" === ");
-    return 'Story{name: $name,detail: $detail,cover: $cover, categories: $str}';
+    return 'Story{name: $name,detail: $detail,cover: $cover, format: $format, categories: $str}';
     //return 'Story{name: $name, link: $link, title: $title, cover: $cover, description: $description, author: $author, authorLink: $authorLink, view: $view, detail: $detail, categories: $str}';
   }
 }

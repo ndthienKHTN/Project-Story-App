@@ -100,7 +100,8 @@ class _ContentStoryScreenState extends State<ContentStoryScreen> {
               decoration: const BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage('assets/images/background_home.png'),
-                      fit: BoxFit.fill)),
+                      fit: BoxFit.fill)
+              ),
               child: SafeArea(
                 child: Container(
                   width: double.infinity,

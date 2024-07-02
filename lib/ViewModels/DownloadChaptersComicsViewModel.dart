@@ -1,32 +1,34 @@
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
-import 'package:project_login/Models/DownloadHistory.dart';
 import 'package:project_login/Services/DownloadService.dart';
+import '../Models/DownloadHistory.dart';
 import '../Services/LocalDatabase.dart';
 
-class DownloadChaptersViewModel extends ChangeNotifier {
+class DownloadChaptersComicsViewModel extends ChangeNotifier {
   final DownloadService downloadService = DownloadService();
   final LocalDatabase _localDatabase = LocalDatabase();
 
-  List<String> _downloadedTxtFilePath = [];
-  List<String> get downloadedTxtFilePath => _downloadedTxtFilePath;
+  List<String> _downloadedHtmlFilePath = [];
+  List<String> get downloadedHtmlFilePath => _downloadedHtmlFilePath;
 
   List<String> _listFileExtension = [];
   List<String> get listFileExtension => _listFileExtension;
 
 
-  Future<bool> downloadChaptersOfStory(String storyTitle,String cover,String nameStory, List<int> chapters, String fileType, String datasource) async {
+  Future<bool> downloadChaptersComicsOfStory(String storyTitle,String cover,String nameStory, List<int> chapters, String fileType, String datasource) async {
     try {
-        _downloadedTxtFilePath.clear();
-        for (int i = 0; i<chapters.length;i++) {
-          int chapter = chapters[i];
-          String filePath = await downloadService.downloadAndUnzipFile(
-              storyTitle, chapter, fileType, datasource);
-          Logger logger = Logger();
-          logger.i("File path: $filePath");
-          _downloadedTxtFilePath.add(filePath);
+      _downloadedHtmlFilePath.clear();
+      for (int i = 0; i<chapters.length;i++) {
+        int chapter = chapters[i];
+        String filePath = await downloadService.downloadComicsAndUnzipFile(
+            storyTitle, chapter, fileType, datasource);
+        Logger logger = Logger();
+        logger.i("File path: $filePath");
+        _downloadedHtmlFilePath.add(filePath);
 
-          // insert reading history to local database
+
+        // insert reading history to local database
+        if (fileType.toLowerCase() == 'html') {
           int currentTimeMillis = DateTime.now().millisecondsSinceEpoch;
           _localDatabase.insertDataDownload(
             DownloadHistory(
@@ -36,11 +38,13 @@ class DownloadChaptersViewModel extends ChangeNotifier {
                 chap: chapter,
                 cover: cover,
                 dataSource: datasource,
-                link: _downloadedTxtFilePath[i],
-                format: 'word'),
+                link: _downloadedHtmlFilePath[i],
+                format: 'image'),
           );
         }
-        notifyListeners();
+
+      }
+      notifyListeners();
     } catch (e) {
       // Handle error
       print('Error download chapters of story: $e');
@@ -50,7 +54,7 @@ class DownloadChaptersViewModel extends ChangeNotifier {
   }
   Future<void> fetchListFileExtension() async{
     try {
-      _listFileExtension = await downloadService.fetchListFileExtension();
+      _listFileExtension = await downloadService.fetchListFileExtensionComics();
       Logger logger = Logger();
       logger.i(_listFileExtension);
       notifyListeners();

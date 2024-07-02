@@ -30,7 +30,13 @@ class ReadingHistoryItem extends StatelessWidget{
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: Image.network(readingHistory.cover),
+                child: Image.network(readingHistory.cover,errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                  return Image.asset(
+                    'assets/images/default_image.png',
+                    height: 101,
+                    width: 84,
+                  );
+                },),
               ),
             ),
             const SizedBox(
@@ -39,10 +45,16 @@ class ReadingHistoryItem extends StatelessWidget{
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  readingHistory.name,
-                  style: const TextStyle(
-                    color: Colors.white,
+                SizedBox(
+                  width: 250,
+                  child: Text(
+                    readingHistory.name,
+                    maxLines: 2,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      overflow: TextOverflow.ellipsis,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 const SizedBox(

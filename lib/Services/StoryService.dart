@@ -1,6 +1,7 @@
 
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:project_login/Models/ContentStoryComics.dart';
 import 'dart:convert';
 import '../Models/ChapterPagination.dart';
 
@@ -181,5 +182,17 @@ class StoryService {
       throw Exception('Failed to fetch list story by type');
     }
   }
+
+  Future<ContentStoryComics> fetchContentStoryComics(String storyTitle, int chapNumber, String datasource) async {
+    final response = await http.get(Uri.parse('http://$ipAddress:$port/api/v1/contentStory/?datasource=$datasource&title=$storyTitle&chap=$chapNumber'));
+
+    if (response.statusCode == 200) {
+      final dynamic jsonData = jsonDecode(response.body);
+      return ContentStoryComics.fromJson(jsonData);
+    } else {
+      throw Exception("Failed to fetch content of story");
+    }
+  }
+
 }
 

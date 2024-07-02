@@ -6,6 +6,7 @@ class DownloadHistory {
   String cover;
   String dataSource;
   String link;
+  String format;
   DownloadHistory(
       {required this.title,
         required this.name,
@@ -13,7 +14,8 @@ class DownloadHistory {
         required this.chap,
       required this.cover,
       required this.dataSource,
-      required this.link});
+      required this.link,
+      required this.format});
 
   Map<String, Object?> toMap() {
     return {
@@ -24,6 +26,7 @@ class DownloadHistory {
       'cover': cover,
       'dataSource': dataSource,
       'link': link,
+      'format': format,
     };
   }
 }

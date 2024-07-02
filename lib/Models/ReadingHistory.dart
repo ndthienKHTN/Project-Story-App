@@ -7,6 +7,7 @@ class ReadingHistory {
   String cover;
   String dataSource;
   int pageNumber;
+  String format;
 
   ReadingHistory(
       {required this.name,
@@ -16,7 +17,8 @@ class ReadingHistory {
       required this.author,
       required this.cover,
       required this.pageNumber,
-      required this.dataSource});
+      required this.dataSource,
+      required this.format});
 
   Map<String, Object?> toMap() {
     return {
@@ -28,6 +30,7 @@ class ReadingHistory {
       'author': author,
       'cover': cover,
       'dataSource': dataSource,
+      'format': format
     };
   }
 }

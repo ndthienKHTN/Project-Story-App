@@ -4,15 +4,15 @@ import 'package:provider/provider.dart';
 
 import '../ViewModels/ChooseCategoryViewModel.dart';
 
-class ChoiseCategoryScreen extends StatefulWidget {
+class ChooseCategoryScreen extends StatefulWidget {
   final String category;
   final String datasource;
-  const ChoiseCategoryScreen({super.key,required this.datasource,required this.category});
+  const ChooseCategoryScreen({super.key,required this.datasource,required this.category});
   @override
-  State<ChoiseCategoryScreen> createState() => _ChoiseCategoryScreenState();
+  State<ChooseCategoryScreen> createState() => _ChooseCategoryScreenState();
 }
 
-class _ChoiseCategoryScreenState extends State<ChoiseCategoryScreen> {
+class _ChooseCategoryScreenState extends State<ChooseCategoryScreen> {
   late ChoiseCategoryViewModel _choiseCategoryViewModel;
   bool firsttime=true;
   @override

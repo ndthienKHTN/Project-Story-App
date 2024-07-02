@@ -1,14 +1,6 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:project_login/Models/DownloadHistory.dart';
 import 'package:project_login/ViewModels/DownloadChaptersViewModel.dart';
-import 'package:path/path.dart';
-
-import '../../Models/ReadingHistory.dart';
 
 class DownloadListItem extends StatelessWidget{
   final DownloadChaptersViewModel _downloadChaptersViewModel = DownloadChaptersViewModel();
