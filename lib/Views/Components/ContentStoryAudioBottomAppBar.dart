@@ -61,9 +61,9 @@ class ContentStoryAudioBottomAppBar extends StatelessWidget {
                     const AssetImage('assets/images/back_button.png'),
                     color: prevChapIconColor),
                 label: ''),
-            const BottomNavigationBarItem(
+            /*const BottomNavigationBarItem(
                 icon: ImageIcon(AssetImage('assets/images/list_icon.png')),
-                label: ''),
+                label: ''),*/
             BottomNavigationBarItem(
                 icon: ImageIcon(
                   const AssetImage('assets/images/next_button.png'),
@@ -77,14 +77,14 @@ class ContentStoryAudioBottomAppBar extends StatelessWidget {
               if (canNavigateToPrevChap) {
                 navigateToPrevChap();
               }
-            } else if (index == 1) {
+            }/* else if (index == 1) {
               // show choose chapter bottom sheet
               await showDialog<void>(
                 context: context,
                 builder: (BuildContext context) => ChooseChapterAudioBottomSheet(
                     contentStoryAudioViewModel, onChooseChapter),
               );
-            } else if (index == 2) {
+            }*/ else if (index == 1) {
               // navigate to previous chapter
               if (canNavigateToNextChap) {
                 navigateToNextChap();
